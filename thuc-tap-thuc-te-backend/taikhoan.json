@@ -1,0 +1,44 @@
+[
+  {
+    "_id": "Admin",
+    "TenDangNhap": "Admin",
+    "MatKhau": "Admin",
+    "CapQuyen": "-1"
+  },
+  {
+    "_id": "GV001",
+    "TenDangNhap": "GV001",
+    "MatKhau": "GV001123456",
+    "CapQuyen": "1"
+  },
+  {
+    "_id": "GV002",
+    "TenDangNhap": "GV002",
+    "MatKhau": "CB002123456",
+    "CapQuyen": "2"
+  },
+  {
+    "_id": "CB001",
+    "TenDangNhap": "CB001",
+    "MatKhau": "CB003123456",
+    "CapQuyen": "3"
+  },
+  {
+    "_id": "B1910408",
+    "TenDangNhap": "B1910408",
+    "MatKhau": "B1910408",
+    "CapQuyen": "0"
+  },
+  {
+    "_id": "B1910317",
+    "TenDangNhap": "B1910317",
+    "MatKhau": "B1910317",
+    "CapQuyen": "0"
+  },
+  {
+    "_id": "B1910468",
+    "TenDangNhap": "B1910468",
+    "MatKhau": "B1910468",
+    "CapQuyen": "0"
+  }
+]

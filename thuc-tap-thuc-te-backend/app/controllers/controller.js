@@ -1,0 +1,218 @@
+const QuanLyTaiKhoan = require("../services/account.service");
+const MongoDB = require("../utils/mongodb.util");
+const ApiError = require("../api-error");
+const QuanLySinhVien = require("../services/student.service");
+const QuanLyLopHoc = require("../services/class.service");
+const Information = require("../services/information.service");
+const Lecturer = require("../services/lecturer.service");
+
+exports.create = async (req, res, next) => {
+    try {
+        const quanLyLopHoc = new QuanLyLopHoc(MongoDB.client);
+
+        const document = await quanLyLopHoc.create(req.body);
+        console.log(document);
+        return res.send(document);
+    } catch (error) {
+        return next(
+            new ApiError(500, "An error occurred while creating the contact")
+        );
+    }
+};
+
+exports.findAllAccount = async (req, res, next) => {
+    let documents = [];
+
+    try {
+        const quanLyTaiKhoan = new QuanLyTaiKhoan(MongoDB.client);
+        documents = await quanLyTaiKhoan.find({});
+    } catch (error) {
+        return next(
+            new ApiError(500, "An error")
+        );
+    }
+    return res.send(documents);
+};
+
+exports.findOneAccount = async (req, res, next) => {
+    let documents = {};
+
+    try {
+        const quanLyTaiKhoan = new QuanLyTaiKhoan(MongoDB.client);
+        documents = await quanLyTaiKhoan.findByName(req.body);
+        if (documents != null) {
+            return res.send(documents);
+
+        } else {
+            return res.send({ error: true });
+        }
+    } catch (error) {
+        return next(
+            new ApiError(500, "An error")
+        );
+    }
+};
+exports.findAllStudent = async (req, res, next) => {
+    let documents = [];
+
+    try {
+        const quanLySinhVien = new QuanLySinhVien(MongoDB.client);
+        const { name } = req.query;
+        console.log(quanLySinhVien);
+        if (name) {
+            documents = await quanLySinhVien.findByName(name);
+        } else {
+            documents = await quanLySinhVien.find({});
+        }
+    } catch (error) {
+        return next(
+            new ApiError(500, "An error")
+        );
+    }
+    return res.send(documents);
+};
+exports.getAllStudent = async (req, res, next) => {
+    let documents = [];
+
+    try {
+        const quanLyLopHoc = new QuanLyLopHoc(MongoDB.client);
+
+
+        documents = await quanLyLopHoc.getAllStudent();
+
+    } catch (error) {
+        return next(
+            new ApiError(500, "An error")
+        );
+    }
+
+    console.log(documents);
+    return res.send(documents);
+};
+exports.getAllLecturer = async (req, res, next) => {
+    let documents = [];
+
+    try {
+        const lecturer = new Lecturer(MongoDB.client);
+        documents = await lecturer.find({});
+
+    } catch (error) {
+        return next(
+            new ApiError(500, "An error")
+        );
+    }
+
+    return res.send(documents);
+};
+exports.findAllClass = async (req, res, next) => {
+    let documents = [];
+
+    try {
+        const quanLyLopHoc = new QuanLyLopHoc(MongoDB.client);
+        const { name } = req.query;
+        if (name) {
+            documents = await quanLyLopHoc.findByName(name);
+        } else {
+            documents = await quanLyLopHoc.find({});
+        }
+    } catch (error) {
+        return next(
+            new ApiError(500, "An error")
+        );
+    }
+    return res.send(documents);
+};
+exports.findOne = async (req, res, next) => {
+    try {
+        const quanLyLopHoc = new QuanLyLopHoc(MongoDB.client);
+        const document = await quanLyLopHoc.findById(req.params.id);
+        if (!document) {
+            return next(new ApiError(404, "Contact not found"));
+        }
+        return res.send(document);
+    } catch (error) {
+        return next(
+            new ApiError(500, `Error retrieving contact with id=${req.params.id}`)
+        );
+    }
+};
+exports.registerClass = async (req, res, next) => {
+    try {
+        const information = new Information(MongoDB.client);
+
+        const document = await information.registerClass(req.body);
+
+        return res.send(document);
+    } catch (error) {
+        return next(
+            new ApiError(500, "An error occurred while creating the contact")
+        );
+    }
+};
+exports.isRegistered = async (req, res, next) => {
+    try {
+        const quanLyLopHoc = new QuanLyLopHoc(MongoDB.client);
+
+        const document = await quanLyLopHoc.isRegistered(req.params.id);
+        return res.send(document);
+    } catch (error) {
+        return next(
+            new ApiError(500, "An error occurred while creating the contact")
+        );
+    }
+};
+exports.updateClass = async(req, res, next) => {
+    if(Object.keys(req.body).length === 0){
+        return next(new ApiError(400, "Data to update can not be empty"));
+    }
+
+    try{
+        const quanLyLopHoc = new QuanLyLopHoc(MongoDB.client);
+        const document = await quanLyLopHoc.update(req.body);
+        if(!document){
+            return next(new ApiError(404, "Contact not found"));
+        }
+        return res.send({message: "Class was updated successfully"});
+    }catch(error){
+        return next(
+            new ApiError(500, `Error updating class with id`)
+        );
+    }
+};
+// exports.delete = async(req, res, next) => {
+//     try{
+//         const contactService = new ContactService(MongoDB.client);
+//         const document = await contactService.delete(req.params.id);
+//         if(!document){
+//             return next(new ApiError(404, "Contact not found"));
+//         }
+//         return res.send({message: "Contact was deleted successfully"});
+//     }catch(error){
+//         return next(
+//             new ApiError(500, `Could not delete contact with id=${req.params.id}`)
+//         );
+//     }
+// };
+// exports.deleteAll = async(_req, res, next) => {
+//     try{
+//         const contactService = new ContactService(MongoDB.client);
+//         const deletedCount = await contactService.deleteAll();
+//         return res.send({message: `${deletedCount} contacts were deleted successfully`});
+//     }catch(error){
+//         return next(
+//             new ApiError(500, "An error while retrieving favorite contacts")
+//         );
+//     }
+// };
+// exports.findAllFavorite = async(_req, res, next) => {
+//     try{
+//         const contactService = new ContactService(MongoDB.client);
+//         const document = await contactService.findFavorite();
+//         return res.send(document);
+//     }catch(error){
+//         return next(
+//             new ApiError(500, "An error while retrieving favorite contacts")
+//         );
+//     }
+// };
+

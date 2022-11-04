@@ -1,0 +1,50 @@
+NIÊN LUẬN NGÀNH - WEBSITE ĐĂNG KÝ TTTT CHO KHOA CNTT&TT
+
+- FontEnd: Vuejs Bootstrap5
+- BackEnd: Nodejs. Expressjs
+- CSDL: MongoDB
+
+* Chức năng:
+- Admin: 
+	+ Tạo lớp học phần
+	+ Xem dssv đăng ký
+	+ Quản lý tài khoản
+	+ Thống kê sinh viên đăng ký các học kỳ
+- Lãnh đạo bộ môn:
+	+ Phân công gvhd cho từng sv ( không phải cho lớp học)
+	+ Xem dssv
+	+ Xem điểm sv, xem tiến độ sv
+- GVHD:
+	+ Xem dssv
+	+ Xem tiến độ (phiếu đánh giá từ công ty hàng tuần và tổng hợp để chấm điểm)
+	+ Chấm điểm cho từng sv
+- Phía cty:
+	+ Xem dssv của cty hd
+	+ Chấm điểm tiến độ hàng tuần thông qua phiếu đánh giá
+	+ Gửi phiếu đánh giá cuối cùng
+- SV:
+	+ Đăng ký
+	+ Xem GVHD
+	+ Nộp file báo cáo
+	+ Xem điểm
+
+* CSDL:
+- Colections: 
+	+ Tài Khoản: Sinh Viên, Giảng Viên (bao gồm Trưởng Khoa)
+		Document: Tên đăng nhập, Mật khẩu, Cấp quyền
+	+ Sinh Viên: Lưu thông tin Sinh Viên
+		Document: MSSV, Họ tên, SĐT, Mã lớp, Chuyên ngành, Kết nối Tài Khoản
+	+ Giảng Viên: Lưu thông tin Giảng Viên
+		Document: MSGV, Họ tên, SĐT, Mã lớp, Bộ môn, Kết nối Tài Khoản
+	+ Lớp Thực Tập:
+		Document: Mã lớp TT, Kết nối Sinh Viên, Giảng Viên HK, Niên khóa
+	+ Cán Bộ Công Ty: Lưu thông tin cán bộ hướng dẫn ở tại cty
+		Document: MaCB, Họ tên, SĐT, Email, Kết nối Tài Khoản, Công Ty
+	+ Công Ty: Lưu thông tin cty thực tập
+		Document: Cty thực tập, Địa điểm cty, SĐT cty, email
+	+ Thông Tin Thực Tập: Các thông tin đăng ký thực tập
+		Document: Kết nối giữa Sinh Viên, Giảng Viên, Cán Bộ Công Ty, Nội dung thực tập
+	+ Đánh Giá Tiến Độ:
+		Document: Time, Phiếu đánh giá, Kết nối Giảng Viên, Cán Bộ Công Ty, Sinh Viên
+	+ Báo Cáo:
+		Document: Kết nối Sinh Viên, File báo cáo SV, Phiếu đánh giá tổng kết bên cty
