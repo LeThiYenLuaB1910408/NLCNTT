@@ -7,8 +7,9 @@ class SinhVien{
     async getAll(){
         return (await this.api.get("/QLSV")).data;
     }
-    async getAllStudent(){
-        return (await this.api.get("/allStudent")).data;
+    
+    async create(data) {
+        return (await this.api.post('/QLSV', data)).data;
     }
 
 

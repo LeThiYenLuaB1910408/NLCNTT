@@ -7,13 +7,14 @@ router.route("/QLTK")
     .get(controller.findAllAccount)
     .post(controller.findOneAccount);
 router.route("/QLSV")
-    .get(controller.findAllStudent);
+    .get(controller.findAllStudent)
+    .post(controller.createStudent);
 router.route("/QLLH")
     .get(controller.findAllClass)
     .put(controller.updateClass)
-    .post(controller.create);
+    .post(controller.createClass);
 router.route("/courses/:id")
-    .get(controller.findOne);
+    .get(controller.findOneClass);
 router.route("/register")
     .post(controller.registerClass);
 router.route("/register/:id")

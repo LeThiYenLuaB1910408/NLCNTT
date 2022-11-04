@@ -58,7 +58,7 @@ class Information {
         
         const result = await this.Lop.updateOne(
             { _id: ObjectId(payload.classCurrent._id) },
-            { $push: { SinhVien: {MSSV:thongTin.MSSV, MSGV:"", MSCB:resultCanBo.insertedId} } }
+            { $push: { SinhVien: {MSSV:thongTin.MSSV, MSGV:'', MSCB:resultCanBo.insertedId, DiemSo:''} } }
          )
          console.log(result);
 

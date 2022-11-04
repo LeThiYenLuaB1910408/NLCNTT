@@ -6,6 +6,8 @@ import HomeHeaderLecturer from "../components/Home/HomeHeaderLecturer.vue"
 import StudentBody from "../components/Student/StudentBody.vue"
 import StudentBodyRegister from "../components/Student/StudentBodyRegister.vue";
 import LecturerBody from "../components/Lecturer/LecturerBody.vue";
+import LeaderBody from "../components/Lecturer/LeaderBody.vue";
+
 import { useAccountStore } from "@/stores/AccountStore";
 
 const routes = [
@@ -38,6 +40,15 @@ const routes = [
         components:{
             default: StudentBodyRegister,
             header: HomeHeaderStudent
+        } 
+    
+    },
+    {
+        path: "/leader",
+        name: "leader",
+        components:{
+            default: LeaderBody,
+            header: HomeHeaderLecturer
         } 
     
     },

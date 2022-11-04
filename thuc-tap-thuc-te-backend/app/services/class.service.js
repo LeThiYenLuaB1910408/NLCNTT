@@ -43,9 +43,40 @@ class QuanLyLopHoc {
     // }
 
     async findById(id) {
-        return await this.LopHoc.findOne({
-            _id: ObjectId.isValid(id) ? new ObjectId(id) : null,
-        });
+        const result = await this.LopHoc.aggregate([
+            { '$unwind': '$SinhVien' },
+            {
+                $lookup: {
+                    from: 'sinhvien',
+                    localField: 'SinhVien.MSSV',
+                    foreignField: '_id',
+                    as: 'SinhVienLop'
+                }
+            },
+            { '$unwind': '$SinhVienLop' },
+
+            {
+                $lookup: {
+                    from: 'canbocongty',
+                    localField: 'SinhVien.MSCB',
+                    foreignField: '_id',
+                    as: 'CanBo'
+                }
+            },
+            { '$unwind': '$CanBo' },
+            {
+                $lookup: {
+                    from: 'giangvien',
+                    localField: 'SinhVien.MSGV',
+                    foreignField: '_id',
+                    as: 'GiangVien'
+                }
+            },
+            { '$unwind': '$GiangVien' }
+        ]
+        );
+        const results = await result.toArray();
+        return results.filter(e => e._id == id);
     }
     async isRegistered(id) {
         return await this.LopHoc.findOne({
@@ -66,7 +97,7 @@ class QuanLyLopHoc {
                 }
             },
             { '$unwind': '$SinhVienLop' },
-            
+
             {
                 $lookup: {
                     from: 'canbocongty',
@@ -75,28 +106,57 @@ class QuanLyLopHoc {
                     as: 'CanBo'
                 }
             },
-            { '$unwind': '$CanBo' }
+            { '$unwind': '$CanBo' },
+            {
+                $lookup: {
+                    from: 'giangvien',
+                    localField: 'SinhVien.MSGV',
+                    foreignField: '_id',
+                    as: 'GiangVien'
+                }
+            },
+            { '$unwind': '$GiangVien' }
         ]
         );
         return await result.toArray();
     }
 
     async update(payload) {
-        console.log(payload);
         const filter = {
             _id: ObjectId.isValid(payload._id) ? ObjectId(payload._id) : null
-            
+
         };
-        console.log(filter);
-        const result = await this.LopHoc.findOneAndUpdate(
-            filter,
-            { $set: {"SinhVien.$[element].MSGV":payload.MSGV} },
-            { 
-                arrayFilters :[{"element.MSSV": payload.MSSV}],
-                returnDocument: "after" }
-        );
-        console.log(result.value);
-        return result.value;
+        if (payload.MSGV) {
+            const result = await this.LopHoc.findOneAndUpdate(
+                filter,
+                {
+                    $set: {
+                        "SinhVien.$[element].MSGV": payload.MSGV
+                    }
+                },
+                {
+                    arrayFilters: [{ "element.MSSV": payload.MSSV }],
+                    returnDocument: "after"
+                }
+            );
+            return result.value;
+        }
+        else {
+            const result = await this.LopHoc.findOneAndUpdate(
+                filter,
+                {
+                    $set: {
+                        "SinhVien.$[element].DiemSo": payload.DiemSo
+                    }
+                },
+                {
+                    arrayFilters: [{ "element.MSSV": payload.MSSV }],
+                    returnDocument: "after"
+                }
+            );
+            return result.value;
+        }
+
     }
 
     // async delete(id) {

@@ -3,6 +3,7 @@ const { ObjectId } = require("mongodb");
 class QuanLySinhVien {
     constructor(client) {
         this.SinhVien = client.db().collection("sinhvien");
+
     }
     // Dinh nghia cac phuong thuc truy xuat CSDL su dung mongodb API
     extractStudentData(payload) {
@@ -11,7 +12,8 @@ class QuanLySinhVien {
             HoTen: payload.HoTen,
             Sdt: payload.Sdt,
             MaLop: payload.MaLop,
-            ChuyenNganh: payload.ChuyenNganh
+            ChuyenNganh: payload.ChuyenNganh,
+            TenDangNhap: payload._id,
         };
 
         // remove undefined fields
@@ -21,17 +23,15 @@ class QuanLySinhVien {
         return sv;
     }
 
-    // async create(payload) {
+    async createStudent(payload) {
 
-    //     const contact = this.extractContactData(payload);
+        const student = this.extractStudentData(payload);
 
-    //     const result = await this.Contact.findOneAndUpdate(
-    //         contact,
-    //         { $set: { favorite: contact.favorite === true } },
-    //         { returnDocument: "after", upsert: true }
-    //     );
-    //     return result.value;
-    // }
+        const result = await this.SinhVien.insertOne(
+            student
+        );
+        return result.value;
+    }
 
     async find(filter) {
         const cursor = await this.SinhVien.find(filter);

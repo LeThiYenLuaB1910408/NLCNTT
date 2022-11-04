@@ -127,7 +127,7 @@ export default {
             </div>
             <div class="row">
               <div class="col-md-6 mb-3 mt-3">
-                <label for="lh" class="form-label">Học Kì:</label>
+                <label for="hk" class="form-label">Học Kì:</label>
                 <select
                   id="inputState"
                   class="form-select"
@@ -140,7 +140,7 @@ export default {
                 </select>
               </div>
               <div class="col-md-6 mb-3 mt-3">
-                <label for="lh" class="form-label">Niên Khóa:</label>
+                <label for="nk" class="form-label">Niên Khóa:</label>
                 <select
                   id="inputState"
                   class="form-select"

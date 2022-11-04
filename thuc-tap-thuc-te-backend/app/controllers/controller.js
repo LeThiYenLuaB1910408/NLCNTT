@@ -6,13 +6,26 @@ const QuanLyLopHoc = require("../services/class.service");
 const Information = require("../services/information.service");
 const Lecturer = require("../services/lecturer.service");
 
-exports.create = async (req, res, next) => {
+exports.createClass = async (req, res, next) => {
     try {
         const quanLyLopHoc = new QuanLyLopHoc(MongoDB.client);
-
-        const document = await quanLyLopHoc.create(req.body);
-        console.log(document);
+        const document = await quanLyLopHoc.createClass(req.body);
         return res.send(document);
+    } catch (error) {
+        return next(
+            new ApiError(500, "An error occurred while creating the contact")
+        );
+    }
+};
+
+exports.createStudent = async (req, res, next) => {
+    try {
+        const quanLySinhVien = new QuanLySinhVien(MongoDB.client);
+        const quanLyTaiKhoan = new QuanLyTaiKhoan(MongoDB.client);
+        const sv = await quanLySinhVien.createStudent(req.body);
+        const tk = await quanLyTaiKhoan.create(req.body);
+
+        return res.send({sv});
     } catch (error) {
         return next(
             new ApiError(500, "An error occurred while creating the contact")
@@ -122,7 +135,7 @@ exports.findAllClass = async (req, res, next) => {
     }
     return res.send(documents);
 };
-exports.findOne = async (req, res, next) => {
+exports.findOneClass = async (req, res, next) => {
     try {
         const quanLyLopHoc = new QuanLyLopHoc(MongoDB.client);
         const document = await quanLyLopHoc.findById(req.params.id);

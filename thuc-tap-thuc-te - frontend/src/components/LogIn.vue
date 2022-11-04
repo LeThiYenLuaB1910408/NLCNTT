@@ -41,6 +41,8 @@ export default {
             this.$router.push({ name: "home" });
           } else if (this.user.CapQuyen == "-1") {
             this.$router.push({ name: "QLTK" });
+          }else if (this.user.CapQuyen == "2") {
+            this.$router.push({ name: "leader" });
           } else {
             this.$router.push({ name: "lecturer" });
           }

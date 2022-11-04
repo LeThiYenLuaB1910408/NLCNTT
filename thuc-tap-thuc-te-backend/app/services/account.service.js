@@ -11,9 +11,10 @@ class QuanLyTaiKhoan {
     // Dinh nghia cac phuong thuc truy xuat CSDL su dung mongodb API
     extractAccountData(payload) {
         const tk = {
-            TenDangNhap: payload.TenDangNhap,
-            MatKhau: payload.MatKhau,
-            CapQuyen: payload.CapQuyen
+            _id: payload.TenDangNhap??payload._id,
+            TenDangNhap: payload.TenDangNhap??payload._id,
+            MatKhau: payload.MatKhau??payload._id,
+            CapQuyen: payload.CapQuyen??"0"
         };
 
         // remove undefined fields
@@ -23,17 +24,15 @@ class QuanLyTaiKhoan {
         return tk;
     }
 
-    // async create(payload) {
+    async create(payload) {
 
-    //     const contact = this.extractContactData(payload);
+        const tk = this.extractAccountData(payload);
 
-    //     const result = await this.Contact.findOneAndUpdate(
-    //         contact,
-    //         { $set: { favorite: contact.favorite === true } },
-    //         { returnDocument: "after", upsert: true }
-    //     );
-    //     return result.value;
-    // }
+        const result = await this.TaiKhoan.insertOne(
+            tk
+        );
+        return result.value;
+    }
 
     async find(filter) {
         const cursor = await this.TaiKhoan.find(filter);
@@ -50,7 +49,10 @@ class QuanLyTaiKhoan {
             case "0":
                 user = await this.SinhVien.findOne({"TenDangNhap": acc.TenDangNhap})
                 break;
-            case "1","2":
+            case "1":
+                user = await this.GiangVien.findOne({"TenDangNhap": acc.TenDangNhap})
+                break;
+            case "2":
                 user = await this.GiangVien.findOne({"TenDangNhap": acc.TenDangNhap})
                 break;
             case "3":

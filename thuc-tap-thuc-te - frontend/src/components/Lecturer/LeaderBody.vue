@@ -1,10 +1,31 @@
 <script>
+import GiangVien from '@/services/lecturer';
+import LopHoc from '@/services/class';
+
 
 export default {
     data() {
         return {
             date: new Date(),
+            students:[],
+            giangvien:[],
+            selected: ""
         };
+    },
+    methods:{
+      async getAll(){
+        this.students= await LopHoc.getAllStudent();
+        this.giangvien=await GiangVien.getAll();
+        this.giangvien =this.giangvien.filter((e)=>e.BoMon!==null)
+        console.log(this.giangvien);
+      },
+      async onChangeLecturer(data){
+        await LopHoc.update(data)
+        this.getAll();
+      }
+    },
+    mounted(){
+      this.getAll();
     }
 };
 </script>
@@ -46,31 +67,41 @@ export default {
             </p>
                 <div class="collapse" id="collapseExample">
                 <div class="card card-body border border-dark rounded-0">
-                    <table class="table">
-                        <thead>
+                    <table class="table" >
+                        <thead align="center">
                             <tr>
                             <th scope="col">STT</th>
                             <th scope="col">MSSV</th>
                             <th scope="col">Họ và Tên</th>
                             <th scope="col">Mã lớp</th>
-                            <th scope="col">SĐT</th>
+                            <th scope="col">Chuyên Ngành</th>
                             <th scope="col">Tên Công Ty</th>
-                            <th scope="col">SĐT Công ty</th>
-                            <th scope="col">Email Cán Bộ Hướng Dẫn</th>
-                            <th scope="col">SĐT Cán Bộ Hướng Dẫn</th>
+                            <th scope="col">Giảng viên hướng dẫn</th>
+                            <th scope="col">Thao tác</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <tr>
-                                <th scope="row">1</th>
-                                <td>Mark</td>
-                                <td>Otto</td>
-                                <td>@mdo</td>
-                                <td>@mdo</td>
-                                <td>Mark</td>
-                                <td>Otto</td>
-                                <td>@mdo</td>
-                                <td>@mdo</td>
+                        <tbody align="center">
+                            <tr v-for="(student, index) in this.students" :key="index">
+                                <th scope="row">{{index+1}}</th>
+                                <td>{{student.SinhVienLop._id}}</td>
+                                <td>{{student.SinhVienLop.HoTen}}</td>
+                                <td>{{student.SinhVienLop.MaLop}}</td>
+                                <td>{{student.SinhVienLop.ChuyenNganh}}</td>
+                                <td>{{student.CanBo.TenCongTy}}</td>
+                                <td>
+                                  <select v-if="student.SinhVien.MSGV==''" class="form-select" v-model="student.selected">
+                                    <option class="fw-bold" disabled>Chọn giảng viên</option>
+                                    <option v-for="(gv, index) in this.giangvien" :key="index" :value="gv.MSGV">
+                                      {{gv.HoTen}} ({{gv.MaLop.toString()}})
+                                    </option>
+                                    
+                                  </select>
+                                  <p v-else>{{this.giangvien.filter((e)=>(e.MSGV==student.SinhVien.MSGV) ? e.HoTen:null)[0].HoTen}}</p>
+                                </td>
+                                <td class="text-center pt-2">
+                                  <i @click="onChangeLecturer({_id:student._id,MSSV:student.SinhVienLop._id,MSGV: student.selected})" class="fa-regular fa-floppy-disk fs-4 mt-1 text-secondary" style="cursor: pointer"></i>
+                                  <i @click="student.SinhVien.MSGV=''" class="fa-regular fa-pen-to-square fs-5 mt-1 text-secondary ms-2" style="cursor: pointer"></i>
+                                </td>
                             </tr>
                         </tbody>
                     </table>

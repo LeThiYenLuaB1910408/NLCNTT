@@ -22,7 +22,9 @@ class LopHoc{
     async update(data) {
         return (await this.api.put('/QLLH', data)).data;
     }
-
+    async getAllStudent(){
+        return (await this.api.get("/allStudent")).data;
+    }
 
 
 

@@ -1,33 +1,33 @@
 <script>
-import SinhVien from '@/services/student';
-import GiangVien from '@/services/lecturer';
 import LopHoc from '@/services/class';
 
+import { useAccountStore } from "@/stores/AccountStore";
 
 export default {
-    data() {
-        return {
-            date: new Date(),
-            students:[],
-            giangvien:[],
-            selected: ""
-        };
+
+  data() {
+    const accStore = useAccountStore();
+
+    return {
+      date: new Date(),
+      students: [],
+      selected: "",
+      accStore
+    };
+  },
+  methods: {
+    async getAll() {
+      this.students = await LopHoc.getAllStudent();
+      this.students = this.students.filter(e => e.SinhVien.MSGV == this.accStore.user._id)
     },
-    methods:{
-      async getAll(){
-        this.students= await SinhVien.getAllStudent();
-        this.giangvien=await GiangVien.getAll();
-        this.giangvien =this.giangvien.filter((e)=>e.BoMon!==null)
-        console.log(this.giangvien);
-      },
-      async onChangeLecturer(data){
-        await LopHoc.update(data)
-        this.getAll();
-      }
-    },
-    mounted(){
+    async onChangeLecturer(data) {
+      await LopHoc.update(data)
       this.getAll();
     }
+  },
+  mounted() {
+    this.getAll();
+  }
 };
 </script>
 
@@ -36,18 +36,15 @@ export default {
     <div class="row">
       <div class="col-md-9 px-5">
         <div class="container my-3">
-            <nav style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='currentColor'/%3E%3C/svg%3E&#34;);" aria-label="breadcrumb">
+          <nav
+            style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='currentColor'/%3E%3C/svg%3E&#34;);"
+            aria-label="breadcrumb">
             <ol class="breadcrumb">
               <li class="breadcrumb-item">
-                <router-link to="/" class="text-decoration-none text-black"
-                  >Trang Chủ</router-link
-                >
+                <router-link to="/" class="text-decoration-none text-black">Trang Chủ</router-link>
               </li>
               <li class="breadcrumb-item"><a>Khoa Công Nghệ Thông Tin</a></li>
-              <router-link
-                to="/CNTT"
-                class="breadcrumb-item text-decoration-none text-black"
-              >
+              <router-link to="/CNTT" class="breadcrumb-item text-decoration-none text-black">
                 Các Khóa Thực Tập
               </router-link>
               <li class="breadcrumb-item active" aria-current="page">
@@ -61,74 +58,74 @@ export default {
           <div class="row mb-5">
             <h5 class="my-4 form text-secondary">DANH SÁCH SINH VIÊN</h5>
             <p>
-                <i class="fa-solid fa-clipboard-list me-2"></i>
-                <a class="" data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
-                    Danh sách sinh viên
-                </a>
+              <i class="fa-solid fa-clipboard-list me-2"></i>
+              <a class="" data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false"
+                aria-controls="collapseExample">
+                Danh sách sinh viên
+              </a>
             </p>
-                <div class="collapse" id="collapseExample">
-                <div class="card card-body border border-dark rounded-0">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                            <th scope="col">STT</th>
-                            <th scope="col">MSSV</th>
-                            <th scope="col">Họ và Tên</th>
-                            <th scope="col">Mã lớp</th>
-                            <th scope="col">Chuyên Ngành</th>
-                            <th scope="col">Tên Công Ty</th>
-                            <th scope="col">Giảng viên hướng dẫn</th>
-                            <th scope="col">Thao tác</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr v-for="(student, index) in this.students" :key="index">
-                                <th scope="row">{{index+1}}</th>
-                                <td>{{student.SinhVienLop._id}}</td>
-                                <td>{{student.SinhVienLop.HoTen}}</td>
-                                <td>{{student.SinhVienLop.MaLop}}</td>
-                                <td>{{student.SinhVienLop.ChuyenNganh}}</td>
-                                <td>{{student.CanBo.TenCongTy}}</td>
-                                <td>
-                                  <select v-if="student.SinhVien.MSGV==''" class="form-select" v-model="student.selected">
-                                    <option value="Chọn giảng viên" selected>Chọn giảng viên</option>
-                                    <option v-for="(gv, index) in this.giangvien" :key="index" :value="gv.MSGV">
-                                      {{gv.HoTen}} ({{gv.MaLop.toString()}})
-                                    </option>
-                                    
-                                  </select>
-                                  <p v-else>{{this.giangvien.filter((e)=>(e.MSGV==student.SinhVien.MSGV) ? e.HoTen:null)[0].HoTen}}</p>
-                                </td>
-                                <td class="text-center pt-2">
-                                  <i @click="onChangeLecturer({_id:student._id,MSSV:student.SinhVienLop._id,MSGV: student.selected})" class="fa-regular fa-floppy-disk fs-4 mt-1 text-secondary "></i>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                </div>
+            <div class="collapse" id="collapseExample">
+              <div class="card card-body border border-dark rounded-0">
+                <table class="table">
+                  <thead align="center">
+                    <tr>
+                      <th scope="col">STT</th>
+                      <th scope="col">MSSV</th>
+                      <th scope="col">Họ và Tên</th>
+                      <th scope="col">Mã lớp</th>
+                      <th scope="col">Chuyên Ngành</th>
+                      <th scope="col">Tên Công Ty</th>
+                      <th scope="col">Điểm</th>
+                      <th scope="col">Thao tác</th>
+                    </tr>
+                  </thead>
+                  <tbody align="center">
+                    <tr v-for="(student, index) in this.students" :key="index">
+                      <th scope="row">{{ index + 1 }}</th>
+                      <td>{{ student.SinhVienLop._id }}</td>
+                      <td>{{ student.SinhVienLop.HoTen }}</td>
+                      <td>{{ student.SinhVienLop.MaLop }}</td>
+                      <td>{{ student.SinhVienLop.ChuyenNganh }}</td>
+                      <td>{{ student.CanBo.TenCongTy }}</td>
+                      <td>
+                        <input type="text" v-if="student.SinhVien.DiemSo == ''" placeholder="Điểm chữ" v-model="student.Diem"/>
+                        <p v-else>{{ student.SinhVien.DiemSo
+                        }}</p>
+                      </td>
+                      <td class="text-center pt-2">
+                        <i @click="onChangeLecturer({ _id: student._id, MSSV: student.SinhVienLop._id, DiemSo: student.Diem })"
+                          class="fa-regular fa-floppy-disk fs-4 mt-1 text-secondary" style="cursor: pointer"></i>
+                        <i @click="student.SinhVien.DiemSo = ''"
+                          class="fa-regular fa-pen-to-square fs-5 mt-1 text-secondary ms-2" style="cursor: pointer"></i>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
           </div>
         </div>
         <div class="container past">
           <div class="row mb-5">
             <h5 class="my-4 bao-cao text-secondary">BÁO CÁO</h5>
             <div class="row">
-                <div class="nop-bao-cao col-md-9">
-                    <i class="fa-solid fa-file me-2"></i>
-                    <a href="#" class="text-decoration-none">Nộp file báo cáo TTTT-CNTT</a>
-                    <p>Lớp học phần CT47101</p>
+              <div class="nop-bao-cao col-md-9">
+                <i class="fa-solid fa-file me-2"></i>
+                <a href="#" class="text-decoration-none">Nộp file báo cáo TTTT-CNTT</a>
+                <p>Lớp học phần CT47101</p>
+              </div>
+              <div class="check col-md-3">
+                <div class="form-check">
+                  <input class="form-check-input border border-dark rounded-0" type="checkbox" value=""
+                    id="flexCheckDefault">
+                  Ẩn
                 </div>
-                <div class="check col-md-3">
-                    <div class="form-check">
-                        <input class="form-check-input border border-dark rounded-0" type="checkbox" value="" id="flexCheckDefault">
-                        Ẩn
-                    </div>
-                    <i class="fa-solid fa-pen-to-square fs-5 me-1"></i>Edit
-                </div>
-                <div class="d-flex justify-content-end">
-                    <div><i class="fa-solid fa-circle-plus me-2 fs-5"></i></div>
-                    <div class="">Thêm hoạt động</div>
-                </div>
+                <i class="fa-solid fa-pen-to-square fs-5 me-1"></i>Edit
+              </div>
+              <div class="d-flex justify-content-end">
+                <div><i class="fa-solid fa-circle-plus me-2 fs-5"></i></div>
+                <div class="">Thêm hoạt động</div>
+              </div>
             </div>
           </div>
         </div>
@@ -198,5 +195,4 @@ th span {
   text-decoration: none;
   font-weight: bold;
 }
-
 </style>

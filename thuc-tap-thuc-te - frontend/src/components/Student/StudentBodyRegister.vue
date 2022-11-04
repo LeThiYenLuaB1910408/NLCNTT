@@ -7,6 +7,7 @@ export default {
     console.log(accStore);
     return {
       date: new Date(),
+      classes:[],
       data: {
         classCurrent: {},
         CanBo: {
@@ -38,7 +39,9 @@ export default {
   methods: {
     async retrieveClasses() {
       try {
-        this.data.classCurrent = await LopHoc.getClass(this.$route.params.id);
+        this.classes = await LopHoc.getClass(this.$route.params.id);
+        this.data.classCurrent = this.classes.filter(e=>e.SinhVien.MSSV==this.accStore.user._id)[0];
+        console.log(this.data.classCurrent);
       this.registered = await LopHoc.isRegistered(this.accStore.user._id)
       } catch (error) {
         console.log(error);
@@ -89,7 +92,7 @@ export default {
         <div class="container lop-hoc-phan">
           <div class="row mb-5">
             <h5 class="my-4 form text-secondary">THÔNG TIN LỚP HỌC PHẦN</h5>
-            
+            <p>{{this.data.classCurrent.GiangVien.HoTen}}</p>
           </div>
         </div>
         <div class="container content">
