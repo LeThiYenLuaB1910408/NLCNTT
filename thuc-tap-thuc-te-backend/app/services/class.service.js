@@ -76,6 +76,7 @@ class QuanLyLopHoc {
         ]
         );
         const results = await result.toArray();
+        console.log(results);
         return results.filter(e => e._id == id);
     }
     async isRegistered(id) {

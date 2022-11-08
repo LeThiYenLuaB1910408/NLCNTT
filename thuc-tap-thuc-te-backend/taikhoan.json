@@ -9,13 +9,13 @@
     "_id": "GV001",
     "TenDangNhap": "GV001",
     "MatKhau": "GV001123456",
-    "CapQuyen": "1"
+    "CapQuyen": "2"
   },
   {
     "_id": "GV002",
     "TenDangNhap": "GV002",
     "MatKhau": "CB002123456",
-    "CapQuyen": "2"
+    "CapQuyen": "1"
   },
   {
     "_id": "CB001",

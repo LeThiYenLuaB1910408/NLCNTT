@@ -24,9 +24,7 @@ class QuanLySinhVien {
     }
 
     async createStudent(payload) {
-
         const student = this.extractStudentData(payload);
-
         const result = await this.SinhVien.insertOne(
             student
         );

@@ -35,16 +35,25 @@ export default {
     async submitAcc(data) {
       try {
         this.user = await TaiKhoan.login(data);
-        this.accStore.user = this.user; 
+        this.accStore.user = this.user;
         if (!this.user.error) {
-          if (this.user.CapQuyen == "0") {
-            this.$router.push({ name: "home" });
-          } else if (this.user.CapQuyen == "-1") {
-            this.$router.push({ name: "QLTK" });
-          }else if (this.user.CapQuyen == "2") {
-            this.$router.push({ name: "leader" });
-          } else {
-            this.$router.push({ name: "lecturer" });
+          switch (this.user.CapQuyen) {
+            case "-1":
+              this.$router.push({ name: "QLTK" });
+              break;
+            case "1":
+              this.$router.push({ name: "leader" });
+              break;
+            case "2":
+              this.$router.push({ name: "lecturer" });
+              break;
+            case "3":
+              this.$router.push({ name: "canbo" });
+              break;
+
+            default:
+              this.$router.push({ name: "home" });
+              break;
           }
         }
       } catch (error) {
@@ -67,32 +76,18 @@ export default {
           <h5 class="text-center fw-bold">ĐĂNG NHẬP</h5>
         </div>
 
-        <Form
-          @submit="submitAcc(this.acc)"
-          :validation-schema="loginFormSchema"
-          id="signinForm"
-          class="form-horizontal container"
-        >
+        <Form @submit="submitAcc(this.acc)" :validation-schema="loginFormSchema" id="signinForm"
+          class="form-horizontal container">
           <div class="form-group mb-4">
             <label for="name" class="form-label">Tên Đăng Nhập</label>
-            <Field
-              type="text"
-              class="form-control py-2 border border-secondary rounded-0"
-              id="name"
-              name="TenDangNhap"
-              v-model="this.acc.TenDangNhap"
-            />
+            <Field type="text" class="form-control py-2 border border-secondary rounded-0" id="name" name="TenDangNhap"
+              v-model="this.acc.TenDangNhap" />
             <ErrorMessage name="name" class="error-feedback" />
           </div>
           <div class="form-group mb-4">
             <label for="password" class="form-label">Mật Khẩu</label>
-            <Field
-              type="password"
-              class="form-control py-2 border border-secondary rounded-0"
-              id="password"
-              name="MatKhau"
-              v-model="this.acc.MatKhau"
-            />
+            <Field type="password" class="form-control py-2 border border-secondary rounded-0" id="password"
+              name="MatKhau" v-model="this.acc.MatKhau" />
             <ErrorMessage name="password" class="error-feedback" />
           </div>
           <p v-if="this.user.error" class="text-danger">
@@ -100,28 +95,17 @@ export default {
           </p>
           <div class="form-group form-check mb-4">
             <label class="form-check-label">
-              <input
-                class="form-check-input border border-secondary rounded-0"
-                type="checkbox"
-                name="remember"
-                id="remember"
-                value="remember_me"
-              />
-              Ghi Nhớ Tôi</label
-            >
+              <input class="form-check-input border border-secondary rounded-0" type="checkbox" name="remember"
+                id="remember" value="remember_me" />
+              Ghi Nhớ Tôi</label>
           </div>
-          <button
-            class="submit btn col-12 py-2 mb-3 border border-secondary rounded-0"
-          >
+          <button class="submit btn col-12 py-2 mb-3 border border-secondary rounded-0">
             Đăng Nhập
           </button>
-          <router-link to="/"
-            ><button
-              class="btn btn-secondary col-12 btn_submit py-2 border border-secondary rounded-0"
-            >
+          <router-link to="/"><button
+              class="btn btn-secondary col-12 btn_submit py-2 border border-secondary rounded-0">
               Trang Chủ
-            </button></router-link
-          >
+            </button></router-link>
           <!-- <router-link to="/lecturer"
             ><button
               class="btn btn-secondary col-12 btn_submit py-2 border border-secondary rounded-0"
@@ -140,14 +124,17 @@ export default {
   border-top: 5px solid rgba(51, 73, 183, 0.814);
   border-bottom: 5px solid rgba(51, 73, 183, 0.814);
 }
+
 .slogan {
   background-color: rgba(51, 73, 183, 0.814);
 }
+
 .log-in {
   border: 2px solid rgba(51, 73, 183, 0.814);
   color: rgba(51, 73, 183, 0.814);
   font-weight: bold;
 }
+
 .submit {
   background-color: rgba(51, 73, 183, 0.814);
   color: white;

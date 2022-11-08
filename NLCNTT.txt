@@ -9,24 +9,24 @@ NIÊN LUẬN NGÀNH - WEBSITE ĐĂNG KÝ TTTT CHO KHOA CNTT&TT
 	+ Tạo lớp học phần
 	+ Xem dssv đăng ký
 	+ Quản lý tài khoản
-	+ Thống kê sinh viên đăng ký các học kỳ
+	+ Thống kê sinh viên đăng ký các học kỳ (*)
 - Lãnh đạo bộ môn:
-	+ Phân công gvhd cho từng sv ( không phải cho lớp học)
+	+ Phân công gvhd cho từng sv ( không phải cho lớp học) 
 	+ Xem dssv
-	+ Xem điểm sv, xem tiến độ sv
+	+ Xem điểm sv, xem tiến độ sv (*)
 - GVHD:
 	+ Xem dssv
-	+ Xem tiến độ (phiếu đánh giá từ công ty hàng tuần và tổng hợp để chấm điểm)
+	+ Xem tiến độ (phiếu đánh giá từ công ty hàng tuần và tổng hợp để chấm điểm)(*)
 	+ Chấm điểm cho từng sv
-- Phía cty:
-	+ Xem dssv của cty hd
-	+ Chấm điểm tiến độ hàng tuần thông qua phiếu đánh giá
-	+ Gửi phiếu đánh giá cuối cùng
+- Phía cbcty:
+	+ Xem dssv của cty hd(*)
+	+ Chấm điểm tiến độ hàng tuần thông qua phiếu đánh giá(*)
+	+ Gửi phiếu đánh giá cuối cùng(*)
 - SV:
 	+ Đăng ký
 	+ Xem GVHD
-	+ Nộp file báo cáo
-	+ Xem điểm
+	+ Nộp file báo cáo(*)
+	+ Xem điểm(*)
 
 * CSDL:
 - Colections: 

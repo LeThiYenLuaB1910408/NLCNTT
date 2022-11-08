@@ -5,7 +5,7 @@ import HomeFooter from "./components/Home/HomeFooter.vue";
 <template>
   <header class="position-sticky top-0">
     <div class="">
-      <router-view class="view header" name="header" ></router-view>
+      <router-view class="view header" name="header"></router-view>
     </div>
   </header>
 

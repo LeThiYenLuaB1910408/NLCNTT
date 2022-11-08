@@ -34,7 +34,6 @@ export default {
       } catch (error) {
         console.log(error);
       }
-      console.log(classPast);
     },
 
     refreshList() {
@@ -141,8 +140,6 @@ export default {
 </template>
 
 <style scoped>
-.breadcrumb-icon {
-}
 .card-recently {
   box-shadow: 0px 1px 2px 1px rgba(0, 0, 0, 0.5);
 }

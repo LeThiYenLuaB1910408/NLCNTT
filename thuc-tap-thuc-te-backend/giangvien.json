@@ -22,7 +22,7 @@
       "MSGV": "GV003",
       "HoTen": "Lê Thanh Phong",
       "Sdt": "123",
-      "MaLop": "DI19Y1A1",
+      "MaLop": ["DI19Y1A1"],
       "BoMon": "THUD",
       "TenDangNhap": "GV003"
     }

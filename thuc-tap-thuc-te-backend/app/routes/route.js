@@ -9,6 +9,15 @@ router.route("/QLTK")
 router.route("/QLSV")
     .get(controller.findAllStudent)
     .post(controller.createStudent);
+router.route("/QLGV")
+    .post(controller.createTeacher);
+router.route("/QLCB")
+    .get(controller.getAllCB)
+    .post(controller.createCB)
+
+router.route("/QLCB/:id")
+    .put(controller.updateCB)
+    .delete(controller.deleteCB);
 router.route("/QLLH")
     .get(controller.findAllClass)
     .put(controller.updateClass)

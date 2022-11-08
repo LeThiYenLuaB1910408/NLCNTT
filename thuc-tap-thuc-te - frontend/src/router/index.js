@@ -77,6 +77,16 @@ const routes = [
         component: () => import('@/views/QLSV.vue'),
     },
     {
+        path: "/QLCB",
+        name: "QLCB",
+        component: () => import('@/views/QLCB.vue'),
+    },
+    {
+        path: "/QLGV",
+        name: "QLGV",
+        component: () => import('@/views/QLGV.vue'),
+    },
+    {
         path: "/:pathMatch(.*)*",
         name: "notfound",
         component: () => import('@/views/NotFound.vue'),

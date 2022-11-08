@@ -66,12 +66,12 @@ export default {
         </div>
         <hr />
         <AdminQLSV :students="students" />
-        <div class="btn-group mb-3" role="group" aria-label="Basic ">
-          <button class="btn btn-outline-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample"
+        <div class="btn-group mb-3 border" role="group" aria-label="Basic ">
+          <button class="btn btn-outline-primary rounded-0" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample"
             aria-expanded="false" aria-controls="collapseExample">
             <i class="fa-solid fa-plus me-2"></i>Thêm sinh viên
           </button>
-          <button class="btn btn-outline-primary" type="button" @click="refreshList()">
+          <button class="btn btn-outline-primary rounded-0" type="button" @click="refreshList()">
             <i class="fa-solid fa-arrows-rotate fs-5"></i>
           </button>
         </div>
@@ -119,7 +119,7 @@ export default {
             </div>
 
             <div class="text-center mt-3">
-              <button class="btn btn-success border rounded-0" data-bs-toggle="collapse" href="#btncheck1"
+              <button class="btn btn-primary border rounded-0" data-bs-toggle="collapse" href="#btncheck1"
                 @click="addStudent(this.student)">
                 Thêm Sinh Viên
               </button>

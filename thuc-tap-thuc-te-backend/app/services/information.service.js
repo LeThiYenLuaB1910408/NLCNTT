@@ -45,24 +45,36 @@ class Information {
         console.log(payload);
         const congTy = this.extractCongTyData(payload.CongTy);
         const canBo = this.extractCanBoData({ ...payload.CanBo, TenCongTy: payload.CongTy.TenCongTy });
-        const resultCongTy = await this.CongTy.insertOne(
-            congTy
-        );
-        const resultCanBo = await this.CanBo.insertOne(
-            canBo
-        );
+        const resultCongTy = await this.CongTy.findOne({
+            'Email': congTy.Email
+        });
+        if(resultCongTy== null){
+            resultCongTy = await this.CongTy.insertOne(
+                congTy
+            );
+        }
+        const resultCanBo = await this.CanBo.findOne({
+            'Email': canBo.Email
+        });
+
+        if (resultCanBo == null) {
+            resultCanBo = await this.CanBo.insertOne(
+                canBo
+            );
+        }
+
         const thongTin = this.extractThongTinData(payload.ThongTin);
         const resultThongTin = await this.ThongTin.insertOne(
             thongTin
         );
-        
+
         const result = await this.Lop.updateOne(
             { _id: ObjectId(payload.classCurrent._id) },
-            { $push: { SinhVien: {MSSV:thongTin.MSSV, MSGV:'', MSCB:resultCanBo.insertedId, DiemSo:''} } }
-         )
-         console.log(result);
+            { $push: { SinhVien: { MSSV: thongTin.MSSV, MSGV: '', MSCB: resultCanBo.insertedId??resultCanBo._id, DiemSo: '' } } }
+        )
+        console.log(result);
 
-        return { resultCanBo, resultCongTy, resultThongTin ,result};
+        return { resultCanBo, resultCongTy, resultThongTin, result };
     }
 
 

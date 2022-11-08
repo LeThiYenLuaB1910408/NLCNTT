@@ -13,7 +13,7 @@ class QuanLyTaiKhoan {
         const tk = {
             _id: payload.TenDangNhap??payload._id,
             TenDangNhap: payload.TenDangNhap??payload._id,
-            MatKhau: payload.MatKhau??payload._id,
+            MatKhau: payload.TenDangNhap??payload._id,
             CapQuyen: payload.CapQuyen??"0"
         };
 
@@ -25,9 +25,7 @@ class QuanLyTaiKhoan {
     }
 
     async create(payload) {
-
         const tk = this.extractAccountData(payload);
-
         const result = await this.TaiKhoan.insertOne(
             tk
         );

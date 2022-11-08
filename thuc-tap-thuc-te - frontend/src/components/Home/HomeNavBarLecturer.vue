@@ -47,7 +47,7 @@ export default {
           style="word-spacing: 4px; font-weight: 700"
         >
           <li class="nav-item me-4">
-            <router-link to="/" class="nav-link text-light"
+            <router-link class="nav-link text-light"
               >TRANG CHỦ</router-link
             >
           </li>

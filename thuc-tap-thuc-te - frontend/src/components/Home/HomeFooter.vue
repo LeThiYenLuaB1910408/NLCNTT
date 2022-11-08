@@ -1,7 +1,7 @@
 <script setup></script>
 
 <template>
-  <div class="footer row mt-2 mb-2">
+  <div class="footer row mt-4 mb-2">
     <div class="link col-md-4 text-center">
       <i class="fa-solid fa-paperclip me-2"></i>
       <a
