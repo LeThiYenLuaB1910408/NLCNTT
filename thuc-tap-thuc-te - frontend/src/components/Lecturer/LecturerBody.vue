@@ -25,7 +25,8 @@ export default {
       this.getAll();
     }
   },
-  mounted() {
+  created() {
+    console.log(12345);
     this.getAll();
   }
 };

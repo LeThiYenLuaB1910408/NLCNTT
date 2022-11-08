@@ -53,14 +53,8 @@ export default {
         <div class="container content">
           <div class="row mb-5">
             <h5 class="my-4 form text-secondary">DANH SÁCH SINH VIÊN</h5>
-            <p>
-              <i class="fa-solid fa-clipboard-list me-2"></i>
-              <a class="" data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false"
-                aria-controls="collapseExample">
-                Danh sách sinh viên
-              </a>
-            </p>
-            <div class="collapse" id="collapseExample">
+            
+            <div >
               <div class="card card-body border border-dark rounded-0">
                 <table class="table">
                   <thead align="center">
@@ -70,9 +64,9 @@ export default {
                       <th scope="col">Họ và Tên</th>
                       <th scope="col">Mã lớp</th>
                       <th scope="col">Chuyên Ngành</th>
-                      <th scope="col">Tên Công Ty</th>
-                      <th scope="col">Điểm</th>
-                      <th scope="col">Thao tác</th>
+                      <th scope="col">Số Điện Thoại</th>
+
+                      <th scope="col"></th>
                     </tr>
                   </thead>
                   <tbody align="center">
@@ -82,18 +76,10 @@ export default {
                       <td>{{ student.SinhVienLop.HoTen }}</td>
                       <td>{{ student.SinhVienLop.MaLop }}</td>
                       <td>{{ student.SinhVienLop.ChuyenNganh }}</td>
-                      <td>{{ student.CanBo.TenCongTy }}</td>
-                      <td>
-                        <input type="text" v-if="student.SinhVien.DiemSo == ''" placeholder="Điểm chữ" v-model="student.Diem"/>
-                        <p v-else>{{ student.SinhVien.DiemSo
-                        }}</p>
-                      </td>
+                      <td>{{ student.SinhVienLop.Sdt }}</td>
+
                       <td class="text-center pt-2">
-                        <i @click="onChangeLecturer({ _id: student._id, MSSV: student.SinhVienLop._id, DiemSo: student.Diem })"
-                          class="fa-regular fa-floppy-disk fs-4 mt-1 text-secondary" style="cursor: pointer"></i>
-                        <i @click="student.SinhVien.DiemSo = ''"
-                          class="fa-regular fa-pen-to-square fs-5 mt-1 text-secondary ms-2" style="cursor: pointer"></i>
-                      </td>
+                        <router-link :to="`/canbo/${student.SinhVienLop._id}`">Xem thông tin</router-link ></td>
                     </tr>
                   </tbody>
                 </table>
@@ -101,46 +87,8 @@ export default {
             </div>
           </div>
         </div>
-        <div class="container past">
-          <div class="row mb-5">
-            <h5 class="my-4 bao-cao text-secondary">BÁO CÁO</h5>
-            <div class="row">
-              <div class="nop-bao-cao col-md-9">
-                <i class="fa-solid fa-file me-2"></i>
-                <a href="#" class="text-decoration-none">Nộp file báo cáo TTTT-CNTT</a>
-                <p>Lớp học phần CT47101</p>
-              </div>
-              <div class="check col-md-3">
-                <div class="form-check">
-                  <input class="form-check-input border border-dark rounded-0" type="checkbox" value=""
-                    id="flexCheckDefault">
-                  Ẩn
-                </div>
-                <i class="fa-solid fa-pen-to-square fs-5 me-1"></i>Edit
-              </div>
-              <div class="d-flex justify-content-end">
-                <div><i class="fa-solid fa-circle-plus me-2 fs-5"></i></div>
-                <div class="">Thêm hoạt động</div>
-              </div>
-            </div>
-          </div>
+        
         </div>
-        <div class="container topic">
-          <div class="row mb-5">
-            <h5 class="my-4 bao-cao text-secondary">CHỦ ĐỀ 3</h5>
-          </div>
-        </div>
-        <div class="container topic">
-          <div class="row mb-5">
-            <h5 class="my-4 bao-cao text-secondary">CHỦ ĐỀ 4</h5>
-          </div>
-        </div>
-        <div class="container topic">
-          <div class="row mb-5">
-            <h5 class="my-4 bao-cao text-secondary">CHỦ ĐỀ 5</h5>
-          </div>
-        </div>
-      </div>
       <div class="col-md-3 mt-5">
         <div class="container thong-bao py-2 mt-4">
           <div class="row p-3">

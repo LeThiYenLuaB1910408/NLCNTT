@@ -7,6 +7,8 @@ import StudentBody from "../components/Student/StudentBody.vue"
 import StudentBodyRegister from "../components/Student/StudentBodyRegister.vue";
 import LecturerBody from "../components/Lecturer/LecturerBody.vue";
 import LeaderBody from "../components/Lecturer/LeaderBody.vue";
+import CanBoBody from "../components/Lecturer/CanBoBody.vue";
+import InfoStudentBody from "../components/Lecturer/InfoStudentBody.vue";
 
 import { useAccountStore } from "@/stores/AccountStore";
 
@@ -62,6 +64,24 @@ const routes = [
     
     },
     {
+        path: "/canbo",
+        name: "canbo",
+        components:{
+            default: CanBoBody,
+            header: HomeHeaderLecturer
+        } 
+    
+    },
+    {
+        path: "/canbo/:id",
+        name: "detail",
+        components:{
+            default: InfoStudentBody,
+            header: HomeHeaderLecturer
+        } 
+    
+    },
+    {
         path: "/QLLH",
         name: "QLLH",
         component: () => import('@/views/QLLH.vue'),
@@ -98,14 +118,14 @@ const router = createRouter({
     routes,
 });
 
-// router.beforeEach((to, from, next)=> {
-//     const AccountStore = useAccountStore();
-//     if(!AccountStore.user.CapQuyen && to.name != 'login'){
-//         next({
-//             path: '/login',
-//             replace: true,
-//         })
-//     }
-//    next();
-// });
+router.beforeEach((to, from, next)=> {
+    const AccountStore = useAccountStore();
+    if(!AccountStore.user.CapQuyen && to.name != 'login'){
+        next({
+            path: '/login',
+            replace: true,
+        })
+    }
+   next();
+});
 export default router;

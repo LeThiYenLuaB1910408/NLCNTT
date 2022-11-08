@@ -45,7 +45,7 @@ export default {
               this.$router.push({ name: "leader" });
               break;
             case "2":
-              this.$router.push({ name: "lecturer" });
+              this.$router.push('/lecturer');
               break;
             case "3":
               this.$router.push({ name: "canbo" });

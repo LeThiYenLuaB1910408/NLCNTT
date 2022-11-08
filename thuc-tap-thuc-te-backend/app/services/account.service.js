@@ -43,24 +43,27 @@ class QuanLyTaiKhoan {
             MatKhau: data.MatKhau
         })
         var user={};
-        switch (acc.CapQuyen) {
-            case "0":
-                user = await this.SinhVien.findOne({"TenDangNhap": acc.TenDangNhap})
-                break;
-            case "1":
-                user = await this.GiangVien.findOne({"TenDangNhap": acc.TenDangNhap})
-                break;
-            case "2":
-                user = await this.GiangVien.findOne({"TenDangNhap": acc.TenDangNhap})
-                break;
-            case "3":
-                user = await this.CanBo.findOne({"TenDangNhap": acc.TenDangNhap})
-                break;
-
-            default:
-                break;
+        if(acc!=null){
+            switch (acc.CapQuyen) {
+                case "0":
+                    user = await this.SinhVien.findOne({"TenDangNhap": acc.TenDangNhap})
+                    break;
+                case "1":
+                    user = await this.GiangVien.findOne({"TenDangNhap": acc.TenDangNhap})
+                    break;
+                case "2":
+                    user = await this.GiangVien.findOne({"TenDangNhap": acc.TenDangNhap})
+                    break;
+                case "3":
+                    user = await this.CanBo.findOne({"TenDangNhap": acc.TenDangNhap})
+                    break;
+    
+                default:
+                    break;
+            }
+            return {...user,CapQuyen: acc.CapQuyen, tenDangNhap: acc.TenDangNhap};
         }
-        return {...user,CapQuyen: acc.CapQuyen, tenDangNhap: acc.TenDangNhap};
+        return null;
     }
 
     // async findById(id) {

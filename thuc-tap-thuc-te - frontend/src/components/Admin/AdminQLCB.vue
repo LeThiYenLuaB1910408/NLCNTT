@@ -77,7 +77,6 @@ export default {
     </table>
   </div>
 
-  <!-- Modal -->
   <div class="modal fade hide" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-scrollable">
       <div class="modal-content">

@@ -11,7 +11,9 @@ export default {
   },
   data() {
     return {
+      date: new Date(),
       classes: [],
+      classCurrent: [],
       class: {
         _id: "",
         MaLopTT: "",
@@ -39,8 +41,15 @@ export default {
     },
 
     async retrieveClasses() {
+      this.classCurrent = []
+      this.classPast = []
       try {
         this.classes = await LopHoc.getAll();
+        this.classes.map((element, index) => {
+          if (element.NienKhoa.startsWith(this.date.getFullYear().toString())) {
+            this.classCurrent.push(element);
+          }
+        });
       } catch (error) {
         console.log(error);
       }
@@ -50,7 +59,7 @@ export default {
       this.retrieveClasses();
     },
   },
-  mounted() {
+  created() {
     this.refreshList();
   },
 };
@@ -121,7 +130,9 @@ export default {
             </div>
           </div>
         </div>
-        <AdminQLLH :classes="classes" />
+
+        <AdminQLLH :classCurrent="this.classCurrent" :classes="classes" />
+
       </main>
     </div>
   </div>
