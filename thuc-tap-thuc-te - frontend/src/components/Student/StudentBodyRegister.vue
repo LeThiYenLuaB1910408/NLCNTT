@@ -91,16 +91,28 @@ export default {
         </div>
 
         <div class="container lop-hoc-phan">
-          <div class="row mb-5">
+          <div class="row mb-3">
             <h5 class="my-4 form text-secondary">THÔNG TIN LỚP HỌC PHẦN</h5>
-            <p>{{this.data.classCurrent!={}?this.data.classCurrent.GiangVien.HoTen:null}}</p>
+            <div class="row">
+              <p class="col-md-4"><span><strong>Lớp Học Phần:</strong></span>{{this.data.classCurrent.MaLopTT}} - {{this.data.classCurrent.ChuyenNganh}}</p>
+              <p class="col-md-6"><span><strong>Học Kì - Niên Khóa:</strong></span>{{this.data.classCurrent.HocKi}} {{this.data.classCurrent.NienKhoa}}</p>
+            </div>
+            <div class="row">
+              <p class="col-md-4"><span><strong>Giảng Viên Hướng Dẫn:</strong></span>{{this.data.classCurrent!={}?this.data.classCurrent.GiangVien.HoTen:null}}</p>
+              <p class="col-md-4"><span><strong><i class="fa-solid fa-phone me-2"></i></strong></span>{{this.data.classCurrent!={}?this.data.classCurrent.GiangVien.Sdt:null}}</p>
+            </div>
+            <div class="row">
+              <p class="col-md-4"><span><strong>Cán Bộ Hướng Dẫn:</strong></span>{{this.data.classCurrent!={}?this.data.classCurrent.CanBo.HoTen:null}}</p>
+              <p class="col-md-3"><span><strong><i class="fa-solid fa-phone me-2"></i></strong></span>{{this.data.classCurrent!={}?this.data.classCurrent.CanBo.Sdt:null}}</p>
+              <p class="col-md-4"><span><strong><i class="fa-regular fa-envelope"></i></strong></span>{{this.data.classCurrent!={}?this.data.classCurrent.CanBo.Email:null}}</p>
+            </div>
           </div>
         </div>
         <div class="container content">
-          <div class="row mb-5">
+          <div class="row mb-3">
             <h5 class="my-4 form text-secondary">FORM ĐĂNG KÝ NỘI DUNG THỰC TẬP</h5>
-            <div class="row">
-              <p class="fs-5 col-md-4">
+            <div class="row ms-2">
+              <p class="col-md-3">
                 <i class="fa-solid fa-file-import me-2"></i>Vui lòng nhập form
                 đăng ký:
               </p>
@@ -116,7 +128,7 @@ export default {
               >
                 ĐĂNG KÝ
               </a>
-              <h5 class="text-danger col-md-2 pt-1" v-else>Đã đăng ký</h5>
+              <h6 class="text-danger col-md-2 mt-1" v-else>Đã đăng ký</h6>
             </div>
 
             <div v-if="!this.registered" class="collapse" id="collapseExample">
@@ -299,9 +311,23 @@ export default {
           </div>
         </div>
         <div class="container past">
-          <div class="row mb-5">
+          <div class="row mb-2">
             <h5 class="my-4 bao-cao text-secondary">BÁO CÁO</h5>
           </div>
+          <div class="row ms-2">
+              <div class="nop-bao-cao col-md-9">
+                <i class="fa-solid fa-file me-2"></i>
+                <a href="#" class="text-decoration-none">File đánh giá tổng kết</a>
+                <p>Lớp học phần {{ this.data.classCurrent.MaLopTT }} - {{ this.data.classCurrent.ChuyenNganh }}</p>
+              </div>
+            </div>
+          <div class="row ms-2">
+              <div class="nop-bao-cao col-md-9">
+                <i class="fa-solid fa-file me-2"></i>
+                <a href="#" class="text-decoration-none">Nộp file báo cáo TTTT - {{ this.data.classCurrent.ChuyenNganh }}</a>
+                <p>Lớp học phần {{ this.data.classCurrent.MaLopTT }} - {{ this.data.classCurrent.ChuyenNganh }}</p>
+              </div>
+            </div>
         </div>
       </div>
       <div class="col-md-3 mt-5">

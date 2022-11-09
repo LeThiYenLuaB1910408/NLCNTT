@@ -2,9 +2,11 @@
   {
     "MaLopTT": "CT471",
     "HocKi": "3",
-    "NienKhoa": "2019-2020",
+    "NienKhoa": "2022-2023",
     "ChuyenNganh": "CNTT",
-    "SinhVien": []
+    "SinhVien": [
+      {"MSSV": null,"MSGV":null,"MSCB":null,"DiemSo":null}
+    ]
   },
   {
     "MaLopTT": "CT475",

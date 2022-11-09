@@ -2,7 +2,7 @@
 import LopHoc from '@/services/class';
 
 import { useAccountStore } from "@/stores/AccountStore";
-
+import axios from 'axios'
 export default {
 
   data() {
@@ -11,8 +11,9 @@ export default {
     return {
       date: new Date(),
       students: [],
-      selected: "",
-      accStore
+      selected: null,
+      accStore,
+      selectedFile: ""
     };
   },
   methods: {
@@ -23,10 +24,33 @@ export default {
     async onChangeLecturer(data) {
       await LopHoc.update(data)
       this.getAll();
-    }
+      this.selected.SinhVien.DiemSo = data.DiemSo;
+    },
+    handleChangeFile(e) {
+      const selectedFile = e.target.files[0]; // accessing file
+      this.selectedFile = selectedFile;
+    },
+    submitFile() {
+      const formData = new FormData();
+      formData.append("file", this.selectedFile);
+      console.log(formData.get('file'));
+      console.log(this.selectedFile);
+      axios.post('/api/single-file',
+        formData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        }
+      ).then(res => {
+          console.log(res);
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    },
   },
   created() {
-    console.log(12345);
     this.getAll();
   }
 };
@@ -76,7 +100,6 @@ export default {
                       <th scope="col">Mã lớp</th>
                       <th scope="col">Chuyên Ngành</th>
                       <th scope="col">Tên Công Ty</th>
-                      <th scope="col">Điểm</th>
                       <th scope="col">Thao tác</th>
                     </tr>
                   </thead>
@@ -88,32 +111,115 @@ export default {
                       <td>{{ student.SinhVienLop.MaLop }}</td>
                       <td>{{ student.SinhVienLop.ChuyenNganh }}</td>
                       <td>{{ student.CanBo.TenCongTy }}</td>
-                      <td>
-                        <input type="text" v-if="student.SinhVien.DiemSo == ''" placeholder="Điểm chữ" v-model="student.Diem"/>
-                        <p v-else>{{ student.SinhVien.DiemSo
-                        }}</p>
-                      </td>
-                      <td class="text-center pt-2">
-                        <i @click="onChangeLecturer({ _id: student._id, MSSV: student.SinhVienLop._id, DiemSo: student.Diem })"
-                          class="fa-regular fa-floppy-disk fs-4 mt-1 text-secondary" style="cursor: pointer"></i>
-                        <i @click="student.SinhVien.DiemSo = ''"
-                          class="fa-regular fa-pen-to-square fs-5 mt-1 text-secondary ms-2" style="cursor: pointer"></i>
+                      <td class="text-center">
+                        <i class="fa-solid fa-circle-info fs-5 mt-1 text-secondary" style="cursor: pointer"
+                          data-bs-toggle="modal" data-bs-target="#exampleModal" @click="this.selected = student"></i>
                       </td>
                     </tr>
                   </tbody>
                 </table>
               </div>
             </div>
+            <div class="modal fade hide " id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+              aria-hidden="true">
+              <div class="modal-dialog modal-dialog-scrollable modal-lg">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div v-if="this.selected" class="modal-body">
+                    <h5 class="text-center mb-4">THÔNG TIN SINH VIÊN</h5>
+                    <div class="row">
+                      <div class="col-3">
+                        <p><strong>MSSV:</strong> {{ this.selected.SinhVienLop._id }}</p>
+                      </div>
+                      <div class="col-4">
+                        <p><strong>Họ Tên:</strong> {{ this.selected.SinhVienLop.HoTen }}</p>
+                      </div>
+                      <div class="col-5">
+                        <p><strong>Số Điện Thoại:</strong> {{ this.selected.SinhVienLop.Sdt }}</p>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-3">
+                        <p><strong>Mã Lớp:</strong> {{ this.selected.SinhVienLop.MaLop }}</p>
+                      </div>
+                      <div class="col-4">
+                        <p><strong>Chuyên Ngành:</strong> {{ this.selected.SinhVienLop.ChuyenNganh }}</p>
+                      </div>
+                      <div class="col-5">
+                        <p><strong>Học Kỳ-Niên Khóa:</strong> {{ this.selected.HocKi }} {{ this.selected.NienKhoa }}</p>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-3">
+                        <p><strong>Công Ty:</strong> {{ this.selected.CanBo.TenCongTy }}</p>
+                      </div>
+                      <div class="col-6">
+                        <p><strong>Cán Bộ Công Ty:</strong> {{ this.selected.CanBo.HoTen }}</p>
+                      </div>
+                    </div>
+                    <div class="row mb-3">
+                      <div class="d-flex align-items-center">
+                        <div class="col-md-5">
+                          <strong class="me-2">Chấm Điểm:</strong>
+                          <input v-if="this.selected.SinhVien.DiemSo == null" type="text"
+                            v-model="this.selected.Diem" />
+                          <span class="m-0" v-else> {{ this.selected.SinhVien.DiemSo }}</span>
+                        </div>
+
+                        <div class="d-flex">
+                          <i @click="onChangeLecturer({ _id: this.selected._id, MSSV: this.selected.SinhVienLop._id, DiemSo: this.selected.Diem })"
+                            class="fa-regular fa-floppy-disk fs-4 mt-1 text-secondary" style="cursor: pointer"></i>
+                          <i @click="this.selected.SinhVien.DiemSo = null"
+                            class="fa-regular fa-pen-to-square fs-5 mt-1 text-secondary ms-2"
+                            style="cursor: pointer"></i>
+                        </div>
+                      </div>
+                    </div>
+
+                    <p><strong>File Công Việc:</strong> {{ this.selected.SinhVien.FileCongViec ?? 'Chưa cập nhật' }}
+                    </p>
+                    <p><strong>File Báo Cáo Từ Sinh Viên:</strong> {{ this.selected.SinhVien.FileBaoCao ?? 'Chưa cập nhật' }}
+                    </p>
+                    <p><strong>File Đánh Giá Từ Công Ty:</strong> {{ this.selected.SinhVien.FileCongViec ?? 'Chưa cập                    nhật' }}
+                    </p>
+
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
         <div class="container past">
           <div class="row mb-5">
+            <input type="file" @change="handleChangeFile">
+            <button @click="submitFile()" style="width:100px">Submit</button>
             <h5 class="my-4 bao-cao text-secondary">BÁO CÁO</h5>
             <div class="row">
               <div class="nop-bao-cao col-md-9">
                 <i class="fa-solid fa-file me-2"></i>
-                <a href="#" class="text-decoration-none">Nộp file báo cáo TTTT-CNTT</a>
-                <p>Lớp học phần CT47101</p>
+                <a href="#" class="text-decoration-none">File đánh giá tổng kết</a>
+                <p>Lớp học phần {{ this.students[0].MaLopTT }} - {{ this.students[0].ChuyenNganh }}</p>
+              </div>
+              <div class="check col-md-3">
+                <div class="form-check">
+                  <input class="form-check-input border border-dark rounded-0" type="checkbox" value=""
+                    id="flexCheckDefault">
+                  Ẩn
+                </div>
+                <i class="fa-solid fa-pen-to-square fs-5 me-1"></i>Edit
+              </div>
+            </div>
+            <div class="row">
+              <div class="nop-bao-cao col-md-9">
+                <i class="fa-solid fa-file me-2"></i>
+                <a href="#" class="text-decoration-none">Nộp file báo cáo TTTT - {{ this.students[0].ChuyenNganh }}</a>
+                <p>Lớp học phần {{ this.students[0].MaLopTT }} - {{ this.students[0].ChuyenNganh }}</p>
               </div>
               <div class="check col-md-3">
                 <div class="form-check">

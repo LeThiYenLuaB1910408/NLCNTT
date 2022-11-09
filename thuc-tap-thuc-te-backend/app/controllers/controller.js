@@ -295,15 +295,22 @@ exports.updateCB = async (req, res, next) => {
 //         );
 //     }
 // };
-// exports.findAllFavorite = async(_req, res, next) => {
-//     try{
-//         const contactService = new ContactService(MongoDB.client);
-//         const document = await contactService.findFavorite();
-//         return res.send(document);
-//     }catch(error){
-//         return next(
-//             new ApiError(500, "An error while retrieving favorite contacts")
-//         );
-//     }
-// };
+exports.upfile = async(req, res, next) => {
+    if (!req.files) {
+        console.log(1);
+        return res.status(500).send({ msg: "file is not found" })
+    }
+        // accessing the file
+    const myFile = req.files.file;
+    console.log(__dirname);
+    console.log(myFile);
+    myFile.mv(`./fileUpload/${myFile.name}`, function (err) {
+        if (err) {
+            console.log(err)
+            return res.status(500).send({ msg: "Error occured" });
+        }
+        // returing the response with file path and name
+        return res.send({name: myFile.name, path: `/${myFile.name}`});
+    });
+};
 

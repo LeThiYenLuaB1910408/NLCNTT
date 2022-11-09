@@ -34,6 +34,8 @@ router.route("/allLecturer")
     .get(controller.getAllLecturer);
 
 
+router.route("/single-file")
+    .post(controller.upfile);
 
 
 module.exports = router;

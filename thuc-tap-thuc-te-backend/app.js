@@ -1,5 +1,6 @@
 const express = require("express");
 const cors = require("cors");
+const fileUpload = require('express-fileupload');
 const contactsRouter = require("./app/routes/route");
 const ApiError = require("./app/api-error");
 
@@ -7,6 +8,7 @@ const app = express();
 
 app.use(cors());
 app.use(express.json());
+app.use(fileUpload());
 app.use("/api", contactsRouter);
 
 // handle 404 response

@@ -1,9 +1,40 @@
 [
-    {
-      "MSSV": null,
+  {
+    "MaLopTT": null,
+    "BaoCao":[
+      {
+        "TenBaoCao": null,
+        "MoTa":null,
+        "TrangThai":null,
+        "BaiNop":[
+          {
+            "MSSV":null, 
+            "File":null
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "FileGiaoViec": {
+      "MoTa": null,
       "File": null,
-      "PhieuDanhGiaTongKet": null
+      "TrangThai":null
+    },
+    "FileBaoCao": {
+      "MoTa": null,
+      "File": null,
+      "TrangThai":null
+    },
+    "PhieuDanhGiaTongKet": {
+      "MoTa": null,
+      "File": null,
+      "TrangThai":null
     }
-    
+  }
 ]
-  
+
+
+
+
+
