@@ -5,7 +5,7 @@
   "main": "server.js",
   "scripts": {
     "start": "nodemon server.js",
-    "push": "cd .. && git add . && git commit -m 'update' && git push origin master"
+    "push": "cd .. && git add . && git commit -m update && git push origin master"
   },
   "author": "Le Thi Yen Lua",
   "license": "ISC",
