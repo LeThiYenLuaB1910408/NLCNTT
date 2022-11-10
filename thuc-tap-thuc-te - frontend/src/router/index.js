@@ -73,7 +73,7 @@ const routes = [
     
     },
     {
-        path: "/canbo/:id",
+        path: "/canbo/:class/:id",
         name: "detail",
         components:{
             default: InfoStudentBody,

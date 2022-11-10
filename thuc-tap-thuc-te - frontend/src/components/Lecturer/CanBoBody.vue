@@ -79,7 +79,7 @@ export default {
                       <td>{{ student.SinhVienLop.Sdt }}</td>
 
                       <td class="text-center pt-2">
-                        <router-link :to="`/canbo/${student.SinhVienLop._id}`">Xem thông tin</router-link ></td>
+                        <router-link :to="`/canbo/${student._id}/${student.SinhVienLop._id}`">Xem thông tin</router-link ></td>
                     </tr>
                   </tbody>
                 </table>

@@ -24,6 +24,12 @@ class GiangVien {
     async updateCB(id,data){
         return (await this.api.put(`/QLCB/${id}`,data)).data;
     }
+    async deleteGV(id){
+        return (await this.api.delete(`/QLGV/${id}`)).data;
+    }
+    async updateGV(id,data){
+        return (await this.api.put(`/QLGV/${id}`,data)).data;
+    }
     // async createAccountCB(data) {
     //     return (await this.api.post('/QLCB', data)).data;
     // }

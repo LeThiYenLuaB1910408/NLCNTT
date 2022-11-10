@@ -22,20 +22,49 @@ export default {
         };
     },
     methods: {
+        // async addTeacher(data) {
+        //     try {
+        //         await GiangVien.create(data);
+        //         this.refreshList();
+        //         this.teacher = {
+        //             _id: "",
+        //             HoTen: "",
+        //             Sdt: "",
+        //             BoMon: "",
+        //             MaLop: [],
+        //             CapQuyen: "2"
+        //         };
+        //     } catch (error) {
+        //         console.log(error);
+        //     }
+        // },
+        async deleteTeacher(id) {
+            if (confirm("Bạn muốn xóa Giảng Viên này?")) {
+                try {
+                    const result = await GiangVien.deleteGV(id);
+                    alert(result.message)
+                    this.retrieveTeachers();
+                }
+                catch (error) { alert(error); }
+            }
+        },
+        async updateTeacher(id, data) {
+            try {
+                const result = await GiangVien.updateGV(id, data);
+                alert(result.message)
+                this.retrieveTeachers();
+            }
+            catch (error) {
+                alert(error);
+            }
+        },
         async addTeacher(data) {
             try {
                 await GiangVien.create(data);
-                this.refreshList();
-                this.teacher = {
-                    _id: "",
-                    HoTen: "",
-                    Sdt: "",
-                    BoMon: "",
-                    MaLop: [],
-                    CapQuyen: "2"
-                };
-            } catch (error) {
-                console.log(error);
+                this.retrieveTeachers();
+            }
+            catch (error) {
+                alert(error);
             }
         },
         async retrieveTeachers() {
@@ -66,8 +95,7 @@ export default {
                     <h2 class="my-3">Quản Lý Giảng Viên</h2>
                 </div>
                 <hr />
-                <AdminQLGV :teachers="teachers" />
-                <div class="btn-group mb-3 border" role="group" aria-label="Basic ">
+                <!-- <div class="btn-group mb-3 border" role="group" aria-label="Basic ">
                     <button class="btn btn-outline-primary rounded-0" type="button" data-bs-toggle="collapse"
                         data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
                         <i class="fa-solid fa-plus me-2"></i>Thêm giảng viên
@@ -75,8 +103,8 @@ export default {
                     <button class="btn btn-outline-primary rounded-0" type="button" @click="refreshList()">
                         <i class="fa-solid fa-arrows-rotate fs-5"></i>
                     </button>
-                </div>
-                <div class="collapse" id="collapseExample">
+                </div> -->
+                <!-- <div class="collapse" id="collapseExample">
                     <div class="container w-50 border border-dark py-4">
                         <div class="header text-center">
                             <h5>THÔNG TIN GIẢNG VIÊN</h5>
@@ -126,7 +154,9 @@ export default {
                             </button>
                         </div>
                     </div>
-                </div>
+                </div> -->
+                <AdminQLGV :teachers="teachers" @delete:teachers="deleteTeacher" @add:teachers="addTeacher"
+                    @update:teachers="updateTeacher" />
             </main>
         </div>
     </div>

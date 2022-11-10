@@ -6,6 +6,7 @@
         "TenBaoCao": null,
         "MoTa":null,
         "TrangThai":null,
+        "QuyenHienThi":[],
         "BaiNop":[
           {
             "MSSV":null, 
@@ -14,23 +15,6 @@
         ]
       }
     ]
-  },
-  {
-    "FileGiaoViec": {
-      "MoTa": null,
-      "File": null,
-      "TrangThai":null
-    },
-    "FileBaoCao": {
-      "MoTa": null,
-      "File": null,
-      "TrangThai":null
-    },
-    "PhieuDanhGiaTongKet": {
-      "MoTa": null,
-      "File": null,
-      "TrangThai":null
-    }
   }
 ]
 

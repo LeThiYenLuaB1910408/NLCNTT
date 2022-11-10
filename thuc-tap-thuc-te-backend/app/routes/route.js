@@ -14,10 +14,12 @@ router.route("/QLGV")
 router.route("/QLCB")
     .get(controller.getAllCB)
     .post(controller.createCB)
-
 router.route("/QLCB/:id")
     .put(controller.updateCB)
     .delete(controller.deleteCB);
+router.route("/QLGV/:id")
+    .put(controller.updateGV)
+    .delete(controller.deleteGV);
 router.route("/QLLH")
     .get(controller.findAllClass)
     .put(controller.updateClass)
@@ -34,8 +36,15 @@ router.route("/allLecturer")
     .get(controller.getAllLecturer);
 
 
-router.route("/single-file")
-    .post(controller.upfile);
+// router.route("/single-file")
+//     .post(controller.upfile);
+
+router.route("/report/:id")
+    .post(controller.createReport)
+    .get(controller.allReport);
+router.route("/reports/:class")
+    .post(controller.uploadFile)
+
 
 
 module.exports = router;

@@ -44,10 +44,7 @@ class CanBo {
         const filter = {
             _id: ObjectId.isValid(id) ? ObjectId(id) : null
         };
-        console.log(id);
-        console.log(payload);
         const update = this.extractCBData(payload)
-        console.log(update);
         const result = await this.CanBo.findOneAndUpdate(
             filter,
             {

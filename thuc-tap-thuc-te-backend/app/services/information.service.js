@@ -48,7 +48,7 @@ class Information {
         const resultCongTy = await this.CongTy.findOne({
             'Email': congTy.Email
         });
-        if(resultCongTy== null){
+        if (resultCongTy == null) {
             resultCongTy = await this.CongTy.insertOne(
                 congTy
             );
@@ -70,7 +70,7 @@ class Information {
 
         const result = await this.Lop.updateOne(
             { _id: ObjectId(payload.classCurrent._id) },
-            { $push: { SinhVien: { MSSV: thongTin.MSSV, MSGV: '', MSCB: resultCanBo.insertedId??resultCanBo._id, DiemSo: '' } } }
+            { $push: { SinhVien: { MSSV: thongTin.MSSV, MSGV: '', MSCB: resultCanBo.insertedId ?? resultCanBo._id, DiemSo: '' } } }
         )
         console.log(result);
 

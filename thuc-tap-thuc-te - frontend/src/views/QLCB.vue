@@ -93,7 +93,7 @@ export default {
         <hr />
         <AdminQLCB :teachers="teachers" @delete:teachers="deleteTeacher" @add:teachers="addTeacher"
           @update:teachers="updateTeacher" />
-        <div class="btn-group mb-3 border" role="group" aria-label="Basic ">
+        <!-- <div class="btn-group mb-3 border" role="group" aria-label="Basic ">
           <button class="btn btn-outline-primary rounded-0" type="button" data-bs-toggle="collapse"
             data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
             <i class="fa-solid fa-plus me-2"></i>Thêm tài khoản cán bộ
@@ -101,8 +101,8 @@ export default {
           <button class="btn btn-outline-primary rounded-0" type="button" @click="refreshList()">
             <i class="fa-solid fa-arrows-rotate fs-5"></i>
           </button>
-        </div>
-        <div class="collapse" id="collapseExample">
+        </div> -->
+        <!-- <div class="collapse" id="collapseExample">
           <div class="container w-50 border border-dark py-4">
             <div class="header text-center">
               <h5>THÔNG TIN TÀI KHOẢN CÁN BỘ</h5>
@@ -127,7 +127,7 @@ export default {
               </button>
             </div>
           </div>
-        </div>
+        </div> -->
       </main>
     </div>
   </div>

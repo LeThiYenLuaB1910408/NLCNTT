@@ -85,13 +85,13 @@ class QuanLyTaiKhoan {
     //     return result.value;
     // }
 
-    // async delete(id) {
-    //     const result = await this.Contact.findOneAndDelete({
-    //         _id: ObjectId.isValid(id) ? new ObjectId(id) : null,
-    //     });
+    async delete(id) {
+        const result = await this.TaiKhoan.findOneAndDelete({
+            _id: id,
+        });
 
-    //     return result.value;
-    // }
+        return result.value;
+    }
     // async findFavorite() {
     //     return await this.find({ favorite: true });
     // }

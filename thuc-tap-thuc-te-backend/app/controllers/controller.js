@@ -6,6 +6,9 @@ const QuanLyLopHoc = require("../services/class.service");
 const Information = require("../services/information.service");
 const Lecturer = require("../services/lecturer.service");
 const CanBo = require("../services/canbo.service");
+const Report = require("../services/report.service");
+const { ObjectId } = require("mongodb");
+
 
 exports.createClass = async (req, res, next) => {
     try {
@@ -60,7 +63,33 @@ exports.createCB = async (req, res, next) => {
         );
     }
 };
+exports.createReport = async (req, res, next) => {
+    try {
+        
+        const quanLyBaoCao = new Report(MongoDB.client);
+        const rp = await quanLyBaoCao.createReport(req.params.id,req.body);
+        return res.send(rp);
+    } catch (error) {
+        return next(
+            new ApiError(500, "An error occurred while creating the contact")
+        );
+    }
+};
 
+exports.allReport = async (req, res, next) => {
+    let documents = [];
+
+    try {
+        const quanLyBaoCao = new Report(MongoDB.client);
+        console.log(req.params.id);
+        documents = await quanLyBaoCao.findOne(req.params.id);
+    } catch (error) {
+        return next(
+            new ApiError(500, "An error")
+        );
+    }
+    return res.send(documents);
+};
 exports.findAllAccount = async (req, res, next) => {
     let documents = [];
 
@@ -264,6 +293,22 @@ exports.deleteCB = async (req, res, next) => {
         );
     }
 };
+exports.deleteGV = async (req, res, next) => {
+    try {
+        const quanLyGiangVien = new Lecturer(MongoDB.client);
+        const quanLyTaiKhoan = new QuanLyTaiKhoan(MongoDB.client);
+        const document = await quanLyGiangVien.delete(req.params.id);
+        await quanLyTaiKhoan.delete(req.params.id);
+        if (!document) {
+            return next(new ApiError(404, "Contact not found"));
+        }
+        return res.send({ message: "Xóa Giảng Viên Thành Công!!!" });
+    } catch (error) {
+        return next(
+            new ApiError(500, `Could not delete contact with id=${req.params.id}`)
+        );
+    }
+};
 exports.updateCB = async (req, res, next) => {
     if (Object.keys(req.body).length === 0) {
         return next(new ApiError(400, "Data to update can not be empty"));
@@ -284,6 +329,24 @@ exports.updateCB = async (req, res, next) => {
         );
     }
 };
+exports.updateGV = async (req, res, next) => {
+    if (Object.keys(req.body).length === 0) {
+        return next(new ApiError(400, "Data to update can not be empty"));
+    }
+
+    try {
+        const quanLyGiangVien = new Lecturer(MongoDB.client);
+        const document = await quanLyGiangVien.update(req.params.id, req.body);
+        if (!document) {
+            return next(new ApiError(404, "Contact not found"));
+        }
+        return res.send({ message: "Lecturer was updated successfully" });
+    } catch (error) {
+        return next(
+            new ApiError(500, `Error updating class with id`)
+        );
+    }
+};
 // exports.deleteAll = async(_req, res, next) => {
 //     try{
 //         const contactService = new ContactService(MongoDB.client);
@@ -295,22 +358,13 @@ exports.updateCB = async (req, res, next) => {
 //         );
 //     }
 // };
-exports.upfile = async(req, res, next) => {
+exports.uploadFile = async(req, res, next) => {
     if (!req.files) {
-        console.log(1);
         return res.status(500).send({ msg: "file is not found" })
     }
-        // accessing the file
-    const myFile = req.files.file;
-    console.log(__dirname);
-    console.log(myFile);
-    myFile.mv(`./fileUpload/${myFile.name}`, function (err) {
-        if (err) {
-            console.log(err)
-            return res.status(500).send({ msg: "Error occured" });
-        }
-        // returing the response with file path and name
-        return res.send({name: myFile.name, path: `/${myFile.name}`});
-    });
+    const quanLyBaoCao = new Report(MongoDB.client);
+    const documents = await quanLyBaoCao.updateFile(req.params.class,req.files.file, req.body);
+
+    res.send(documents)
 };
 

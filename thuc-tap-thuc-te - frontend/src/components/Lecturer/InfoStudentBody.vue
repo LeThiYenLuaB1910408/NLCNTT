@@ -1,6 +1,5 @@
 <script>
-import LopHoc from '@/services/class';
-
+import Report from '@/services/report';
 import { useAccountStore } from "@/stores/AccountStore";
 
 export default {
@@ -9,21 +8,31 @@ export default {
     const accStore = useAccountStore();
 
     return {
-      date: new Date(),
-      students: [],
-      selected: "",
-      accStore
+      reportCanBo: null,
+      accStore,
+      reports: null,
+      selected:null,
+      fileSelected:null
     };
   },
   methods: {
     async getAll() {
-      this.students = await LopHoc.getAllStudent();
-      this.students = this.students.filter(e => e.SinhVien.MSCB == this.accStore.user._id)
+      this.reports = await Report.getAll(this.$route.params.class)
+      this.reportCanBo = this.reports.BaoCao.filter((e) => e.QuyenHienThi.includes(this.accStore.user.CapQuyen))
+      console.log(this.reportCanBo);
     },
-    async onChangeLecturer(data) {
-      await LopHoc.update(data)
-      this.getAll();
-    }
+    onChangeFile(e) {
+      const selectedFile = e.target.files[0]; // accessing file
+      this.selectedFile = selectedFile;
+    },
+    async submitFile() {
+      const formData = new FormData();
+      formData.append("file", this.selectedFile);
+      formData.append("TenBaoCao", this.selected.TenBaoCao);
+      formData.append("MSSV", this.$route.params.id);
+      const res = await Report.submitFile(this.$route.params.class,formData)
+      console.log(res);
+    },
   },
   mounted() {
     this.getAll();
@@ -64,6 +73,19 @@ export default {
             <p class="text-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
               <i class="fa-solid fa-file me-2 text-dark"></i>Thêm file giao việc
             </p>
+            <div v-for="(e, i) in this.reportCanBo" class="row">
+              <div class="nop-bao-cao col-md-9">
+                <i class="fa-solid fa-file me-2"></i>
+                <a href="#" class="text-decoration-none" data-bs-toggle="modal" data-bs-target="#exampleModal"
+                @click="this.selected=e">{{ e.TenBaoCao }}</a>
+                <p>{{ e.MoTa }}</p>
+                <div v-for="(e,i) in e.BaiNop" v-if="e.MSSV==this.$route.params.id">
+                  <i class="fa-solid fa-file me-2"></i>
+                  <span >
+                    {{e.File}}
+                  </span>
+                </div>
+              </div></div>
             <div class="modal fade hide" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
               aria-hidden="true">
               <div class="modal-dialog modal-dialog-centered">
@@ -71,24 +93,24 @@ export default {
                   <div class="modal-header">
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                   </div>
-                  <div class="modal-body">
+                  <div class="modal-body" v-if="this.selected!=null">
                     <div class="container py-4 ms-0">
                       <div class="header text-center">
                         <h5>THÔNG TIN GIAO VIỆC</h5>
                       </div>
                       <div class="mb-3 mt-3">
                         <label for="lh" class="form-label">Mô tả công việc:</label>
-                        <input type="text" class="form-control border rounded-0" id="lh" placeholder="" name="lh" />
+                        <input type="text" class="form-control border rounded-0" v-model="this.selected.MoTa" />
                       </div>
                       <div class="mb-3 mt-3">
                         <label for="lh" class="form-label">File giao việc chi tiết:</label>
-                        <input type="file" class="form-control border rounded-0" />
+                        <input type="file" class="form-control border rounded-0" @change="onChangeFile" />
                       </div>
                     </div>
                   </div>
                   <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
-                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Xác nhận</button>
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal" @click="submitFile">Xác nhận</button>
                   </div>
                 </div>
               </div>
@@ -96,60 +118,7 @@ export default {
           </div>
         </div>
 
-        <div class="container past">
-          <div class="row mb-5">
-            <h5 class="my-4 bao-cao text-secondary">PHIẾU ĐÁNH GIÁ CUỐI CÙNG</h5>
-            <div class="row">
-              <div class="nop-bao-cao col-md-9">
-                <i class="fa-solid fa-file me-2"></i>
-                <a href="#" class="text-decoration-none" data-bs-toggle="modal" data-bs-target="#fileBaoCao">Gửi file
-                  đánh giá cuối cùng</a>
-                <div class="modal fade hide" id="fileBaoCao" tabindex="-1" aria-labelledby="exampleModalLabel"
-                  aria-hidden="true">
-                  <div class="modal-dialog modal-dialog-centered">
-                    <div class="modal-content">
-                      <div class="modal-header">
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                      </div>
-                      <div class="modal-body">
-                        <div class="container py-4 ms-0">
-                          <div class="header text-center">
-                            <h5>FILE ĐÁNH GIÁ</h5>
-                          </div>
-                          <div class="mb-3 mt-3">
-                            <label for="lh" class="form-label">Mô tả công việc:</label>
-                            <input type="text" class="form-control border rounded-0" id="lh" placeholder="" name="lh" />
-                          </div>
-                          <div class="mb-3 mt-3">
-                            <label for="lh" class="form-label">File giao việc chi tiết:</label>
-                            <input type="file" class="form-control border rounded-0" />
-                          </div>
-                        </div>
-                      </div>
-                      <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
-                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Xác nhận</button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="check col-md-3">
-                <div class="form-check">
-                  <input class="form-check-input border border-dark rounded-0" type="checkbox" value=""
-                    id="flexCheckDefault">
-                  Ẩn
-                </div>
-                <i class="fa-solid fa-pen-to-square fs-5 me-1"></i>Edit
-              </div>
-              <div class="d-flex justify-content-end">
-                <div><i class="fa-solid fa-circle-plus me-2 fs-5"></i></div>
-                <div class="">Thêm hoạt động</div>
-              </div>
-            </div>
-          </div>
         </div>
-      </div>
 
       <div class="col-md-3 mt-5">
         <div class="container thong-bao py-2 mt-4">

@@ -1,5 +1,6 @@
 <script>
 import LopHoc from '@/services/class';
+import Report from '@/services/report';
 
 import { useAccountStore } from "@/stores/AccountStore";
 import axios from 'axios'
@@ -13,12 +14,21 @@ export default {
       students: [],
       selected: null,
       accStore,
-      selectedFile: ""
+      selectedFile: "",
+      reports: null,
+      dataCreateReport: {
+        MaLopTT: null,
+        BaoCao: {
+          QuyenHienThi: []
+        }
+      }
     };
   },
   methods: {
     async getAll() {
       this.students = await LopHoc.getAllStudent();
+      this.reports = await Report.getAll(this.students[0]._id)
+      console.log(this.reports);
       this.students = this.students.filter(e => e.SinhVien.MSGV == this.accStore.user._id)
     },
     async onChangeLecturer(data) {
@@ -26,6 +36,19 @@ export default {
       this.getAll();
       this.selected.SinhVien.DiemSo = data.DiemSo;
     },
+
+    async handleAddReport() {
+      this.dataCreateReport.MaLopTT = this.students[0]._id;
+      await Report.create(this.students[0]._id, this.dataCreateReport)
+      this.reports = await Report.getAll(this.students[0]._id)
+      this.dataCreateReport = {
+        MaLopTT: null,
+        BaoCao: {
+          QuyenHienThi: []
+        }
+      }
+    },
+
     handleChangeFile(e) {
       const selectedFile = e.target.files[0]; // accessing file
       this.selectedFile = selectedFile;
@@ -43,8 +66,8 @@ export default {
           }
         }
       ).then(res => {
-          console.log(res);
-        })
+        console.log(res);
+      })
         .catch(err => {
           console.log(err);
         });
@@ -178,13 +201,6 @@ export default {
                       </div>
                     </div>
 
-                    <p><strong>File Công Việc:</strong> {{ this.selected.SinhVien.FileCongViec ?? 'Chưa cập nhật' }}
-                    </p>
-                    <p><strong>File Báo Cáo Từ Sinh Viên:</strong> {{ this.selected.SinhVien.FileBaoCao ?? 'Chưa cập nhật' }}
-                    </p>
-                    <p><strong>File Đánh Giá Từ Công Ty:</strong> {{ this.selected.SinhVien.FileCongViec ?? 'Chưa cập                    nhật' }}
-                    </p>
-
                   </div>
                   <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
@@ -200,7 +216,7 @@ export default {
             <input type="file" @change="handleChangeFile">
             <button @click="submitFile()" style="width:100px">Submit</button>
             <h5 class="my-4 bao-cao text-secondary">BÁO CÁO</h5>
-            <div class="row">
+            <!-- <div class="row">
               <div class="nop-bao-cao col-md-9">
                 <i class="fa-solid fa-file me-2"></i>
                 <a href="#" class="text-decoration-none">File đánh giá tổng kết</a>
@@ -231,7 +247,101 @@ export default {
               </div>
               <div class="d-flex justify-content-end">
                 <div><i class="fa-solid fa-circle-plus me-2 fs-5"></i></div>
-                <div class="">Thêm hoạt động</div>
+                <div class="" style="cursor: pointer" data-bs-toggle="modal" data-bs-target="#addReport">Thêm hoạt động
+                </div>
+              </div>
+            </div> -->
+
+            <div v-for="(e, i) in this.reports.BaoCao" class="row">
+              <div class="nop-bao-cao col-md-9">
+                <i class="fa-solid fa-file me-2"></i>
+                <a href="#" class="text-decoration-none">{{ e.TenBaoCao }}</a>
+                <p>{{ e.MoTa }}</p>
+              </div>
+              <div class="check col-md-3">
+                <div class="form-check">
+                  <input class="form-check-input border border-dark rounded-0" type="checkbox" value=""
+                    id="flexCheckDefault">
+                  Ẩn
+                </div>
+                <i class="fa-solid fa-pen-to-square fs-5 me-1"></i>Edit
+              </div>
+
+            </div>
+            <div class="d-flex justify-content-end">
+              <div><i class="fa-solid fa-circle-plus me-2 fs-5"></i></div>
+              <div class="" style="cursor: pointer" data-bs-toggle="modal" data-bs-target="#addReport">Thêm hoạt động
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal fade hide " id="addReport" tabindex="-1" aria-labelledby="exampleModalLabel"
+          aria-hidden="true">
+          <div class="modal-dialog modal-dialog-scrollable modal-lg">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <div class="container py-4 ms-0">
+                  <div class="header text-center">
+                    <h5>THÔNG TIN HOẠT ĐỘNG</h5>
+                  </div>
+                  <div class="mb-3 mt-3">
+                    <label for="lh" class="form-label">Tên Hoạt Động:</label>
+                    <input type="text" class="form-control border rounded-0" id="lh" placeholder="" name="lh"
+                      v-model="this.dataCreateReport.BaoCao.TenBaoCao" />
+                  </div>
+                  <div class="mb-3 mt-3">
+                    <div class="form-floating">
+                      <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea2"
+                        style="height: 100px" v-model="this.dataCreateReport.BaoCao.MoTa"></textarea>
+                      <label for="floatingTextarea2">Mô Tả</label>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="mb-3 mt-3 col-md-6">
+                      <label for="lh" class="form-label">Trạng Thái Hiển Thị:</label>
+                      <div class="form-check">
+                        <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1"
+                          value=true v-model="this.dataCreateReport.BaoCao.TrangThai">
+                        <label class="form-check-label" for="flexRadioDefault1">
+                          Hiện
+                        </label>
+                      </div>
+                      <div class="form-check">
+                        <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2"
+                          value=false v-model="this.dataCreateReport.BaoCao.TrangThai">
+                        <label class="form-check-label" for="flexRadioDefault2">
+                          Ẩn
+                        </label>
+                      </div>
+                    </div>
+                    <div class="mb-3 mt-3 col-md-6">
+                      <label for="lh" class="form-label">Hiển Thị Với:</label>
+                      <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="0" id="flexCheckDefault"
+                          v-model="this.dataCreateReport.BaoCao.QuyenHienThi">
+                        <label class="form-check-label" for="flexCheckDefault">
+                          Sinh Viên
+                        </label>
+                      </div>
+                      <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="3" id="flexCheckChecked"
+                          v-model="this.dataCreateReport.BaoCao.QuyenHienThi">
+                        <label class="form-check-label" for="flexCheckChecked">
+                          Cán Bộ
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal"
+                  @click="handleAddReport">Thêm</button>
+
               </div>
             </div>
           </div>
