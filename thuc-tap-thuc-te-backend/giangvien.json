@@ -1,30 +1,38 @@
 [
-    {
-      "_id": "GV001",
-      "MSGV": "GV001",
-      "HoTen": "Trần Minh Tân",
-      "Sdt": "123",
-      "MaLop": ["DI19V7A8", "DI18V7A2"],
-      "BoMon": "CNTT",
-      "TenDangNhap": "GV001"
-    },
-    {
-      "_id": "GV002",
-      "MSGV": "GV002",
-      "HoTen": "Nguyễn Hữu Hòa",
-      "Sdt": "123",
-      "MaLop": null,
-      "BoMon": null,
-      "TenDangNhap": "GV002"
-    },
-    {
-      "_id": "GV003",
-      "MSGV": "GV003",
-      "HoTen": "Lê Thanh Phong",
-      "Sdt": "123",
-      "MaLop": ["DI19Y1A1"],
-      "BoMon": "THUD",
-      "TenDangNhap": "GV003"
-    }
-  ]
-  
+  {
+    "_id": "GV001",
+    "MSGV": "GV001",
+    "HoTen": "Nguyễn Hữu Hòa",
+    "Sdt": "0345687550",
+    "MaLop": null,
+    "BoMon": null,
+    "TenDangNhap": "GV001"
+  },
+  {
+    "_id": "GV002",
+    "MSGV": "GV002",
+    "HoTen": "Trần Minh Tân",
+    "Sdt": "0345687540",
+    "MaLop": ["DI19V7A8", "DI18V7A2"],
+    "BoMon": "CNTT",
+    "TenDangNhap": "GV002"
+  },
+  {
+    "_id": "GV003",
+    "MSGV": "GV003",
+    "HoTen": "Nguyễn Nhị Gia Vinh",
+    "Sdt": "0345687555",
+    "MaLop": ["DI19Y1A1"],
+    "BoMon": "THUD",
+    "TenDangNhap": "GV003"
+  },
+  {
+    "_id": "GV004",
+    "MSGV": "GV004",
+    "HoTen": "Thái Minh Tuấn",
+    "Sdt": "0345687444",
+    "MaLop": ["DI19V7A7", "DI18V7A3"],
+    "BoMon": "CNTT",
+    "TenDangNhap": "GV004"
+  }
+]

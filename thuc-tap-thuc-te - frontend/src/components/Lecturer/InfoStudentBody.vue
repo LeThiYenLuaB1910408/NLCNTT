@@ -70,9 +70,7 @@ export default {
         <div class="container topic">
           <div class="row mb-5">
             <h5 class="my-4 bao-cao text-secondary">CÔNG VIỆC THỰC HIỆN</h5>
-            <p class="text-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-              <i class="fa-solid fa-file me-2 text-dark"></i>Thêm file giao việc
-            </p>
+            
             <div v-for="(e, i) in this.reportCanBo" class="row">
               <div class="nop-bao-cao col-md-9">
                 <i class="fa-solid fa-file me-2"></i>

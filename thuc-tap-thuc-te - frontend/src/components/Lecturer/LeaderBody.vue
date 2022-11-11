@@ -14,6 +14,7 @@ export default {
   methods: {
     async getAll() {
       this.students = await LopHoc.getAllStudent();
+      console.log(this.students);
       this.giangvien = await GiangVien.getAll();
       this.giangvien = this.giangvien.filter((e) => e.BoMon !== null)
 

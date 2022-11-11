@@ -45,36 +45,39 @@ class Information {
         console.log(payload);
         const congTy = this.extractCongTyData(payload.CongTy);
         const canBo = this.extractCanBoData({ ...payload.CanBo, TenCongTy: payload.CongTy.TenCongTy });
-        const resultCongTy = await this.CongTy.findOne({
-            'Email': congTy.Email
-        });
-        if (resultCongTy == null) {
-            resultCongTy = await this.CongTy.insertOne(
-                congTy
-            );
-        }
-        const resultCanBo = await this.CanBo.findOne({
-            'Email': canBo.Email
-        });
-
-        if (resultCanBo == null) {
-            resultCanBo = await this.CanBo.insertOne(
-                canBo
-            );
-        }
-
         const thongTin = this.extractThongTinData(payload.ThongTin);
-        const resultThongTin = await this.ThongTin.insertOne(
-            thongTin
-        );
-
-        const result = await this.Lop.updateOne(
-            { _id: ObjectId(payload.classCurrent._id) },
-            { $push: { SinhVien: { MSSV: thongTin.MSSV, MSGV: '', MSCB: resultCanBo.insertedId ?? resultCanBo._id, DiemSo: '' } } }
-        )
-        console.log(result);
-
-        return { resultCanBo, resultCongTy, resultThongTin, result };
+        try {
+            const resultCongTy = await this.CongTy.findOne({
+                'Email': congTy.Email
+            });
+            if (resultCongTy == null) {
+                this.CongTy.insertOne(
+                    congTy
+                );
+            }
+            let resultCanBo = await this.CanBo.findOne({
+                'Email': canBo.Email
+            });
+            if (resultCanBo == null) {
+                resultCanBo = await this.CanBo.insertOne(
+                    canBo
+                );
+            }
+             this.ThongTin.insertOne(
+                thongTin
+            );
+    
+            let result = await this.Lop.updateOne(
+                { _id: ObjectId(payload.classCurrent._id) },
+                { $push: { SinhVien: { MSSV: thongTin.MSSV, MSGV: '', MSCB: resultCanBo.insertedId ?? resultCanBo._id, DiemSo: '' } } }
+            )
+            console.log(result);
+    
+            return result ;
+        } catch (error) {
+            console.log(error);
+        }
+       
     }
 
 

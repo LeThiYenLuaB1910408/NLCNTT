@@ -2,16 +2,42 @@
   {
     "MaLopTT": "CT471",
     "HocKi": "3",
-    "NienKhoa": "2022-2023",
+    "NienKhoa": "2021-2022",
     "ChuyenNganh": "CNTT",
-    "SinhVien": [
-      {"MSSV": null,"MSGV":null,"MSCB":null,"DiemSo":null}
-    ]
+    "SinhVien": []
+  },
+  {
+    "MaLopTT": "CT471",
+    "HocKi": "3",
+    "NienKhoa": "2020-2021",
+    "ChuyenNganh": "CNTT",
+    "SinhVien": []
+  },
+  {
+    "MaLopTT": "CT471",
+    "HocKi": "3",
+    "NienKhoa": "2019-2020",
+    "ChuyenNganh": "CNTT",
+    "SinhVien": []
   },
   {
     "MaLopTT": "CT475",
     "HocKi": "3",
     "NienKhoa": "2020-2021",
+    "ChuyenNganh": "THUD",
+    "SinhVien": []
+  },
+  {
+    "MaLopTT": "CT475",
+    "HocKi": "3",
+    "NienKhoa": "2019-2020",
+    "ChuyenNganh": "THUD",
+    "SinhVien": []
+  },
+  {
+    "MaLopTT": "CT475",
+    "HocKi": "3",
+    "NienKhoa": "2021-2022",
     "ChuyenNganh": "THUD",
     "SinhVien": []
   },
@@ -40,6 +66,34 @@
     "MaLopTT": "CT476",
     "HocKi": "3",
     "NienKhoa": "2020-2021",
+    "ChuyenNganh": "HTTT",
+    "SinhVien": []
+  },
+  {
+    "MaLopTT": "CT472",
+    "HocKi": "3",
+    "NienKhoa": "2019-2020",
+    "ChuyenNganh": "CNPM",
+    "SinhVien": []
+  },
+  {
+    "MaLopTT": "CT473",
+    "HocKi": "3",
+    "NienKhoa": "2019-2020",
+    "ChuyenNganh": "MMT&TT",
+    "SinhVien": []
+  },
+  {
+    "MaLopTT": "CT474",
+    "HocKi": "3",
+    "NienKhoa": "2019-2020",
+    "ChuyenNganh": "KHMT",
+    "SinhVien": []
+  },
+  {
+    "MaLopTT": "CT476",
+    "HocKi": "3",
+    "NienKhoa": "2019-2020",
     "ChuyenNganh": "HTTT",
     "SinhVien": []
   }

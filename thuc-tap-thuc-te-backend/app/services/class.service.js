@@ -21,7 +21,7 @@ class QuanLyLopHoc {
         return lh;
     }
 
-    async create(payload) {
+    async createClass(payload) {
 
         const lh = this.extractClassData(payload);
         console.log(lh);
@@ -43,6 +43,7 @@ class QuanLyLopHoc {
     // }
 
     async findById(id) {
+        console.log(id);
         const result = await this.LopHoc.aggregate([
             { '$unwind': '$SinhVien' },
             {
@@ -72,10 +73,9 @@ class QuanLyLopHoc {
                     as: 'GiangVien'
                 }
             },
-            { '$unwind': '$GiangVien' }
         ]
         );
-        const results = await result.toArray();
+        let results = await result.toArray();
         console.log(results);
         return results.filter(e => e._id == id);
     }
@@ -108,15 +108,7 @@ class QuanLyLopHoc {
                 }
             },
             { '$unwind': '$CanBo' },
-            {
-                $lookup: {
-                    from: 'giangvien',
-                    localField: 'SinhVien.MSGV',
-                    foreignField: '_id',
-                    as: 'GiangVien'
-                }
-            },
-            { '$unwind': '$GiangVien' }
+            
         ]
         );
         return await result.toArray();

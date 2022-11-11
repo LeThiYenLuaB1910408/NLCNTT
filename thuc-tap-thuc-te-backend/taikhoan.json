@@ -8,20 +8,26 @@
   {
     "_id": "GV001",
     "TenDangNhap": "GV001",
-    "MatKhau": "GV001123456",
-    "CapQuyen": "2"
+    "MatKhau": "GV001",
+    "CapQuyen": "1"
   },
   {
     "_id": "GV002",
     "TenDangNhap": "GV002",
-    "MatKhau": "CB002123456",
-    "CapQuyen": "1"
+    "MatKhau": "GV002",
+    "CapQuyen": "2"
   },
   {
-    "_id": "CB001",
-    "TenDangNhap": "CB001",
-    "MatKhau": "CB003123456",
-    "CapQuyen": "3"
+    "_id": "GV003",
+    "TenDangNhap": "GV003",
+    "MatKhau": "GV003",
+    "CapQuyen": "2"
+  },
+  {
+    "_id": "GV004",
+    "TenDangNhap": "GV004",
+    "MatKhau": "GV004",
+    "CapQuyen": "2"
   },
   {
     "_id": "B1910408",

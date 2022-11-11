@@ -7,7 +7,7 @@ class LopHoc{
     async getAll(){
         return (await this.api.get("/QLLH")).data;
     }
-    async getClass(id){
+    async getStudentClass(id){
         return (await this.api.get(`/courses/${id}`)).data;
     }
     async RegisterClass(data){

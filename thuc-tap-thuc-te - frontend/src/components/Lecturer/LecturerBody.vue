@@ -27,8 +27,9 @@ export default {
   methods: {
     async getAll() {
       this.students = await LopHoc.getAllStudent();
-      this.reports = await Report.getAll(this.students[0]._id)
-      console.log(this.reports);
+      if (this.students.length != 0) {
+        this.reports = await Report.getAll(this.students[0]._id)
+      }
       this.students = this.students.filter(e => e.SinhVien.MSGV == this.accStore.user._id)
     },
     async onChangeLecturer(data) {
@@ -252,7 +253,7 @@ export default {
               </div>
             </div> -->
 
-            <div v-for="(e, i) in this.reports.BaoCao" class="row">
+            <div v-if="this.reports != null" v-for="(e, i) in this.reports.BaoCao" class="row">
               <div class="nop-bao-cao col-md-9">
                 <i class="fa-solid fa-file me-2"></i>
                 <a href="#" class="text-decoration-none">{{ e.TenBaoCao }}</a>
