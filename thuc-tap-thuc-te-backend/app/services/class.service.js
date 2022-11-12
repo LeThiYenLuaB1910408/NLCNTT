@@ -11,7 +11,7 @@ class QuanLyLopHoc {
             HocKi: payload.HocKi,
             NienKhoa: payload.NienKhoa,
             ChuyenNganh: payload.ChuyenNganh,
-            SinhVien: payload.MSSV ?? [],
+            SinhVien: [],
         };
 
         // remove undefined fields
@@ -108,7 +108,7 @@ class QuanLyLopHoc {
                 }
             },
             { '$unwind': '$CanBo' },
-            
+
         ]
         );
         return await result.toArray();
@@ -119,36 +119,21 @@ class QuanLyLopHoc {
             _id: ObjectId.isValid(payload._id) ? ObjectId(payload._id) : null
 
         };
-        if (payload.MSGV) {
-            const result = await this.LopHoc.findOneAndUpdate(
-                filter,
-                {
-                    $set: {
-                        "SinhVien.$[element].MSGV": payload.MSGV
-                    }
-                },
-                {
-                    arrayFilters: [{ "element.MSSV": payload.MSSV }],
-                    returnDocument: "after"
+        const result = await this.LopHoc.findOneAndUpdate(
+            filter,
+            {
+                $set: {
+                    "SinhVien.$[element].MSGV": payload.MSGV
                 }
-            );
-            return result.value;
-        }
-        else {
-            const result = await this.LopHoc.findOneAndUpdate(
-                filter,
-                {
-                    $set: {
-                        "SinhVien.$[element].DiemSo": payload.DiemSo
-                    }
-                },
-                {
-                    arrayFilters: [{ "element.MSSV": payload.MSSV }],
-                    returnDocument: "after"
-                }
-            );
-            return result.value;
-        }
+            },
+            {
+                arrayFilters: [{ "element.MSSV": payload.MSSV }],
+                returnDocument: "after"
+            }
+        );
+        return result.value;
+
+
 
     }
 

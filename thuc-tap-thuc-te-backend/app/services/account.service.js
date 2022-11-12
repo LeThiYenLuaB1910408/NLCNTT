@@ -33,7 +33,7 @@ class QuanLyTaiKhoan {
     }
 
     async find(filter) {
-        const cursor = await this.TaiKhoan.find(filter);
+        const cursor = await this.TaiKhoan.find(filter).sort({'CapQuyen':1});
         return await cursor.toArray();
     }
 

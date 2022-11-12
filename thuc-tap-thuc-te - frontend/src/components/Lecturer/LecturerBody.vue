@@ -1,20 +1,19 @@
 <script>
 import LopHoc from '@/services/class';
 import Report from '@/services/report';
-
+import Calendar from '../Home/Calendar.vue';
 import { useAccountStore } from "@/stores/AccountStore";
-import axios from 'axios'
 export default {
-
+  components: {
+    Calendar
+  },
   data() {
     const accStore = useAccountStore();
-
     return {
-      date: new Date(),
+      accStore,
       students: [],
       selected: null,
-      accStore,
-      selectedFile: "",
+      selectedReport: null,
       reports: null,
       dataCreateReport: {
         MaLopTT: null,
@@ -25,6 +24,7 @@ export default {
     };
   },
   methods: {
+
     async getAll() {
       this.students = await LopHoc.getAllStudent();
       if (this.students.length != 0) {
@@ -32,10 +32,10 @@ export default {
       }
       this.students = this.students.filter(e => e.SinhVien.MSGV == this.accStore.user._id)
     },
-    async onChangeLecturer(data) {
-      await LopHoc.update(data)
+    async onSetScore(data) {
+      await Report.update(data.MaLopTT,data)
       this.getAll();
-      this.selected.SinhVien.DiemSo = data.DiemSo;
+      this.selectedReport.Diem = data.DiemSo;
     },
 
     async handleAddReport() {
@@ -48,31 +48,7 @@ export default {
           QuyenHienThi: []
         }
       }
-    },
-
-    handleChangeFile(e) {
-      const selectedFile = e.target.files[0]; // accessing file
-      this.selectedFile = selectedFile;
-    },
-    submitFile() {
-      const formData = new FormData();
-      formData.append("file", this.selectedFile);
-      console.log(formData.get('file'));
-      console.log(this.selectedFile);
-      axios.post('/api/single-file',
-        formData,
-        {
-          headers: {
-            'Content-Type': 'multipart/form-data'
-          }
-        }
-      ).then(res => {
-        console.log(res);
-      })
-        .catch(err => {
-          console.log(err);
-        });
-    },
+    }
   },
   created() {
     this.getAll();
@@ -183,24 +159,7 @@ export default {
                         <p><strong>Cán Bộ Công Ty:</strong> {{ this.selected.CanBo.HoTen }}</p>
                       </div>
                     </div>
-                    <div class="row mb-3">
-                      <div class="d-flex align-items-center">
-                        <div class="col-md-5">
-                          <strong class="me-2">Chấm Điểm:</strong>
-                          <input v-if="this.selected.SinhVien.DiemSo == null" type="text"
-                            v-model="this.selected.Diem" />
-                          <span class="m-0" v-else> {{ this.selected.SinhVien.DiemSo }}</span>
-                        </div>
 
-                        <div class="d-flex">
-                          <i @click="onChangeLecturer({ _id: this.selected._id, MSSV: this.selected.SinhVienLop._id, DiemSo: this.selected.Diem })"
-                            class="fa-regular fa-floppy-disk fs-4 mt-1 text-secondary" style="cursor: pointer"></i>
-                          <i @click="this.selected.SinhVien.DiemSo = null"
-                            class="fa-regular fa-pen-to-square fs-5 mt-1 text-secondary ms-2"
-                            style="cursor: pointer"></i>
-                        </div>
-                      </div>
-                    </div>
 
                   </div>
                   <div class="modal-footer">
@@ -214,65 +173,91 @@ export default {
         </div>
         <div class="container past">
           <div class="row mb-5">
-            <input type="file" @change="handleChangeFile">
-            <button @click="submitFile()" style="width:100px">Submit</button>
             <h5 class="my-4 bao-cao text-secondary">BÁO CÁO</h5>
-            <!-- <div class="row">
+            <div v-if="this.reports != null" v-for="(e) in this.reports.BaoCao" class="row">
               <div class="nop-bao-cao col-md-9">
                 <i class="fa-solid fa-file me-2"></i>
-                <a href="#" class="text-decoration-none">File đánh giá tổng kết</a>
-                <p>Lớp học phần {{ this.students[0].MaLopTT }} - {{ this.students[0].ChuyenNganh }}</p>
-              </div>
-              <div class="check col-md-3">
-                <div class="form-check">
-                  <input class="form-check-input border border-dark rounded-0" type="checkbox" value=""
-                    id="flexCheckDefault">
-                  Ẩn
-                </div>
-                <i class="fa-solid fa-pen-to-square fs-5 me-1"></i>Edit
-              </div>
-            </div>
-            <div class="row">
-              <div class="nop-bao-cao col-md-9">
-                <i class="fa-solid fa-file me-2"></i>
-                <a href="#" class="text-decoration-none">Nộp file báo cáo TTTT - {{ this.students[0].ChuyenNganh }}</a>
-                <p>Lớp học phần {{ this.students[0].MaLopTT }} - {{ this.students[0].ChuyenNganh }}</p>
-              </div>
-              <div class="check col-md-3">
-                <div class="form-check">
-                  <input class="form-check-input border border-dark rounded-0" type="checkbox" value=""
-                    id="flexCheckDefault">
-                  Ẩn
-                </div>
-                <i class="fa-solid fa-pen-to-square fs-5 me-1"></i>Edit
-              </div>
-              <div class="d-flex justify-content-end">
-                <div><i class="fa-solid fa-circle-plus me-2 fs-5"></i></div>
-                <div class="" style="cursor: pointer" data-bs-toggle="modal" data-bs-target="#addReport">Thêm hoạt động
-                </div>
-              </div>
-            </div> -->
-
-            <div v-if="this.reports != null" v-for="(e, i) in this.reports.BaoCao" class="row">
-              <div class="nop-bao-cao col-md-9">
-                <i class="fa-solid fa-file me-2"></i>
-                <a href="#" class="text-decoration-none">{{ e.TenBaoCao }}</a>
+                <a class="text-decoration-none text-primary" style="cursor:pointer"
+                  @click="this.selectedReport = e" data-bs-toggle="modal" data-bs-target="#infoReport">{{
+                      e.TenBaoCao
+                  }}</a>
                 <p>{{ e.MoTa }}</p>
               </div>
               <div class="check col-md-3">
-                <div class="form-check">
-                  <input class="form-check-input border border-dark rounded-0" type="checkbox" value=""
-                    id="flexCheckDefault">
-                  Ẩn
-                </div>
                 <i class="fa-solid fa-pen-to-square fs-5 me-1"></i>Edit
               </div>
-
             </div>
             <div class="d-flex justify-content-end">
               <div><i class="fa-solid fa-circle-plus me-2 fs-5"></i></div>
               <div class="" style="cursor: pointer" data-bs-toggle="modal" data-bs-target="#addReport">Thêm hoạt động
               </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal fade hide " id="infoReport" tabindex="-1" aria-labelledby="exampleModalLabel"
+          aria-hidden="true">
+          <div class="modal-dialog modal-dialog-scrollable modal-lg">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <div class="container py-4 ms-0">
+                  <div class="header text-center">
+                    <h5>THÔNG TIN HOẠT ĐỘNG</h5>
+                  </div>
+                  <table class="table">
+                    <thead align="center">
+                      <tr>
+                        <th scope="col">STT</th>
+                        <th scope="col">MSSV</th>
+                        <th scope="col">File</th>
+                        <th scope="col">Điểm số</th>
+                        <th scope="col">Thao tác</th>
+                      </tr>
+                    </thead>
+                    <tbody align="center">
+                      <tr v-if="this.selectedReport!=null" v-for="(e, i) in this.selectedReport.BaiNop">
+                        <th scope="row">{{ i + 1 }}</th>
+                        <td>{{ e.MSSV }}</td>
+                        <td>
+                          <i v-if="e.File.slice(e.File.lastIndexOf('.') + 1) == 'pdf'"
+                            class="fa-regular text-danger fa-file-pdf"></i>
+                          <i v-else-if="e.File.slice(e.File.lastIndexOf('.') + 1) == 'docx'"
+                            class="fa-regular text-primary fa-file-word"></i>
+                          <i v-else-if="e.File.slice(e.File.lastIndexOf('.') + 1) == 'xlsx'"
+                            class="fa-regular text-success fa-file-excel"></i>
+                          <i v-else-if="e.File.slice(e.File.lastIndexOf('.') + 1) == 'jpg'"
+                            class="fa-regular text-success fa-file-image"></i>
+                          <i v-else-if="e.File.slice(e.File.lastIndexOf('.') + 1) == 'pptx'"
+                            class="fa-regular fa-file-powerpoint" style="color:orange"></i>
+                          <i v-else class="fa-regular  fa-file-lines"></i>
+                          <a href="#" class="ms-2">
+                            {{ e.File.slice(e.File.lastIndexOf("/") + 1) }}
+                          </a>
+                        </td>
+                        <td>
+                              <input v-if="e.DiemSo == null" type="text"
+                                v-model="this.selectedReport.Diem" />
+                              <span class="m-0" v-else> {{ e.DiemSo }}</span>
+
+
+                        </td>
+                        <td class="text-center">
+                            <i @click="onSetScore({ MaLopTT: this.students[0]._id, TenBaoCao: this.selectedReport.TenBaoCao, DiemSo: this.selectedReport.Diem, MSSV: e.MSSV })"
+                              class="fa-regular fa-floppy-disk fs-4 mt-1 text-secondary" style="cursor: pointer"></i>
+                            <i @click="e.DiemSo = null"
+                              class="fa-regular fa-pen-to-square fs-5 mt-1 text-secondary ms-2"
+                              style="cursor: pointer"></i>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+
+
+                </div>
+              </div>
+
             </div>
           </div>
         </div>
@@ -363,23 +348,7 @@ export default {
           </div>
         </div>
       </div>
-      <div class="col-md-3 mt-5">
-        <div class="container thong-bao py-2 mt-4">
-          <div class="row p-3">
-            <h5><i class="fa-solid fa-bullhorn me-3"></i>THÔNG BÁO MỚI</h5>
-            <hr />
-          </div>
-          <div class="row text-center pb-3">
-            <i>Chưa có thông báo mới ...</i>
-          </div>
-        </div>
-        <section class="container mt-5 pb-4">
-          <div class="row p-3">
-            <h5><i class="fa-regular fa-calendar-days me-3"></i>LỊCH</h5>
-          </div>
-          <v-date-picker v-model="date" class="w-100 border rounded-0" />
-        </section>
-      </div>
+      <Calendar />
     </div>
   </div>
 </template>
@@ -392,12 +361,7 @@ export default {
   border-left: 3px solid rgba(80, 116, 235, 0.814);
 }
 
-section,
-.thong-bao {
-  box-shadow: 0px 1px 2px 1px rgba(0, 0, 0, 0.5);
-  border-top: 5px solid rgba(80, 116, 235, 0.814);
-  border-radius: 0;
-}
+
 
 th,
 span,

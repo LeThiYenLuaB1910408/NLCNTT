@@ -75,6 +75,18 @@ exports.createReport = async (req, res, next) => {
         );
     }
 };
+exports.updateReport = async (req, res, next) => {
+    try {
+        
+        const quanLyBaoCao = new Report(MongoDB.client);
+        const rp = await quanLyBaoCao.updateReport(req.params.id,req.body);
+        return res.send(rp);
+    } catch (error) {
+        return next(
+            new ApiError(500, "An error occurred while creating the contact")
+        );
+    }
+};
 
 exports.allReport = async (req, res, next) => {
     let documents = [];

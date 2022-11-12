@@ -24,10 +24,10 @@ export default {
           <td>{{ account.TenDangNhap }}</td>
           <td>{{ account.MatKhau }}</td>
           <td v-if="account.CapQuyen == 0">Sinh viên</td>
-          <td v-if="account.CapQuyen == 1">Lãnh đạo cấp khoa</td>
-          <td v-if="account.CapQuyen == 2">Giảng viên hướng dẫn</td>
-          <td v-if="account.CapQuyen == 3">Cán bộ hướng dẫn</td>
-          <td v-if="account.CapQuyen == -1">Quản trị viên</td>
+          <td v-else-if="account.CapQuyen == 1">Lãnh đạo cấp khoa</td>
+          <td v-else-if="account.CapQuyen == 2">Giảng viên hướng dẫn</td>
+          <td v-else-if="account.CapQuyen == 3">Cán bộ hướng dẫn</td>
+          <td v-else-if="account.CapQuyen == -1">Quản trị viên</td>
           <td><i class="fa-solid fa-pen-to-square" style="cursor: pointer"></i> <i class="fa-regular fa-trash-can"
               style="cursor: pointer"></i></td>
         </tr>

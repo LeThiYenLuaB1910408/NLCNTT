@@ -1,7 +1,13 @@
 <script>
 import LopHoc from "@/services/class";
+import Report from '@/services/report';
+import FileBaoCao from '../Home/FileBaoCao.vue';
+
 import { useAccountStore } from "@/stores/AccountStore";
 export default {
+  components: {
+    FileBaoCao
+  },
   data() {
     const accStore = useAccountStore();
     return {
@@ -22,7 +28,9 @@ export default {
       },
       registered: null,
       accStore,
-      classCurrent: null
+      classCurrent: null,
+      reportSinhVien: null,
+      reports: null,
     };
   },
   methods: {
@@ -35,6 +43,8 @@ export default {
           this.data.classCurrent = this.studentClass.filter(e => e.SinhVien.MSSV == this.accStore.user._id)[0];
         }
         this.registered = await LopHoc.isRegistered(this.accStore.user._id)
+        this.reports = await Report.getAll(this.$route.params.id)
+        this.reportSinhVien = this.reports.BaoCao.filter((e) => e.QuyenHienThi.includes(this.accStore.user.CapQuyen))
       } catch (error) {
         console.log(error);
       }
@@ -44,6 +54,15 @@ export default {
       await LopHoc.RegisterClass(this.data);
       this.registered = await LopHoc.isRegistered(this.accStore.user._id)
 
+    },
+    async submitFile(file, TenBaoCao) {
+      const formData = new FormData();
+      console.log(this.accStore.user);
+      formData.append("file", file);
+      formData.append("TenBaoCao", TenBaoCao);
+      formData.append("MSSV", this.accStore.user._id);
+      await Report.submitFile(this.$route.params.id, formData)
+      this.refreshList();
     },
 
     refreshList() {
@@ -233,21 +252,8 @@ export default {
           <div class="row mb-2">
             <h5 class="my-4 bao-cao text-secondary">BÁO CÁO</h5>
           </div>
-          <div class="row ms-2">
-            <div class="nop-bao-cao col-md-9">
-              <i class="fa-solid fa-file me-2"></i>
-              <a href="#" class="text-decoration-none">File đánh giá tổng kết</a>
-              <p>Lớp học phần {{ this.classCurrent.MaLopTT }} - {{ this.classCurrent.ChuyenNganh }}</p>
-            </div>
-          </div>
-          <div class="row ms-2">
-            <div class="nop-bao-cao col-md-9">
-              <i class="fa-solid fa-file me-2"></i>
-              <a href="#" class="text-decoration-none">Nộp file báo cáo TTTT - {{ this.classCurrent.ChuyenNganh
-              }}</a>
-              <p>Lớp học phần {{ this.classCurrent.MaLopTT }} - {{ this.classCurrent.ChuyenNganh }}</p>
-            </div>
-          </div>
+          <FileBaoCao :MSSV="this.accStore.user.MSSV" :reports="this.reportSinhVien" @submit:report="submitFile" />
+
         </div>
       </div>
       <div class="col-md-3 mt-5">

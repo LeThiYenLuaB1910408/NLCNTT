@@ -8,20 +8,17 @@ class Report {
     extractData(payload) {
         const rp = {
             MaLopTT: ObjectId(payload.MaLopTT),
-            BaoCao:[
+            BaoCao: [
                 {
-                  TenBaoCao: payload.BaoCao.TenBaoCao,
-                  MoTa:payload.BaoCao.MoTa,
-                  TrangThai:payload.BaoCao.TrangThai,
-                  QuyenHienThi:payload.BaoCao.QuyenHienThi,
-                  BaiNop:[
-                    {
-                      MSSV:payload.BaoCao.BaiNop, 
-                      File:payload.BaoCao.File
-                    }
-                  ]
+                    TenBaoCao: payload.BaoCao.TenBaoCao,
+                    MoTa: payload.BaoCao.MoTa,
+                    TrangThai: payload.BaoCao.TrangThai,
+                    QuyenHienThi: payload.BaoCao.QuyenHienThi,
+                    BaiNop: [
+
+                    ]
                 }
-              ]
+            ]
         };
 
         // remove undefined fields
@@ -31,17 +28,17 @@ class Report {
         return rp;
     }
 
-    async createReport(id,payload) {
+    async createReport(id, payload) {
         const rp = this.extractData(payload);
         const cursor = await this.Report.findOne({
             "MaLopTT": ObjectId(id)
         });
-        if(cursor==null){
+        if (cursor == null) {
             const result = await this.Report.insertOne(
                 rp
             );
             return result.value;
-        }else{
+        } else {
             const result = await this.Report.updateOne(
                 { "MaLopTT": ObjectId(id) },
                 { $push: { BaoCao: rp.BaoCao[0] } }
@@ -50,40 +47,83 @@ class Report {
         }
 
     }
-    
+    async updateReport(id, payload) {
+        console.log(payload);
+        const result = await this.Report.findOneAndUpdate(
+            { "MaLopTT": ObjectId(id) },
+            {
+                $set: {
+                    'BaoCao.$[element].BaiNop.$[elem].DiemSo': payload.DiemSo
+                }
+            },
+            {
+                arrayFilters: [
+                    { "element.TenBaoCao": payload.TenBaoCao },
+                    {'elem.MSSV':payload.MSSV}
+            ],
+                returnDocument: "after"
+            }
+        )
+        console.log(result);
+        return result.value;
+
+    }
+
     async findOne(id) {
-        const cursor = await this.Report.findOne({"MaLopTT":ObjectId(id)});
+        const cursor = await this.Report.findOne({ "MaLopTT": ObjectId(id) });
         return await cursor;
     }
-    async updateFile(MaLop,file,data) {
-        file.mv(`./fileUpload/${file.name}`, function (err) {
+    async updateFile(MaLop, file, data) {
+        const fs = require('fs');
+        let folderPath = "./fileUpload/" + MaLop;
+        try {
+            if (!fs.existsSync(folderPath)) {
+                fs.mkdirSync(folderPath);
+            }
+            folderPath = folderPath + "/" + data.TenBaoCao
+            if (!fs.existsSync(folderPath)) {
+                fs.mkdirSync(folderPath);
+            }
+            folderPath = folderPath + "/" + data.MSSV
+            if (!fs.existsSync(folderPath)) {
+                fs.mkdirSync(folderPath);
+            }
+        } catch (err) {
+            console.error(err);
+        }
+        file.mv(`${folderPath}/${file.name}`, function (err) {
             if (err) {
                 console.log(err)
                 return res.status(500).send({ msg: "Error occured" });
             }
-            // returing the response with file path and name
         });
-        console.log(file);
-        const result = await this.Report.findOneAndUpdate(
-            {
-                "MaLopTT":MaLop,
-                "BaoCao.TenBaoCao": data.TenBaoCao
-            },
-            {
-                $set: {
-                    "BaoCao.BaiNop.$[element].MSSV": data.MSSV,
-                    "BaoCao.BaiNop.$[element].File": file.name,
+        try {
+            const result = await this.Report.updateOne(
+                {
+                    "MaLopTT": ObjectId(MaLop),
+                },
+                {
+                    $push: {
+                        'BaoCao.$[element].BaiNop': {
+                            MSSV: data.MSSV,
+                            File: `${folderPath}/${file.name}`
+                        }
+                    }
+                    // $set: {
+                    //     "BaoCao.BaiNop.$[element].MSSV": data.MSSV,
+                    //     "BaoCao.BaiNop.$[element].File": file.name,
+                    // }
+                },
+                {
+                    arrayFilters: [{ "element.TenBaoCao": data.TenBaoCao }],
+                    returnDocument: "after"
                 }
-            },
-            {
-                arrayFilters: [{ "element.MSSV": data.MSSV }],
-                returnDocument: "after"
-            }
-        );
-        console.log(1);
-        return result.value;
-        // return await cursor;
-        // return res.send({name: file.name, path: `/${file.name}`});
+            );
+            return result.value;
+        } catch (error) {
+            console.log(error);
+        }
+
     }
 
 }

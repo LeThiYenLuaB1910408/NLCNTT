@@ -11,6 +11,9 @@ class Report {
     async create(id, data) {
         return (await this.api.post(`/report/${id}`, data)).data;
     }
+    async update(id, data) {
+        return (await this.api.put(`/report/${id}`, data)).data;
+    }
     async submitFile(lop, data) {
         return (await this.api.post(`/reports/${lop}`, data, {
             headers: {

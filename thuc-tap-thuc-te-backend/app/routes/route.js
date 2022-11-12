@@ -40,6 +40,7 @@ router.route("/allLecturer")
 //     .post(controller.upfile);
 
 router.route("/report/:id")
+    .put(controller.updateReport)
     .post(controller.createReport)
     .get(controller.allReport);
 router.route("/reports/:class")
