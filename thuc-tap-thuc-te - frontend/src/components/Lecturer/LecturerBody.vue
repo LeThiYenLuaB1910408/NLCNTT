@@ -3,6 +3,7 @@ import LopHoc from '@/services/class';
 import Report from '@/services/report';
 import Calendar from '../Home/Calendar.vue';
 import { useAccountStore } from "@/stores/AccountStore";
+import axios from 'axios';
 export default {
   components: {
     Calendar
@@ -16,11 +17,10 @@ export default {
       selectedReport: null,
       reports: null,
       dataCreateReport: null,
-      edit:false
+      edit: false
     };
   },
   methods: {
-
     async getAll() {
       this.students = await LopHoc.getAllStudent();
       if (this.students.length != 0) {
@@ -59,6 +59,15 @@ export default {
         }
       }
     },
+    async onClick(url) {
+      const res = await Report.getFile({ url: url });
+      var fileURL = window.URL.createObjectURL(new Blob([res]));
+      var fileLink = document.createElement('a');
+      fileLink.href = fileURL;
+      fileLink.setAttribute('download', url.slice(url.lastIndexOf("/") + 1));
+      document.body.appendChild(fileLink);
+      fileLink.click();
+    }
   },
   created() {
     this.getAll();
@@ -184,7 +193,7 @@ export default {
         <div class="container past">
           <div class="row mb-5">
             <h5 class="my-4 bao-cao text-secondary">BÁO CÁO</h5>
-            <div v-if="this.reports != null" v-for="(e,i) in this.reports.BaoCao" class="row" :key="i">
+            <div v-if="this.reports != null" v-for="(e, i) in this.reports.BaoCao" class="row" :key="i">
               <div class="nop-bao-cao col-md-9">
                 <i class="fa-solid fa-file me-2"></i>
                 <a class="text-decoration-none text-primary" style="cursor:pointer" @click="this.selectedReport = e"
@@ -195,7 +204,7 @@ export default {
               </div>
               <div class="check col-md-3">
                 <button type="button" class="border-0 " data-bs-toggle="modal" data-bs-target="#addReport"
-                  @click="this.dataCreateReport = e; this.edit=true">
+                  @click="this.dataCreateReport = e; this.edit = true">
                   <i class="fa-solid fa-pen-to-square fs-5 me-1"></i>Edit
                 </button>
               </div>
@@ -246,7 +255,7 @@ export default {
                           <i v-else-if="e.File.slice(e.File.lastIndexOf('.') + 1) == 'pptx'"
                             class="fa-regular fa-file-powerpoint" style="color:orange"></i>
                           <i v-else class="fa-regular  fa-file-lines"></i>
-                          <a href="#" class="ms-2">
+                          <a class="ms-2" style="cursor:pointer" @click="onClick(e.File)">
                             {{ e.File.slice(e.File.lastIndexOf("/") + 1) }}
                           </a>
                         </td>
@@ -278,7 +287,7 @@ export default {
               <div class="modal-header">
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
               </div>
-              <div class="modal-body" v-if="this.dataCreateReport!=null">
+              <div class="modal-body" v-if="this.dataCreateReport != null">
                 <div class="container py-4 ms-0">
                   <div class="header text-center">
                     <h5 v-if="this.edit">CHỈNH SỬA THÔNG TIN</h5>

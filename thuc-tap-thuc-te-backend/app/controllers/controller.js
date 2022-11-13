@@ -65,9 +65,9 @@ exports.createCB = async (req, res, next) => {
 };
 exports.createReport = async (req, res, next) => {
     try {
-        
+
         const quanLyBaoCao = new Report(MongoDB.client);
-        const rp = await quanLyBaoCao.createReport(req.params.id,req.body);
+        const rp = await quanLyBaoCao.createReport(req.params.id, req.body);
         return res.send(rp);
     } catch (error) {
         return next(
@@ -77,9 +77,9 @@ exports.createReport = async (req, res, next) => {
 };
 exports.updateReport = async (req, res, next) => {
     try {
-        
+
         const quanLyBaoCao = new Report(MongoDB.client);
-        const rp = await quanLyBaoCao.updateReport(req.params.id,req.body);
+        const rp = await quanLyBaoCao.updateReport(req.params.id, req.body);
         return res.send(rp);
     } catch (error) {
         return next(
@@ -365,13 +365,38 @@ exports.updateGV = async (req, res, next) => {
 //         );
 //     }
 // };
-exports.uploadFile = async(req, res, next) => {
+exports.uploadFile = async (req, res, next) => {
     if (!req.files) {
         return res.status(500).send({ msg: "file is not found" })
     }
     const quanLyBaoCao = new Report(MongoDB.client);
-    const documents = await quanLyBaoCao.updateFile(req.params.class,req.files.file, req.body);
+    const documents = await quanLyBaoCao.updateFile(req.params.class, req.files.file, req.body);
 
     res.send(documents)
+};
+exports.getFile = async (req, res, next) => {
+    const fs = require('fs');
+    // const Blob = require('buffer')
+    try {
+        var file = fs.readFileSync(req.body.url, 'binary');
+        var stat = fs.statSync(req.body.url);
+
+        res.setHeader('Content-Length', stat.size);
+        res.setHeader('Content-Type', '*/*');
+        res.setHeader('Content-Disposition', 'attachment; filename=your_file_name');
+        res.write(file, 'binary');
+        res.end();
+        // console.log(data);
+        // const ab = new ArrayBuffer(data.length);
+        // const view = new Uint8Array(ab);
+        // for (let i = 0; i < data.length; ++i) {
+        //     view[i] = data[i];
+        // }
+        // const blob = new Blob([data]);
+        // return blob
+    } catch (err) {
+        console.error(err);
+    }
+
 };
 

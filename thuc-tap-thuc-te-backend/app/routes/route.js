@@ -45,6 +45,8 @@ router.route("/report/:id")
     .get(controller.allReport);
 router.route("/reports/:class")
     .post(controller.uploadFile)
+router.route("/getfile")
+    .post(controller.getFile)
 
 
 

@@ -1,4 +1,5 @@
 const { ObjectId } = require("mongodb");
+const { Blob } = require('buffer') ;
 
 class Report {
     constructor(client) {
@@ -48,7 +49,7 @@ class Report {
     }
     async updateReport(id, payload) {
         let result;
-        if(payload.DiemSo!=null){
+        if (payload.DiemSo != null) {
             result = await this.Report.findOneAndUpdate(
                 { "MaLopTT": ObjectId(id) },
                 {
@@ -59,13 +60,13 @@ class Report {
                 {
                     arrayFilters: [
                         { "element.TenBaoCao": payload.TenBaoCao },
-                        {'elem.MSSV':payload.MSSV}
-                ],
+                        { 'elem.MSSV': payload.MSSV }
+                    ],
                     returnDocument: "after"
                 }
             )
         }
-        else{
+        else {
             result = await this.Report.findOneAndUpdate(
                 { "MaLopTT": ObjectId(id) },
                 {
@@ -76,7 +77,7 @@ class Report {
                 {
                     arrayFilters: [
                         { "element.TenBaoCao": payload.TenBaoCao },
-                ],
+                    ],
                     returnDocument: "after"
                 }
             )
@@ -139,6 +140,11 @@ class Report {
         } catch (error) {
             console.log(error);
         }
+
+    }
+    async getFile(payload) {
+
+        
 
     }
 

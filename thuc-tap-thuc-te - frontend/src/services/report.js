@@ -7,6 +7,13 @@ class Report {
     async getAll(id) {
         return (await this.api.get(`/report/${id}`)).data;
     }
+    async getFile(linkUrl) {
+        return (await this.api.post(`/getfile/`, linkUrl,
+            {
+                responseType: 'blob'
+            })).data;
+    }
+    // },{responseType:'blob'}/
 
     async create(id, data) {
         return (await this.api.post(`/report/${id}`, data)).data;
