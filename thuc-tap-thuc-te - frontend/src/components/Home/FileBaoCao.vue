@@ -26,8 +26,10 @@ export default {
     <div v-for="(e, i) in this.reports" class="row">
         <div v-if="e.TrangThai=='true'" class="nop-bao-cao col-md-9 mb-5">
             <i class="fa-solid fa-file me-2"></i>
-            <a href="#" class="text-decoration-none" data-bs-toggle="modal" data-bs-target="#exampleModal"
-                @click="this.selected = e">{{ e.TenBaoCao }}</a>
+            <router-link to="/submit" class="text-decoration-none" 
+                >{{ e.TenBaoCao }}</router-link>
+            <!-- <a href="#" class="text-decoration-none" data-bs-toggle="modal" data-bs-target="#exampleModal"
+                @click="this.selected = e">{{ e.TenBaoCao }}</a> -->
             <p>{{ e.MoTa }}</p>
             <div class="ms-4" v-for="(e, i) in e.BaiNop.filter(e => e.MSSV == this.MSSV)">
                 <i v-if="e.File.slice(e.File.lastIndexOf('.') + 1) == 'pdf'"

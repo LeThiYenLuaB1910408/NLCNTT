@@ -7,6 +7,10 @@ class Report {
     async getAll(id) {
         return (await this.api.get(`/report/${id}`)).data;
     }
+    async getReport(MaLop, TenBaoCao) {
+        return (await this.api.get(`/report/${MaLop}/${TenBaoCao}`)).data;
+    }
+    
     async getFile(linkUrl) {
         return (await this.api.post(`/getfile/`, linkUrl,
             {

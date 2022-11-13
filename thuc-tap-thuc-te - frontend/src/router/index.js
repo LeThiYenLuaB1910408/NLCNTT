@@ -9,6 +9,7 @@ import LecturerBody from "../components/Lecturer/LecturerBody.vue";
 import LeaderBody from "../components/Lecturer/LeaderBody.vue";
 import CanBoBody from "../components/Lecturer/CanBoBody.vue";
 import InfoStudentBody from "../components/Lecturer/InfoStudentBody.vue";
+import SubmitFile from "../components/Student/SubmitFile.vue";
 
 import { useAccountStore } from "@/stores/AccountStore";
 
@@ -41,6 +42,15 @@ const routes = [
         name: "courses",
         components:{
             default: StudentBodyRegister,
+            header: HomeHeaderStudent
+        } 
+    
+    },
+    {
+        path: "/submit/:MaLopTT/:TenBaoCao",
+        name: "submit",
+        components:{
+            default: SubmitFile,
             header: HomeHeaderStudent
         } 
     

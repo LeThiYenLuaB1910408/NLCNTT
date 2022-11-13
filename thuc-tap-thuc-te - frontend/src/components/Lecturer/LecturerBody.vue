@@ -87,7 +87,7 @@ export default {
               <li class="breadcrumb-item">
                 <router-link to="/" class="text-decoration-none text-black">Trang Chủ</router-link>
               </li>
-              <li class="breadcrumb-item"><a>Khoa Công Nghệ Thông Tin</a></li>
+              <li class="breadcrumb-item"><a>Khoa {{ this.accStore.user.BoMon }}</a></li>
               <router-link to="/CNTT" class="breadcrumb-item text-decoration-none text-black">
                 Các Khóa Thực Tập
               </router-link>

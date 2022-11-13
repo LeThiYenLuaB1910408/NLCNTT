@@ -252,11 +252,34 @@ export default {
           <div class="row mb-2">
             <h5 class="my-4 bao-cao text-secondary">BÁO CÁO</h5>
           </div>
-          <FileBaoCao :MSSV="this.accStore.user.MSSV" :reports="this.reportSinhVien" @submit:report="submitFile" />
+          <div v-for="(e, i) in this.reportSinhVien" class="row">
+            <div v-if="e.TrangThai == 'true'" class="nop-bao-cao col-md-9 mb-5">
+              <i class="fa-solid fa-file me-2"></i>
+              <router-link :to='"/submit/"+this.$route.params.id+"/"+e.TenBaoCao' class="text-decoration-none">{{ e.TenBaoCao }}</router-link>
+              
+              <p>{{ e.MoTa }}</p>
+              <div class="ms-4" v-for="(e, i) in e.BaiNop.filter(e => e.MSSV == this.accStore.user.MSSV)">
+                <i v-if="e.File.slice(e.File.lastIndexOf('.') + 1) == 'pdf'"
+                  class="fa-regular text-danger fa-file-pdf"></i>
+                <i v-else-if="e.File.slice(e.File.lastIndexOf('.') + 1) == 'docx'"
+                  class="fa-regular text-primary fa-file-word"></i>
+                <i v-else-if="e.File.slice(e.File.lastIndexOf('.') + 1) == 'xlsx'"
+                  class="fa-regular text-success fa-file-excel"></i>
+                <i v-else-if="e.File.slice(e.File.lastIndexOf('.') + 1) == 'jpg'"
+                  class="fa-regular text-success fa-file-image"></i>
+                <i v-else-if="e.File.slice(e.File.lastIndexOf('.') + 1) == 'pptx'" class="fa-regular fa-file-powerpoint"
+                  style="color:orange"></i>
+                <i v-else class="fa-regular  fa-file-lines"></i>
+                <a href="#" class="ms-2">
+                  {{ e.File.slice(e.File.lastIndexOf("/") + 1) }}
+                </a>
+              </div>
+            </div>
+          </div>
 
         </div>
       </div>
-      <Calendar/>
+      <Calendar />
     </div>
   </div>
 </template>

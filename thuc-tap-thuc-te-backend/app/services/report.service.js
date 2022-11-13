@@ -88,7 +88,22 @@ class Report {
 
     async findOne(id) {
         const cursor = await this.Report.findOne({ "MaLopTT": ObjectId(id) });
-        return await cursor;
+        return cursor;
+    }
+    async getReport(MaLopTT, TenBaoCao) {
+        let cursor = await this.Report.aggregate([
+            {
+                $unwind: "$BaoCao"
+            }
+            ,{   
+                $match: {"BaoCao.TenBaoCao": TenBaoCao }
+                
+            }
+        ]
+            
+        );
+        cursor = (await cursor.toArray())[0]
+        return cursor;
     }
     async updateFile(MaLop, file, data) {
         const fs = require('fs');

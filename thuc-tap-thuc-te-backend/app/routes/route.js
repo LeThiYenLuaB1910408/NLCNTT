@@ -43,7 +43,10 @@ router.route("/report/:id")
     .put(controller.updateReport)
     .post(controller.createReport)
     .get(controller.allReport);
-router.route("/reports/:class")
+router.route("/report/:MaLopTT/:TenBaoCao")
+    .get(controller.getReport)
+
+router.route("/reports/:MaLopTT")
     .post(controller.uploadFile)
 router.route("/getfile")
     .post(controller.getFile)

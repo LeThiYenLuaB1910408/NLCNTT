@@ -365,12 +365,19 @@ exports.updateGV = async (req, res, next) => {
 //         );
 //     }
 // };
+exports.getReport = async (req, res, next) => {
+
+    const quanLyBaoCao = new Report(MongoDB.client);
+    const documents = await quanLyBaoCao.getReport(req.params.MaLopTT,req.params.TenBaoCao );
+
+    res.send(documents)
+};
 exports.uploadFile = async (req, res, next) => {
     if (!req.files) {
         return res.status(500).send({ msg: "file is not found" })
     }
     const quanLyBaoCao = new Report(MongoDB.client);
-    const documents = await quanLyBaoCao.updateFile(req.params.class, req.files.file, req.body);
+    const documents = await quanLyBaoCao.updateFile(req.params.MaLopTT, req.files.file, req.body);
 
     res.send(documents)
 };
