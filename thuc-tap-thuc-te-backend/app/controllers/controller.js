@@ -376,7 +376,6 @@ exports.uploadFile = async (req, res, next) => {
 };
 exports.getFile = async (req, res, next) => {
     const fs = require('fs');
-    // const Blob = require('buffer')
     try {
         var file = fs.readFileSync(req.body.url, 'binary');
         var stat = fs.statSync(req.body.url);
@@ -386,14 +385,6 @@ exports.getFile = async (req, res, next) => {
         res.setHeader('Content-Disposition', 'attachment; filename=your_file_name');
         res.write(file, 'binary');
         res.end();
-        // console.log(data);
-        // const ab = new ArrayBuffer(data.length);
-        // const view = new Uint8Array(ab);
-        // for (let i = 0; i < data.length; ++i) {
-        //     view[i] = data[i];
-        // }
-        // const blob = new Blob([data]);
-        // return blob
     } catch (err) {
         console.error(err);
     }

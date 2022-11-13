@@ -142,11 +142,6 @@ class Report {
         }
 
     }
-    async getFile(payload) {
-
-        
-
-    }
 
 }
 
