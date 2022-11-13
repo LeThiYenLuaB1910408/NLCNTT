@@ -99,8 +99,4 @@ th span {
   font-size: 15px;
 }
 
-.current a {
-  text-decoration: none;
-  font-weight: bold;
-}
 </style>

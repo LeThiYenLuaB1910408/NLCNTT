@@ -12,13 +12,7 @@ export default {
   data() {
     return {
       students: [],
-      student: {
-        _id: "",
-        HoTen: "",
-        Sdt: "",
-        ChuyenNganh: "",
-        MaLop: "",
-      },
+      student: {},
     };
   },
   methods: {
@@ -26,13 +20,7 @@ export default {
       try {
         await SinhVien.create(data);
         this.refreshList();
-        this.student = {
-          _id: "",
-          HoTen: "",
-          Sdt: "",
-          ChuyenNganh: "",
-          MaLop: "",
-        };
+        this.student = {};
       } catch (error) {
         console.log(error);
       }

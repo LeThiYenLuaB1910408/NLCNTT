@@ -93,7 +93,6 @@ exports.allReport = async (req, res, next) => {
 
     try {
         const quanLyBaoCao = new Report(MongoDB.client);
-        console.log(req.params.id);
         documents = await quanLyBaoCao.findOne(req.params.id);
     } catch (error) {
         return next(
@@ -140,7 +139,6 @@ exports.findAllStudent = async (req, res, next) => {
     try {
         const quanLySinhVien = new QuanLySinhVien(MongoDB.client);
         const { name } = req.query;
-        console.log(quanLySinhVien);
         if (name) {
             documents = await quanLySinhVien.findByName(name);
         } else {
@@ -168,7 +166,6 @@ exports.getAllStudent = async (req, res, next) => {
         );
     }
 
-    console.log(documents);
     return res.send(documents);
 };
 exports.findAllStudent = async (req, res, next) => {
@@ -190,7 +187,6 @@ exports.getAllLecturer = async (req, res, next) => {
     try {
         const lecturer = new Lecturer(MongoDB.client);
         documents = await lecturer.find({});
-        console.log(documents);
 
     } catch (error) {
         return next(
@@ -206,7 +202,6 @@ exports.getAllCB = async (req, res, next) => {
     try {
         const canbo = new CanBo(MongoDB.client);
         documents = await canbo.find({});
-        console.log(documents);
 
     } catch (error) {
         return next(

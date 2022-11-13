@@ -4,7 +4,6 @@ import { useAccountStore } from "@/stores/AccountStore";
 export default {
   setup() {
     const acc = useAccountStore();
-    console.log(acc.user);
     return {
       acc,
     };
@@ -126,8 +125,5 @@ nav li {
 a:hover {
   color: black !important;
 }
-/* 
-.dropdown-menu{
-  box-shadow: 0px 2px 0px 0px black;
-} */
+
 </style>

@@ -2,11 +2,13 @@
 import LopHoc from "@/services/class";
 import Report from '@/services/report';
 import FileBaoCao from '../Home/FileBaoCao.vue';
+import Calendar from '../Home/Calendar.vue';
 
 import { useAccountStore } from "@/stores/AccountStore";
 export default {
   components: {
-    FileBaoCao
+    FileBaoCao,
+    Calendar
   },
   data() {
     const accStore = useAccountStore();
@@ -46,7 +48,6 @@ export default {
         this.reports = await Report.getAll(this.$route.params.id)
         this.reportSinhVien = this.reports.BaoCao.filter((e) => e.QuyenHienThi.includes(this.accStore.user.CapQuyen))
       } catch (error) {
-        console.log(error);
       }
     },
     async onSubmit() {
@@ -57,7 +58,6 @@ export default {
     },
     async submitFile(file, TenBaoCao) {
       const formData = new FormData();
-      console.log(this.accStore.user);
       formData.append("file", file);
       formData.append("TenBaoCao", TenBaoCao);
       formData.append("MSSV", this.accStore.user._id);
@@ -256,23 +256,7 @@ export default {
 
         </div>
       </div>
-      <div class="col-md-3 mt-5">
-        <div class="container thong-bao py-2 mt-4">
-          <div class="row p-3">
-            <h5><i class="fa-solid fa-bullhorn me-3"></i>THÔNG BÁO MỚI</h5>
-            <hr />
-          </div>
-          <div class="row text-center pb-3">
-            <i>Chưa có thông báo mới ...</i>
-          </div>
-        </div>
-        <section class="container mt-5 pb-4">
-          <div class="row p-3">
-            <h5><i class="fa-regular fa-calendar-days me-3"></i>LỊCH</h5>
-          </div>
-          <v-date-picker v-model="date" class="w-100 border rounded-0" />
-        </section>
-      </div>
+      <Calendar/>
     </div>
   </div>
 </template>
@@ -285,13 +269,6 @@ export default {
   border-left: 3px solid rgba(80, 116, 235, 0.814);
 }
 
-section,
-.thong-bao {
-  box-shadow: 0px 1px 2px 1px rgba(0, 0, 0, 0.5);
-  border-top: 5px solid rgba(80, 116, 235, 0.814);
-  border-radius: 0;
-}
-
 th,
 span,
 td {
@@ -302,10 +279,6 @@ th span {
   font-size: 15px;
 }
 
-.current a {
-  text-decoration: none;
-  font-weight: bold;
-}
 
 .btn {
   background-color: rgba(80, 116, 235, 0.814);

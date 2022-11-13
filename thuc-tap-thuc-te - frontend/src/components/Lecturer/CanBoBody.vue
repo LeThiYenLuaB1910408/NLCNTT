@@ -98,12 +98,6 @@ export default {
 </template>
 
 <style scoped>
-.form,
-.bao-cao {
-  background: rgb(228, 225, 225);
-  padding: 10px 0 10px 5px;
-  border-left: 3px solid rgba(80, 116, 235, 0.814);
-}
 
 th,
 span,
@@ -115,8 +109,4 @@ th span {
   font-size: 15px;
 }
 
-.current a {
-  text-decoration: none;
-  font-weight: bold;
-}
 </style>

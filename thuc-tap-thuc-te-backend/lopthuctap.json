@@ -1,5 +1,18 @@
 [
   {
+    "MaLopTT": null,
+    "HocKi": null,
+    "NienKhoa": null,
+    "ChuyenNganh": null,
+    "SinhVien": [
+      {
+        "MSSV": null,
+        "MSGV":null,
+        "MSCB":null
+      }
+    ]
+  },
+  {
     "MaLopTT": "CT471",
     "HocKi": "3",
     "NienKhoa": "2021-2022",

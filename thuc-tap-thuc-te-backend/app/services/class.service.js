@@ -24,7 +24,6 @@ class QuanLyLopHoc {
     async createClass(payload) {
 
         const lh = this.extractClassData(payload);
-        console.log(lh);
         const result = await this.LopHoc.insertOne(
             lh
         );
@@ -43,7 +42,6 @@ class QuanLyLopHoc {
     // }
 
     async findById(id) {
-        console.log(id);
         const result = await this.LopHoc.aggregate([
             { '$unwind': '$SinhVien' },
             {
@@ -76,7 +74,6 @@ class QuanLyLopHoc {
         ]
         );
         let results = await result.toArray();
-        console.log(results);
         return results.filter(e => e._id == id);
     }
     async isRegistered(id) {

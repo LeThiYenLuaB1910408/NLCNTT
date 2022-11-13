@@ -15,20 +15,6 @@ export default {
         <h5>Hệ Thống Đăng Ký Thực Tập Trực Tuyến</h5>
       </div>
     </div>
-    <!-- <form class="d-flex me-2 border border-dark mt-5">
-      <input
-        class="form-control border border-0"
-        type="search"
-        placeholder="Tìm kiếm khóa học"
-        aria-label="Search"
-      />
-      <button
-        class="btn border border-dark rounded-0 m-1 text-light"
-        type="submit"
-      >
-        <i class="fa-solid fa-magnifying-glass"></i>
-      </button>
-    </form> -->
     <div class="languages">
       <img src="../../assets/VietNam.png" class="me-2" />
       <img src="../../assets/UK.webp" />

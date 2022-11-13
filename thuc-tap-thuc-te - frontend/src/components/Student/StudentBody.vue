@@ -1,7 +1,11 @@
 <script>
 import LopHoc from "@/services/class";
 import { useAccountStore } from "@/stores/AccountStore";
+import Calendar from '../Home/Calendar.vue';
 export default {
+  components: {
+    Calendar
+  },
   data() {
     const accStore = useAccountStore();
     return {
@@ -50,12 +54,12 @@ export default {
     <div class="row">
       <div class="col-md-9 px-5">
         <div class="container my-3">
-          <nav style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='currentColor'/%3E%3C/svg%3E&#34;);" aria-label="breadcrumb">
+          <nav
+            style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='currentColor'/%3E%3C/svg%3E&#34;);"
+            aria-label="breadcrumb">
             <ol class="breadcrumb">
               <li class="breadcrumb-item">
-                <router-link to="/" class="text-decoration-none text-black"
-                  >Trang Chủ</router-link
-                >
+                <router-link to="/" class="text-decoration-none text-black">Trang Chủ</router-link>
               </li>
               <li class="breadcrumb-item">
                 <a>{{ $route.params.id }}</a>
@@ -70,11 +74,8 @@ export default {
         <div class="container recently">
           <div class="row mb-5">
             <h5 class="my-4 khoa-hoc text-secondary">CÁC KHÓA HỌC GẦN ĐÂY</h5>
-            <div
-              v-if="this.classCurrent._id"
-              class="col-md-4 card card-recently border rounded-0 me-4"
-              style="width: 18rem"
-            >
+            <div v-if="this.classCurrent._id" class="col-md-4 card card-recently border rounded-0 me-4"
+              style="width: 18rem">
               <div class="card-body">
                 <h5 class="card-title">
                   Thực Tập Thực Tế - {{ this.classCurrent.ChuyenNganh }}
@@ -83,8 +84,8 @@ export default {
                 <h6 class="card-subtitle mb-4 mt-2 text-muted">
                   HK Hè - Khóa {{ this.classCurrent.NienKhoa }}
                 </h6>
-                <router-link :to="'/courses/' + this.classCurrent._id"
-                  ><button v-if="!this.registered" class="btn border rounded-0">
+                <router-link :to="'/courses/' + this.classCurrent._id"><button v-if="!this.registered"
+                    class="btn border rounded-0">
                     Đăng Ký
                   </button>
                   <button v-else class="btn border rounded-0">Tham gia</button>
@@ -96,12 +97,8 @@ export default {
         <div class="container past">
           <div class="row mb-5">
             <h5 class="my-4 khoa-hoc text-secondary">CÁC KHÓA HỌC KHÁC</h5>
-            <div
-              v-for="classs in this.classPast"
-              :key="classs._id"
-              class="col-md-4 card card-past border rounded-0 me-4"
-              style="width: 18rem"
-            >
+            <div v-for="classs in this.classPast" :key="classs._id"
+              class="col-md-4 card card-past border rounded-0 me-4" style="width: 18rem">
               <div class="card-body">
                 <h5 class="card-title">
                   Thực Tập Thực Tế - {{ classs.ChuyenNganh }}
@@ -118,23 +115,7 @@ export default {
           </div>
         </div>
       </div>
-      <div class="col-md-3 mt-5">
-        <div class="container thong-bao py-2 mt-4">
-          <div class="row p-3">
-            <h5><i class="fa-solid fa-bullhorn me-3"></i>THÔNG BÁO MỚI</h5>
-            <hr />
-          </div>
-          <div class="row text-center pb-3">
-            <i>Chưa có thông báo mới ...</i>
-          </div>
-        </div>
-        <section class="container mt-5 pb-4">
-          <div class="row p-3">
-            <h5><i class="fa-regular fa-calendar-days me-3"></i>LỊCH</h5>
-          </div>
-          <v-date-picker v-model="date" class="w-100 border rounded-0" />
-        </section>
-      </div>
+      <Calendar />
     </div>
   </div>
 </template>
@@ -143,6 +124,7 @@ export default {
 .card-recently {
   box-shadow: 0px 1px 2px 1px rgba(0, 0, 0, 0.5);
 }
+
 .card-recently .btn {
   background-color: rgba(51, 73, 183, 0.814);
   color: aliceblue;
@@ -160,12 +142,6 @@ export default {
   border-left: 3px solid rgba(80, 116, 235, 0.814);
 }
 
-section,
-.thong-bao {
-  box-shadow: 0px 1px 2px 1px rgba(0, 0, 0, 0.5);
-  border-top: 5px solid rgba(80, 116, 235, 0.814);
-  border-radius: 0;
-}
 
 th,
 span,
@@ -175,10 +151,5 @@ td {
 
 th span {
   font-size: 15px;
-}
-
-.current a {
-  text-decoration: none;
-  font-weight: bold;
 }
 </style>

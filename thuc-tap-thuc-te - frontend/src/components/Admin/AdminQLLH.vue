@@ -46,7 +46,6 @@ export default {
         <a href="#" @click="showStudents(lh._id)"> Lớp thực tập {{ lh.ChuyenNganh }} {{ lh.MaLopTT }} {{ lh.NienKhoa
         }}</a>
       </li>
-      <!-- </ol> -->
     </div>
 
     <div class="col-lg-8">
@@ -54,7 +53,7 @@ export default {
         <div class="card card-body">
           <i class="fa-solid fa-xmark ms-auto fs-5" @click="this.activeIndex = null" style="cursor: pointer"></i>
           <h5 class="text-center mb-4">Danh sách sinh viên lớp</h5>
-          <p>Số lượng sinh viên: {{this.studentInClass.length}} </p>
+          <p>Số lượng sinh viên: {{ this.studentInClass.length }} </p>
           <table class="table table-striped table-sm">
             <thead align="center">
               <tr>
@@ -64,7 +63,6 @@ export default {
                 <th scope="col">Số điện thoại</th>
                 <th scope="col">Mã lớp</th>
                 <th scope="col">Chuyên Ngành</th>
-                <th scope="col">Điểm Số</th>
               </tr>
             </thead>
             <tbody align="center">
@@ -75,20 +73,15 @@ export default {
                 <td>{{ e.SinhVienLop.Sdt }}</td>
                 <td>{{ e.SinhVienLop.MaLop }}</td>
                 <td>{{ e.SinhVienLop.ChuyenNganh }}</td>
-                <td>{{ e.SinhVien.DiemSo }}</td>
               </tr>
             </tbody>
           </table>
-          
+
         </div>
       </div>
     </div>
   </div>
-
-
-
 </template>
-
 <style>
 
 </style>

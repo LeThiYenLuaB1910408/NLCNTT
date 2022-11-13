@@ -43,28 +43,44 @@ class Report {
                 { "MaLopTT": ObjectId(id) },
                 { $push: { BaoCao: rp.BaoCao[0] } }
             )
-            console.log(result);
         }
 
     }
     async updateReport(id, payload) {
-        console.log(payload);
-        const result = await this.Report.findOneAndUpdate(
-            { "MaLopTT": ObjectId(id) },
-            {
-                $set: {
-                    'BaoCao.$[element].BaiNop.$[elem].DiemSo': payload.DiemSo
+        let result;
+        if(payload.DiemSo!=null){
+            result = await this.Report.findOneAndUpdate(
+                { "MaLopTT": ObjectId(id) },
+                {
+                    $set: {
+                        'BaoCao.$[element].BaiNop.$[elem].DiemSo': payload.DiemSo
+                    }
+                },
+                {
+                    arrayFilters: [
+                        { "element.TenBaoCao": payload.TenBaoCao },
+                        {'elem.MSSV':payload.MSSV}
+                ],
+                    returnDocument: "after"
                 }
-            },
-            {
-                arrayFilters: [
-                    { "element.TenBaoCao": payload.TenBaoCao },
-                    {'elem.MSSV':payload.MSSV}
-            ],
-                returnDocument: "after"
-            }
-        )
-        console.log(result);
+            )
+        }
+        else{
+            result = await this.Report.findOneAndUpdate(
+                { "MaLopTT": ObjectId(id) },
+                {
+                    $set: {
+                        'BaoCao.$[element]': payload
+                    }
+                },
+                {
+                    arrayFilters: [
+                        { "element.TenBaoCao": payload.TenBaoCao },
+                ],
+                    returnDocument: "after"
+                }
+            )
+        }
         return result.value;
 
     }

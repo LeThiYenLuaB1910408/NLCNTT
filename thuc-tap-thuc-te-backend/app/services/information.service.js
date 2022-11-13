@@ -42,7 +42,6 @@ class Information {
     }
 
     async registerClass(payload) {
-        console.log(payload);
         const congTy = this.extractCongTyData(payload.CongTy);
         const canBo = this.extractCanBoData({ ...payload.CanBo, TenCongTy: payload.CongTy.TenCongTy });
         const thongTin = this.extractThongTinData(payload.ThongTin);
@@ -71,7 +70,6 @@ class Information {
                 { _id: ObjectId(payload.classCurrent._id) },
                 { $push: { SinhVien: { MSSV: thongTin.MSSV, MSGV: '', MSCB: resultCanBo.insertedId ?? resultCanBo._id, DiemSo: '' } } }
             )
-            console.log(result);
     
             return result ;
         } catch (error) {

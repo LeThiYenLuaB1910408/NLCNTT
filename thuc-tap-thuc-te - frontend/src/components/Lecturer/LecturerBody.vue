@@ -15,12 +15,8 @@ export default {
       selected: null,
       selectedReport: null,
       reports: null,
-      dataCreateReport: {
-        MaLopTT: null,
-        BaoCao: {
-          QuyenHienThi: []
-        }
-      }
+      dataCreateReport: null,
+      edit:false
     };
   },
   methods: {
@@ -33,14 +29,17 @@ export default {
       this.students = this.students.filter(e => e.SinhVien.MSGV == this.accStore.user._id)
     },
     async onSetScore(data) {
-      await Report.update(data.MaLopTT,data)
+      await Report.update(data.MaLopTT, data)
       this.getAll();
       this.selectedReport.Diem = data.DiemSo;
     },
 
     async handleAddReport() {
-      this.dataCreateReport.MaLopTT = this.students[0]._id;
-      await Report.create(this.students[0]._id, this.dataCreateReport)
+      const data = {
+        MaLopTT: this.students[0]._id,
+        BaoCao: this.dataCreateReport
+      }
+      await Report.create(this.students[0]._id, data)
       this.reports = await Report.getAll(this.students[0]._id)
       this.dataCreateReport = {
         MaLopTT: null,
@@ -48,7 +47,18 @@ export default {
           QuyenHienThi: []
         }
       }
-    }
+    },
+    async handleUpdateReport() {
+
+      await Report.update(this.students[0]._id, this.dataCreateReport)
+      this.reports = await Report.getAll(this.students[0]._id)
+      this.dataCreateReport = {
+        MaLopTT: null,
+        BaoCao: {
+          QuyenHienThi: []
+        }
+      }
+    },
   },
   created() {
     this.getAll();
@@ -113,14 +123,14 @@ export default {
                       <td>{{ student.CanBo.TenCongTy }}</td>
                       <td class="text-center">
                         <i class="fa-solid fa-circle-info fs-5 mt-1 text-secondary" style="cursor: pointer"
-                          data-bs-toggle="modal" data-bs-target="#exampleModal" @click="this.selected = student"></i>
+                          data-bs-toggle="modal" data-bs-target="#infoStudent" @click="this.selected = student"></i>
                       </td>
                     </tr>
                   </tbody>
                 </table>
               </div>
             </div>
-            <div class="modal fade hide " id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+            <div class="modal fade hide " id="infoStudent" tabindex="-1" aria-labelledby="infoStudent"
               aria-hidden="true">
               <div class="modal-dialog modal-dialog-scrollable modal-lg">
                 <div class="modal-content">
@@ -174,22 +184,26 @@ export default {
         <div class="container past">
           <div class="row mb-5">
             <h5 class="my-4 bao-cao text-secondary">BÁO CÁO</h5>
-            <div v-if="this.reports != null" v-for="(e) in this.reports.BaoCao" class="row">
+            <div v-if="this.reports != null" v-for="(e,i) in this.reports.BaoCao" class="row" :key="i">
               <div class="nop-bao-cao col-md-9">
                 <i class="fa-solid fa-file me-2"></i>
-                <a class="text-decoration-none text-primary" style="cursor:pointer"
-                  @click="this.selectedReport = e" data-bs-toggle="modal" data-bs-target="#infoReport">{{
+                <a class="text-decoration-none text-primary" style="cursor:pointer" @click="this.selectedReport = e"
+                  data-bs-toggle="modal" data-bs-target="#infoReport">{{
                       e.TenBaoCao
                   }}</a>
                 <p>{{ e.MoTa }}</p>
               </div>
               <div class="check col-md-3">
-                <i class="fa-solid fa-pen-to-square fs-5 me-1"></i>Edit
+                <button type="button" class="border-0 " data-bs-toggle="modal" data-bs-target="#addReport"
+                  @click="this.dataCreateReport = e; this.edit=true">
+                  <i class="fa-solid fa-pen-to-square fs-5 me-1"></i>Edit
+                </button>
               </div>
             </div>
             <div class="d-flex justify-content-end">
               <div><i class="fa-solid fa-circle-plus me-2 fs-5"></i></div>
-              <div class="" style="cursor: pointer" data-bs-toggle="modal" data-bs-target="#addReport">Thêm hoạt động
+              <div class="" style="cursor: pointer" data-bs-toggle="modal" data-bs-target="#addReport"
+                @click="this.dataCreateReport = { QuyenHienThi: [] }">Thêm hoạt động
               </div>
             </div>
           </div>
@@ -217,7 +231,7 @@ export default {
                       </tr>
                     </thead>
                     <tbody align="center">
-                      <tr v-if="this.selectedReport!=null" v-for="(e, i) in this.selectedReport.BaiNop">
+                      <tr v-if="this.selectedReport != null" v-for="(e, i) in this.selectedReport.BaiNop">
                         <th scope="row">{{ i + 1 }}</th>
                         <td>{{ e.MSSV }}</td>
                         <td>
@@ -237,18 +251,14 @@ export default {
                           </a>
                         </td>
                         <td>
-                              <input v-if="e.DiemSo == null" type="text"
-                                v-model="this.selectedReport.Diem" />
-                              <span class="m-0" v-else> {{ e.DiemSo }}</span>
-
-
+                          <input v-if="e.DiemSo == null" type="text" v-model="this.selectedReport.Diem" />
+                          <span class="m-0" v-else> {{ e.DiemSo }}</span>
                         </td>
                         <td class="text-center">
-                            <i @click="onSetScore({ MaLopTT: this.students[0]._id, TenBaoCao: this.selectedReport.TenBaoCao, DiemSo: this.selectedReport.Diem, MSSV: e.MSSV })"
-                              class="fa-regular fa-floppy-disk fs-4 mt-1 text-secondary" style="cursor: pointer"></i>
-                            <i @click="e.DiemSo = null"
-                              class="fa-regular fa-pen-to-square fs-5 mt-1 text-secondary ms-2"
-                              style="cursor: pointer"></i>
+                          <i @click="onSetScore({ MaLopTT: this.students[0]._id, TenBaoCao: this.selectedReport.TenBaoCao, DiemSo: this.selectedReport.Diem, MSSV: e.MSSV })"
+                            class="fa-regular fa-floppy-disk fs-4 mt-1 text-secondary" style="cursor: pointer"></i>
+                          <i @click="e.DiemSo = null" class="fa-regular fa-pen-to-square fs-5 mt-1 text-secondary ms-2"
+                            style="cursor: pointer"></i>
                         </td>
                       </tr>
                     </tbody>
@@ -268,20 +278,21 @@ export default {
               <div class="modal-header">
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
               </div>
-              <div class="modal-body">
+              <div class="modal-body" v-if="this.dataCreateReport!=null">
                 <div class="container py-4 ms-0">
                   <div class="header text-center">
-                    <h5>THÔNG TIN HOẠT ĐỘNG</h5>
+                    <h5 v-if="this.edit">CHỈNH SỬA THÔNG TIN</h5>
+                    <h5 v-else>THÔNG TIN HOẠT ĐỘNG</h5>
                   </div>
                   <div class="mb-3 mt-3">
                     <label for="lh" class="form-label">Tên Hoạt Động:</label>
                     <input type="text" class="form-control border rounded-0" id="lh" placeholder="" name="lh"
-                      v-model="this.dataCreateReport.BaoCao.TenBaoCao" />
+                      v-model="this.dataCreateReport.TenBaoCao" />
                   </div>
                   <div class="mb-3 mt-3">
                     <div class="form-floating">
                       <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea2"
-                        style="height: 100px" v-model="this.dataCreateReport.BaoCao.MoTa"></textarea>
+                        style="height: 100px" v-model="this.dataCreateReport.MoTa"></textarea>
                       <label for="floatingTextarea2">Mô Tả</label>
                     </div>
                   </div>
@@ -290,14 +301,14 @@ export default {
                       <label for="lh" class="form-label">Trạng Thái Hiển Thị:</label>
                       <div class="form-check">
                         <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1"
-                          value=true v-model="this.dataCreateReport.BaoCao.TrangThai">
+                          value=true v-model="this.dataCreateReport.TrangThai">
                         <label class="form-check-label" for="flexRadioDefault1">
                           Hiện
                         </label>
                       </div>
                       <div class="form-check">
                         <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2"
-                          value=false v-model="this.dataCreateReport.BaoCao.TrangThai">
+                          value=false v-model="this.dataCreateReport.TrangThai">
                         <label class="form-check-label" for="flexRadioDefault2">
                           Ẩn
                         </label>
@@ -307,14 +318,14 @@ export default {
                       <label for="lh" class="form-label">Hiển Thị Với:</label>
                       <div class="form-check">
                         <input class="form-check-input" type="checkbox" value="0" id="flexCheckDefault"
-                          v-model="this.dataCreateReport.BaoCao.QuyenHienThi">
+                          v-model="this.dataCreateReport.QuyenHienThi">
                         <label class="form-check-label" for="flexCheckDefault">
                           Sinh Viên
                         </label>
                       </div>
                       <div class="form-check">
                         <input class="form-check-input" type="checkbox" value="3" id="flexCheckChecked"
-                          v-model="this.dataCreateReport.BaoCao.QuyenHienThi">
+                          v-model="this.dataCreateReport.QuyenHienThi">
                         <label class="form-check-label" for="flexCheckChecked">
                           Cán Bộ
                         </label>
@@ -325,7 +336,9 @@ export default {
                 </div>
               </div>
               <div class="modal-footer">
-                <button type="button" class="btn btn-primary" data-bs-dismiss="modal"
+                <button v-if="this.edit" type="button" class="btn btn-primary" data-bs-dismiss="modal"
+                  @click="handleUpdateReport">Cập Nhật</button>
+                <button v-else type="button" class="btn btn-primary" data-bs-dismiss="modal"
                   @click="handleAddReport">Thêm</button>
 
               </div>
@@ -361,8 +374,6 @@ export default {
   border-left: 3px solid rgba(80, 116, 235, 0.814);
 }
 
-
-
 th,
 span,
 td {
@@ -371,10 +382,5 @@ td {
 
 th span {
   font-size: 15px;
-}
-
-.current a {
-  text-decoration: none;
-  font-weight: bold;
 }
 </style>

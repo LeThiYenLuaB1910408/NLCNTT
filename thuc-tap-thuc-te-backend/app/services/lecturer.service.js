@@ -16,19 +16,15 @@ class Lecturer {
             BoMon: payload.BoMon,
             TenDangNhap: payload._id
         };
-console.log(gv);
 // remove undefined fields
 Object.keys(gv).forEach(
     (key) => gv[key] === undefined && delete gv[key]
     );
-    console.log(gv);
         return gv;
     }
 
     async createTeacher(payload) {
-        console.log(1+ payload);
         const teacher = this.extractTeacherData(payload);
-        console.log(teacher);
         const result = await this.GiangVien.insertOne(
             teacher
         );
@@ -48,12 +44,9 @@ Object.keys(gv).forEach(
     }
 
     async update(id, payload) {
-        console.log(payload);
         const filter = {
             _id: id
         };
-        console.log(filter);
-        // const update = this.extractTeacherData(payload)
 
         const result = await this.GiangVien.findOneAndUpdate(
             filter,

@@ -4,7 +4,6 @@ import { useAccountStore } from "@/stores/AccountStore";
 export default {
   setup() {
     const acc = useAccountStore();
-    console.log(acc.user);
     return {
       acc,
     };

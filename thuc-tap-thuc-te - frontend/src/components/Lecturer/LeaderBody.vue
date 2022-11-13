@@ -16,7 +16,6 @@ export default {
   methods: {
     async getAll() {
       this.students = await LopHoc.getAllStudent();
-      console.log(this.students);
       this.giangvien = await GiangVien.getAll();
       this.giangvien = this.giangvien.filter((e) => e.BoMon !== null)
 
@@ -203,7 +202,6 @@ export default {
   border-left: 3px solid rgba(80, 116, 235, 0.814);
 }
 
-
 th,
 span,
 td {
@@ -214,8 +212,4 @@ th span {
   font-size: 15px;
 }
 
-.current a {
-  text-decoration: none;
-  font-weight: bold;
-}
 </style>
