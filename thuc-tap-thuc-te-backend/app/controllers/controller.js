@@ -381,6 +381,13 @@ exports.uploadFile = async (req, res, next) => {
 
     res.send(documents)
 };
+exports.deleteFile = async (req, res, next) => {
+    console.log(req.body);
+    const quanLyBaoCao = new Report(MongoDB.client);
+    const documents = await quanLyBaoCao.deleteFile(req.params.MaLopTT, req.body);
+
+    res.send(documents)
+};
 exports.getFile = async (req, res, next) => {
     const fs = require('fs');
     try {

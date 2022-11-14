@@ -116,19 +116,36 @@ class QuanLyLopHoc {
             _id: ObjectId.isValid(payload._id) ? ObjectId(payload._id) : null
 
         };
-        const result = await this.LopHoc.findOneAndUpdate(
-            filter,
-            {
-                $set: {
-                    "SinhVien.$[element].MSGV": payload.MSGV
+        if (payload.MSGV) {
+            const result = await this.LopHoc.findOneAndUpdate(
+                filter,
+                {
+                    $set: {
+                        "SinhVien.$[element].MSGV": payload.MSGV
+                    }
+                },
+                {
+                    arrayFilters: [{ "element.MSSV": payload.MSSV }],
+                    returnDocument: "after"
                 }
-            },
-            {
-                arrayFilters: [{ "element.MSSV": payload.MSSV }],
-                returnDocument: "after"
-            }
-        );
-        return result.value;
+            );
+            return result.value;
+        }
+        else {
+            const result = await this.LopHoc.findOneAndUpdate(
+                filter,
+                {
+                    $set: {
+                        "SinhVien.$[element].DiemSo": payload.DiemSo
+                    }
+                },
+                {
+                    arrayFilters: [{ "element.MSSV": payload.MSSV }],
+                    returnDocument: "after"
+                }
+            );
+            return result.value;
+        }
 
 
 

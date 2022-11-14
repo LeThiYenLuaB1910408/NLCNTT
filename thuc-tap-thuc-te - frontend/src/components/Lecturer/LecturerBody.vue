@@ -3,10 +3,11 @@ import LopHoc from '@/services/class';
 import Report from '@/services/report';
 import Calendar from '../Home/Calendar.vue';
 import { useAccountStore } from "@/stores/AccountStore";
-import axios from 'axios';
+import FileBaoCao from '../Home/FileBaoCao.vue';
 export default {
   components: {
-    Calendar
+    Calendar,
+    FileBaoCao
   },
   data() {
     const accStore = useAccountStore();
@@ -23,17 +24,21 @@ export default {
   methods: {
     async getAll() {
       this.students = await LopHoc.getAllStudent();
+      this.students = this.students.filter(e => e.SinhVien.MSGV == this.accStore.user._id)
       if (this.students.length != 0) {
         this.reports = await Report.getAll(this.students[0]._id)
       }
-      this.students = this.students.filter(e => e.SinhVien.MSGV == this.accStore.user._id)
     },
-    async onSetScore(data) {
+    async onSetScoreReport(data) {
       await Report.update(data.MaLopTT, data)
       this.getAll();
       this.selectedReport.Diem = data.DiemSo;
     },
-
+    async onSetScoreStudent(data) {
+      await LopHoc.update(data)
+      this.getAll();
+      this.selected.SinhVien.DiemSo = data.DiemSo;
+    },
     async handleAddReport() {
       const data = {
         MaLopTT: this.students[0]._id,
@@ -59,15 +64,7 @@ export default {
         }
       }
     },
-    async onClick(url) {
-      const res = await Report.getFile({ url: url });
-      var fileURL = window.URL.createObjectURL(new Blob([res]));
-      var fileLink = document.createElement('a');
-      fileLink.href = fileURL;
-      fileLink.setAttribute('download', url.slice(url.lastIndexOf("/") + 1));
-      document.body.appendChild(fileLink);
-      fileLink.click();
-    }
+    
   },
   created() {
     this.getAll();
@@ -178,8 +175,25 @@ export default {
                         <p><strong>Cán Bộ Công Ty:</strong> {{ this.selected.CanBo.HoTen }}</p>
                       </div>
                     </div>
+                    <div class="row mb-3">
+                      <div class="d-flex align-items-center">
+                        <div class="col-md-5">
+                          <strong class="me-2">Chấm Điểm:</strong>
+                          <input v-if="this.selected.SinhVien.DiemSo == null" type="text"
+                            v-model="this.selected.Diem" />
+                          <span class="m-0" v-else> {{ this.selected.SinhVien.DiemSo }}</span>
+                        </div>
 
-
+                        <div class="d-flex">
+                          <i @click="onSetScoreStudent({ _id: this.selected._id, MSSV: this.selected.SinhVienLop._id, DiemSo: this.selected.Diem })"
+                            class="fa-regular fa-floppy-disk fs-4 mt-1 text-secondary" style="cursor: pointer"></i>
+                          <i @click="this.selected.SinhVien.DiemSo = null"
+                            class="fa-regular fa-pen-to-square fs-5 mt-1 text-secondary ms-2"
+                            style="cursor: pointer"></i>
+                        </div>
+                      </div>
+                    </div>
+                    
                   </div>
                   <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
@@ -244,27 +258,14 @@ export default {
                         <th scope="row">{{ i + 1 }}</th>
                         <td>{{ e.MSSV }}</td>
                         <td>
-                          <i v-if="e.File.slice(e.File.lastIndexOf('.') + 1) == 'pdf'"
-                            class="fa-regular text-danger fa-file-pdf"></i>
-                          <i v-else-if="e.File.slice(e.File.lastIndexOf('.') + 1) == 'docx'"
-                            class="fa-regular text-primary fa-file-word"></i>
-                          <i v-else-if="e.File.slice(e.File.lastIndexOf('.') + 1) == 'xlsx'"
-                            class="fa-regular text-success fa-file-excel"></i>
-                          <i v-else-if="e.File.slice(e.File.lastIndexOf('.') + 1) == 'jpg'"
-                            class="fa-regular text-success fa-file-image"></i>
-                          <i v-else-if="e.File.slice(e.File.lastIndexOf('.') + 1) == 'pptx'"
-                            class="fa-regular fa-file-powerpoint" style="color:orange"></i>
-                          <i v-else class="fa-regular  fa-file-lines"></i>
-                          <a class="ms-2" style="cursor:pointer" @click="onClick(e.File)">
-                            {{ e.File.slice(e.File.lastIndexOf("/") + 1) }}
-                          </a>
+                          <FileBaoCao :fileName="e.File"/>
                         </td>
                         <td>
                           <input v-if="e.DiemSo == null" type="text" v-model="this.selectedReport.Diem" />
                           <span class="m-0" v-else> {{ e.DiemSo }}</span>
                         </td>
                         <td class="text-center">
-                          <i @click="onSetScore({ MaLopTT: this.students[0]._id, TenBaoCao: this.selectedReport.TenBaoCao, DiemSo: this.selectedReport.Diem, MSSV: e.MSSV })"
+                          <i @click="onSetScoreReport({ MaLopTT: this.students[0]._id, TenBaoCao: this.selectedReport.TenBaoCao, DiemSo: this.selectedReport.Diem, MSSV: e.MSSV })"
                             class="fa-regular fa-floppy-disk fs-4 mt-1 text-secondary" style="cursor: pointer"></i>
                           <i @click="e.DiemSo = null" class="fa-regular fa-pen-to-square fs-5 mt-1 text-secondary ms-2"
                             style="cursor: pointer"></i>

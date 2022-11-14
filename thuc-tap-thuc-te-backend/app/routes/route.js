@@ -48,6 +48,7 @@ router.route("/report/:MaLopTT/:TenBaoCao")
 
 router.route("/reports/:MaLopTT")
     .post(controller.uploadFile)
+    .put(controller.deleteFile)
 router.route("/getfile")
     .post(controller.getFile)
 

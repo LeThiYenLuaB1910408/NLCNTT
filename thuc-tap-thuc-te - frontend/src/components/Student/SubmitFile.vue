@@ -2,9 +2,11 @@
 import Report from '@/services/report';
 import { useAccountStore } from "@/stores/AccountStore";
 import Calendar from '../Home/Calendar.vue';
+import FileBaoCao from '../Home/FileBaoCao.vue';
 export default {
     components: {
-        Calendar
+        Calendar,
+        FileBaoCao
     },
     data() {
         const accStore = useAccountStore();
@@ -20,8 +22,11 @@ export default {
         async getData() {
             try {
                 this.report = await Report.getReport(this.$route.params.MaLopTT, this.$route.params.TenBaoCao)
+                console.log(this.report);
                 if (this.report.BaoCao.BaiNop.length > 0) {
                     this.BaiNop = this.report.BaoCao.BaiNop.filter(e => e.MSSV == this.accStore.user._id)[0]
+                }else{
+                    this.BaiNop={}
                 }
                 console.log(this.BaiNop);
             } catch (error) {
@@ -40,8 +45,17 @@ export default {
             await Report.submitFile(this.$route.params.MaLopTT, formData)
             this.getData();
         },
+        async deleteFile() {
+            const data = {
+                TenBaoCao: this.$route.params.TenBaoCao,
+                MSSV: this.accStore.user._id,
+                File: this.BaiNop.File
+            }
+            await Report.deleteFile(this.$route.params.MaLopTT, data)
+            this.getData();
+        }
     },
-    mounted() {
+    created() {
         this.getData();
     },
 };
@@ -73,7 +87,10 @@ export default {
                 <div class="row">
                     <h5 class="my-3 khoa-hoc text-secondary">Nộp {{ this.$route.params.TenBaoCao }}
                     </h5>
-                    <div class="ms-3 my-3"> Hướng dẫn:
+                    <p  class="ms-3">
+                        {{this.report.BaoCao.MoTa}}
+                    </p>
+                    <div class="ms-3 mb-3"> Hướng dẫn:
                         <ol class="mt-2">
                             <li>Sinh Viên nộp file dưới dạng .pdf</li>
                             <li>Cách đặt tên: <b>MSSV_HoTen_BaoCao.pdf</b></li>
@@ -83,62 +100,51 @@ export default {
                     <div class="noidung ms-4">
                         <table class="table border border-light">
                             <tr>
-                                <td class="col-2 border border-light ">Trạng thái nộp</td>
+                                <td class="col-2 border ">Trạng thái nộp</td>
                                 <td v-if="this.BaiNop.File != null" style="background: rgba(49,222,65,0.3);">Đã nộp bài
                                 </td>
                                 <td v-else style="background: rgb(230, 230, 230);">Chưa nộp bài</td>
                             </tr>
                             <tr>
-                                <td class="col-2 border border-right">Tình trạng chấm điểm</td>
+                                <td class="col-2 border">Tình trạng chấm điểm</td>
                                 <td v-if="this.BaiNop.DiemSo != null" style="background: rgba(49,222,65,0.3);">
                                     {{ this.BaiNop.DiemSo }}</td>
                                 <td v-else style="background: rgb(230, 230, 230);">Chưa chấm điểm</td>
                             </tr>
                             <tr>
-                                <td class="col-2 border border-right">Hết hạn</td>
+                                <td class="col-2 border">Hết hạn</td>
                                 <td style="background: rgb(230, 230, 230);">Monday, 14 November 2022, 12:00 AM</td>
                             </tr>
                             <tr>
-                                <td class="col-2 border border-right">Thời gian còn lại</td>
+                                <td class="col-2 border">Thời gian còn lại</td>
                                 <td style="background: rgb(230, 230, 230);">3 giờ 57 phút</td>
                             </tr>
                             <tr>
-                                <td class="col-2 border border-right">Sửa đổi lần cuối</td>
+                                <td class="col-2 border">Sửa đổi lần cuối</td>
                                 <td style="background: rgb(230, 230, 230);">-</td>
                             </tr>
                             <tr>
-                                <td class="col-2 border border-right">Nộp tập tin</td>
+                                <td class="col-2 border">Nộp tập tin</td>
                                 <td v-if="this.BaiNop.File != null" style="background: rgb(230, 230, 230);">
-                                    <i v-if="this.BaiNop.File.includes('pdf')"
-                                        class="fa-regular text-danger fa-file-pdf"></i>
-                                    <i v-else-if="this.BaiNop.File.includes('docx')"
-                                        class="fa-regular text-primary fa-file-word"></i>
-                                    <i v-else-if="this.BaiNop.File.includes('xlsx')"
-                                        class="fa-regular text-success fa-file-excel"></i>
-                                    <i v-else-if="this.BaiNop.File.includes('jpg')"
-                                        class="fa-regular text-success fa-file-image"></i>
-                                    <i v-else-if="this.BaiNop.File.includes('pptx')"
-                                        class="fa-regular fa-file-powerpoint" style="color:orange"></i>
-                                    <i v-else class="fa-regular  fa-file-lines"></i>
-                                    <a href="#">
-                                        {{ this.BaiNop.File.slice(this.BaiNop.File.lastIndexOf("/") + 1) }}
-                                    </a>
+                                    <FileBaoCao :fileName="this.BaiNop.File" />
                                 </td>
                                 <td v-else style="background: rgb(230, 230, 230);">
                                     <input type="file" class="form-control border rounded-0" @change="onChangeFile" />
                                 </td>
                             </tr>
                             <tr>
-                                <td class="col-2 border border-right">Đăng tải bình luận</td>
+                                <td class="col-2 border">Đăng tải bình luận</td>
                                 <td style="background: rgb(230, 230, 230);">> Các bình luận(0)</td>
                             </tr>
                         </table>
                         <div class="submit text-center my-5">
-                            <button v-if="this.BaiNop.File == null" @click="submitFile" class="btn btn-primary border rounded-0">Nộp
+                            <button v-if="this.BaiNop.File == null" @click="submitFile"
+                                class="btn btn-primary border rounded-0">Nộp
                                 Bài</button>
                             <div v-else class="row justify-content-center">
                                 <button class="col-2 btn btn-primary border rounded-0">Sửa Bài Nộp</button>
-                                <button class="col-2 btn btn-danger border rounded-0">Loại Bỏ Bài Nộp</button>
+                                <button class="col-2 btn btn-danger border rounded-0" @click="deleteFile">Loại Bỏ Bài
+                                    Nộp</button>
                             </div>
                         </div>
 
@@ -164,7 +170,8 @@ td {
     padding-right: 10px;
     border: 1px solid rgba(255, 255, 255);
 }
-.col-2{
+
+.col-2 {
     width: 20%;
 }
 </style>

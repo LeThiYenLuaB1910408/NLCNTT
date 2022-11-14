@@ -5,7 +5,7 @@ import FileBaoCao from '../Home/FileBaoCao.vue';
 import Calendar from '../Home/Calendar.vue';
 
 export default {
-  components:{
+  components: {
     FileBaoCao,
     Calendar
   },
@@ -17,22 +17,35 @@ export default {
       reportCanBo: null,
       reports: null,
       selected: null,
-      fileSelected: null
+      selectedFile: null
     };
   },
   methods: {
     async getAll() {
-      this.reports = await Report.getAll(this.$route.params.class)
+      this.reports = await Report.getAll(this.$route.params.MaLopTT)
       this.reportCanBo = this.reports.BaoCao.filter((e) => e.QuyenHienThi.includes(this.accStore.user.CapQuyen))
     },
-    async submitFile(file,TenBaoCao) {
+    onChangeFile(e) {
+      const selectedFile = e.target.files[0];
+      this.selectedFile = selectedFile;
+    },
+    async submitFile() {
       const formData = new FormData();
-      formData.append("file", file);
-      formData.append("TenBaoCao", TenBaoCao);
-      formData.append("MSSV", this.$route.params.id);
-      await Report.submitFile(this.$route.params.class, formData)
+      formData.append("file", this.selectedFile);
+      formData.append("TenBaoCao", this.selected.TenBaoCao);
+      formData.append("MSSV", this.$route.params.MSSV);
+      await Report.submitFile(this.$route.params.MaLopTT, formData)
       this.getAll();
     },
+    async deleteFile() {
+      const data = {
+        TenBaoCao: this.selected.TenBaoCao,
+        MSSV: this.$route.params.MSSV,
+        File: this.selected.BaiNop.filter(e => e.MSSV == this.$route.params.MSSV)[0].File
+      }
+      await Report.deleteFile(this.$route.params.MaLopTT, data)
+      this.getAll();
+    }
   },
   created() {
     this.getAll();
@@ -58,7 +71,7 @@ export default {
               </li>
 
               <li class="breadcrumb-item active" aria-current="page">
-                {{ this.$route.params.id }}
+                {{ this.$route.params.MSSV }}
               </li>
             </ol>
           </nav>
@@ -70,13 +83,59 @@ export default {
         <div class="container topic">
           <div class="row mb-5">
             <h5 class="my-4 bao-cao text-secondary">CÔNG VIỆC THỰC HIỆN</h5>
-            <FileBaoCao :MSSV="this.$route.params.id" :reports="this.reportCanBo" @submit:report="submitFile"/>
+            <div v-for="(e, i) in this.reportCanBo" class="row">
+              <div v-if="e.TrangThai == 'true'" class="nop-bao-cao col-md-9 mb-5">
+                <i class="fa-solid fa-file me-2"></i>
+                <!-- <router-link to="/submit" class="text-decoration-none">{{ e.TenBaoCao }}</router-link> -->
+                <a href="#" class="text-decoration-none" data-bs-toggle="modal" data-bs-target="#exampleModal"
+                  @click="this.selected = e">{{ e.TenBaoCao }}</a>
+                <p>{{ e.MoTa }}</p>
+                <div class="ms-4" v-for="(e, i) in e.BaiNop.filter(e => e.MSSV == this.$route.params.MSSV)">
+                  <FileBaoCao :fileName="e.File" />
+                </div>
+              </div>
+            </div>
+            <div class="modal fade hide" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+              aria-hidden="true">
+              <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content" v-if="this.selected != null">
+                  <div class="modal-header">
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                    <div class="container py-4 ms-0">
+                      <div class="header text-center">
+                        <h5>THÔNG TIN GIAO VIỆC</h5>
+                      </div>
+                      <div class="mb-3 mt-3">
+                        <label for="lh" class="form-label">Mô tả công việc:</label>
+                        <input type="text" class="form-control border rounded-0" v-model="this.selected.MoTa" />
+                      </div>
+                      <div class="mb-3 mt-3">
+                        <label for="lh" class="form-label">File giao việc chi tiết:</label><br />
+                        <FileBaoCao
+                          v-if="this.selected.BaiNop.filter(e => e.MSSV == this.$route.params.MSSV).length > 0"
+                          :fileName="this.selected.BaiNop.filter(e => e.MSSV == this.$route.params.MSSV)[0].File" />
+                        <input v-else type="file" class="form-control border rounded-0" @change="onChangeFile" />
+                      </div>
+                    </div>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                    <button v-if="this.selected.BaiNop.filter(e => e.MSSV == this.$route.params.MSSV).length > 0"
+                      type="button" class="btn btn-danger" data-bs-dismiss="modal" @click="deleteFile">Xóa File</button>
+                    <button v-else type="button" class="btn btn-primary" data-bs-dismiss="modal" @click="submitFile">Xác
+                      nhận</button>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
       </div>
 
-      <Calendar/>
+      <Calendar />
     </div>
   </div>
 </template>
@@ -98,5 +157,4 @@ td {
 th span {
   font-size: 15px;
 }
-
 </style>

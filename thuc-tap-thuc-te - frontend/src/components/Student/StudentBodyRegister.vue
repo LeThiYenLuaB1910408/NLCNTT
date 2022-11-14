@@ -44,6 +44,7 @@ export default {
         if (this.studentClass.length != 0) {
           this.data.classCurrent = this.studentClass.filter(e => e.SinhVien.MSSV == this.accStore.user._id)[0];
         }
+        console.log(this.data.classCurrent);
         this.registered = await LopHoc.isRegistered(this.accStore.user._id)
         this.reports = await Report.getAll(this.$route.params.id)
         this.reportSinhVien = this.reports.BaoCao.filter((e) => e.QuyenHienThi.includes(this.accStore.user.CapQuyen))
@@ -53,8 +54,7 @@ export default {
     async onSubmit() {
       this.data.classCurrent._id = this.$route.params.id;
       await LopHoc.RegisterClass(this.data);
-      this.registered = await LopHoc.isRegistered(this.accStore.user._id)
-
+      this.retrieveClasses();
     },
     async submitFile(file, TenBaoCao) {
       const formData = new FormData();
@@ -62,15 +62,13 @@ export default {
       formData.append("TenBaoCao", TenBaoCao);
       formData.append("MSSV", this.accStore.user._id);
       await Report.submitFile(this.$route.params.id, formData)
-      this.refreshList();
-    },
-
-    refreshList() {
       this.retrieveClasses();
     },
+
+   
   },
   created() {
-    this.refreshList();
+    this.retrieveClasses();
   },
 };
 </script>
@@ -107,9 +105,9 @@ export default {
               <p class="col-md-6"><span><strong>Học Kì - Niên Khóa:</strong></span>{{ this.data.classCurrent.HocKi }}
                 {{ this.data.classCurrent.NienKhoa }}</p>
             </div>
-            <div class="row">
+            <div v-if="this.data.classCurrent.GiangVien!=null" class="row">
               <p class="col-md-4"><span><strong>Giảng Viên Hướng
-                    Dẫn:</strong></span>{{ this.data.classCurrent.GiangVien.length != 0 ?
+                    Dẫn:</strong></span>{{ this.data.classCurrent.GiangVien.length> 0 ?
                         this.data.classCurrent.GiangVien[0].HoTen : null
                     }}</p>
               <p class="col-md-4"><span><strong><i class="fa-solid fa-phone me-2"></i></strong></span>{{
@@ -258,22 +256,7 @@ export default {
               <router-link :to='"/submit/"+this.$route.params.id+"/"+e.TenBaoCao' class="text-decoration-none">{{ e.TenBaoCao }}</router-link>
               
               <p>{{ e.MoTa }}</p>
-              <div class="ms-4" v-for="(e, i) in e.BaiNop.filter(e => e.MSSV == this.accStore.user.MSSV)">
-                <i v-if="e.File.slice(e.File.lastIndexOf('.') + 1) == 'pdf'"
-                  class="fa-regular text-danger fa-file-pdf"></i>
-                <i v-else-if="e.File.slice(e.File.lastIndexOf('.') + 1) == 'docx'"
-                  class="fa-regular text-primary fa-file-word"></i>
-                <i v-else-if="e.File.slice(e.File.lastIndexOf('.') + 1) == 'xlsx'"
-                  class="fa-regular text-success fa-file-excel"></i>
-                <i v-else-if="e.File.slice(e.File.lastIndexOf('.') + 1) == 'jpg'"
-                  class="fa-regular text-success fa-file-image"></i>
-                <i v-else-if="e.File.slice(e.File.lastIndexOf('.') + 1) == 'pptx'" class="fa-regular fa-file-powerpoint"
-                  style="color:orange"></i>
-                <i v-else class="fa-regular  fa-file-lines"></i>
-                <a href="#" class="ms-2">
-                  {{ e.File.slice(e.File.lastIndexOf("/") + 1) }}
-                </a>
-              </div>
+              
             </div>
           </div>
 

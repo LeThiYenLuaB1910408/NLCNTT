@@ -83,7 +83,7 @@ const routes = [
     
     },
     {
-        path: "/canbo/:class/:id",
+        path: "/canbo/:MaLopTT/:MSSV",
         name: "detail",
         components:{
             default: InfoStudentBody,

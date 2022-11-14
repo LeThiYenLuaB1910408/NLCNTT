@@ -10,7 +10,7 @@ class Report {
     async getReport(MaLop, TenBaoCao) {
         return (await this.api.get(`/report/${MaLop}/${TenBaoCao}`)).data;
     }
-    
+
     async getFile(linkUrl) {
         return (await this.api.post(`/getfile/`, linkUrl,
             {
@@ -31,6 +31,9 @@ class Report {
                 'Content-Type': 'multipart/form-data'
             }
         })).data;
+    }
+    async deleteFile(MaLopTT, data) {
+        return (await this.api.put(`/reports/${MaLopTT}`, data)).data;
     }
 
 

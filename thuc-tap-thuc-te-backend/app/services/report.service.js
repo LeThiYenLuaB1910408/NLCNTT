@@ -96,7 +96,10 @@ class Report {
                 $unwind: "$BaoCao"
             }
             ,{   
-                $match: {"BaoCao.TenBaoCao": TenBaoCao }
+                $match: {
+                    "MaLopTT": ObjectId(MaLopTT),
+                    "BaoCao.TenBaoCao": TenBaoCao 
+                }
                 
             }
         ]
@@ -109,6 +112,9 @@ class Report {
         const fs = require('fs');
         let folderPath = "./fileUpload/" + MaLop;
         try {
+            if (!fs.existsSync("./fileUpload")) {
+                fs.mkdirSync("./fileUpload");
+            }
             if (!fs.existsSync(folderPath)) {
                 fs.mkdirSync(folderPath);
             }
@@ -123,6 +129,7 @@ class Report {
         } catch (err) {
             console.error(err);
         }
+        console.log(file.name);
         file.mv(`${folderPath}/${file.name}`, function (err) {
             if (err) {
                 console.log(err)
@@ -145,6 +152,32 @@ class Report {
                     //     "BaoCao.BaiNop.$[element].MSSV": data.MSSV,
                     //     "BaoCao.BaiNop.$[element].File": file.name,
                     // }
+                },
+                {
+                    arrayFilters: [{ "element.TenBaoCao": data.TenBaoCao }],
+                    returnDocument: "after"
+                }
+            );
+            return result.value;
+        } catch (error) {
+            console.log(error);
+        }
+
+    }
+    async deleteFile(MaLop, data) {
+        const fs = require('fs');
+        fs.unlinkSync(data.File);
+        try {
+            const result = await this.Report.updateOne(
+                {
+                    "MaLopTT": ObjectId(MaLop),
+                },
+                {
+                    $pull: {
+                        'BaoCao.$[element].BaiNop': {
+                            MSSV: data.MSSV
+                        }
+                    }
                 },
                 {
                     arrayFilters: [{ "element.TenBaoCao": data.TenBaoCao }],
