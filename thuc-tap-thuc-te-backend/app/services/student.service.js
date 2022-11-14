@@ -37,7 +37,32 @@ class QuanLySinhVien {
     }
 
 
+    async delete(id) {
+        const result = await this.SinhVien.findOneAndDelete({
+            _id: id,
+        });
 
+        return result.value;
+    }
+
+    async update(id, payload) {
+        const filter = {
+            _id: id
+        };
+
+        const result = await this.SinhVien.findOneAndUpdate(
+            filter,
+            {
+                $set: payload
+            },
+            {
+                returnDocument: "after"
+            }
+        );
+        return result.value;
+
+
+    }
 
     // async findByName(name) {
     //     return await this.find({

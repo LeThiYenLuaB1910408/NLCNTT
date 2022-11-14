@@ -34,7 +34,7 @@ export default {
           (cl) => cl._id !== this.classCurrent._id
         );
 
-        this.registered = await LopHoc.isRegistered(this.accStore.user._id);
+        this.registered = await LopHoc.isRegistered(this.classCurrent._id,this.accStore.user._id);
       } catch (error) {
         console.log(error);
       }
@@ -84,8 +84,8 @@ export default {
                 <h6 class="card-subtitle mb-4 mt-2 text-muted">
                   HK Hè - Khóa {{ this.classCurrent.NienKhoa }}
                 </h6>
-                <router-link :to="'/courses/' + this.classCurrent._id"><button v-if="!this.registered"
-                    class="btn border rounded-0">
+                <router-link :to="'/courses/' + this.classCurrent._id">
+                  <button v-if="!this.registered" class="btn border rounded-0">
                     Đăng Ký
                   </button>
                   <button v-else class="btn border rounded-0">Tham gia</button>

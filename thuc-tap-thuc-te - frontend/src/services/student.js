@@ -12,7 +12,12 @@ class SinhVien{
         return (await this.api.post('/QLSV', data)).data;
     }
 
-
+    async deleteSV(id){
+        return (await this.api.delete(`/QLSV/${id}`)).data;
+    }
+    async updateSV(id,data){
+        return (await this.api.put(`/QLSV/${id}`,data)).data;
+    }
 
 
 }

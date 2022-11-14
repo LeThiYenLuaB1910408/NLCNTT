@@ -76,9 +76,10 @@ class QuanLyLopHoc {
         let results = await result.toArray();
         return results.filter(e => e._id == id);
     }
-    async isRegistered(id) {
+    async isRegistered(MaLopTT, MSSV) {
         return await this.LopHoc.findOne({
-            "SinhVien.MSSV": id,
+            "_id": ObjectId(MaLopTT),
+            "SinhVien.MSSV": MSSV,
         });
     }
 

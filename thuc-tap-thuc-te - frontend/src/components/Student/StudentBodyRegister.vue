@@ -45,7 +45,7 @@ export default {
           this.data.classCurrent = this.studentClass.filter(e => e.SinhVien.MSSV == this.accStore.user._id)[0];
         }
         console.log(this.data.classCurrent);
-        this.registered = await LopHoc.isRegistered(this.accStore.user._id)
+        this.registered = await LopHoc.isRegistered(this.$route.params.id, this.accStore.user._id)
         this.reports = await Report.getAll(this.$route.params.id)
         this.reportSinhVien = this.reports.BaoCao.filter((e) => e.QuyenHienThi.includes(this.accStore.user.CapQuyen))
       } catch (error) {
@@ -253,7 +253,7 @@ export default {
           <div v-for="(e, i) in this.reportSinhVien" class="row">
             <div v-if="e.TrangThai == 'true'" class="nop-bao-cao col-md-9 mb-5">
               <i class="fa-solid fa-file me-2"></i>
-              <router-link :to='"/submit/"+this.$route.params.id+"/"+e.TenBaoCao' class="text-decoration-none">{{ e.TenBaoCao }}</router-link>
+              <router-link :to='"/courses/"+this.$route.params.id+"/"+e.TenBaoCao' class="text-decoration-none">{{ e.TenBaoCao }}</router-link>
               
               <p>{{ e.MoTa }}</p>
               

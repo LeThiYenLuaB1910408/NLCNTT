@@ -47,7 +47,7 @@ const routes = [
     
     },
     {
-        path: "/submit/:MaLopTT/:TenBaoCao",
+        path: "/courses/:MaLopTT/:TenBaoCao",
         name: "submit",
         components:{
             default: SubmitFile,

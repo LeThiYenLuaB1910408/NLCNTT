@@ -260,7 +260,7 @@ exports.isRegistered = async (req, res, next) => {
     try {
         const quanLyLopHoc = new QuanLyLopHoc(MongoDB.client);
 
-        const document = await quanLyLopHoc.isRegistered(req.params.id);
+        const document = await quanLyLopHoc.isRegistered(req.params.MaLopTT,req.params.MSSV);
         return res.send(document);
     } catch (error) {
         return next(
@@ -316,6 +316,22 @@ exports.deleteGV = async (req, res, next) => {
         );
     }
 };
+exports.deleteSV = async (req, res, next) => {
+    try {
+        const quanLySinhVien = new QuanLySinhVien(MongoDB.client);
+        const quanLyTaiKhoan = new QuanLyTaiKhoan(MongoDB.client);
+        const document = await quanLySinhVien.delete(req.params.id);
+        await quanLyTaiKhoan.delete(req.params.id);
+        if (!document) {
+            return next(new ApiError(404, "Contact not found"));
+        }
+        return res.send({ message: "Xóa Sinh Viên Thành Công!!!" });
+    } catch (error) {
+        return next(
+            new ApiError(500, `Could not delete contact with id=${req.params.id}`)
+        );
+    }
+};
 exports.updateCB = async (req, res, next) => {
     if (Object.keys(req.body).length === 0) {
         return next(new ApiError(400, "Data to update can not be empty"));
@@ -348,6 +364,24 @@ exports.updateGV = async (req, res, next) => {
             return next(new ApiError(404, "Contact not found"));
         }
         return res.send({ message: "Lecturer was updated successfully" });
+    } catch (error) {
+        return next(
+            new ApiError(500, `Error updating class with id`)
+        );
+    }
+};
+exports.updateSV = async (req, res, next) => {
+    if (Object.keys(req.body).length === 0) {
+        return next(new ApiError(400, "Data to update can not be empty"));
+    }
+
+    try {
+        const quanLySinhVien = new QuanLySinhVien(MongoDB.client);
+        const document = await quanLySinhVien.update(req.params.id, req.body);
+        if (!document) {
+            return next(new ApiError(404, "Contact not found"));
+        }
+        return res.send({ message: "Student was updated successfully" });
     } catch (error) {
         return next(
             new ApiError(500, `Error updating class with id`)

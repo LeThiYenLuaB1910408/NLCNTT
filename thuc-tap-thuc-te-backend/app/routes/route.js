@@ -20,6 +20,9 @@ router.route("/QLCB/:id")
 router.route("/QLGV/:id")
     .put(controller.updateGV)
     .delete(controller.deleteGV);
+router.route("/QLSV/:id")
+    .put(controller.updateSV)
+    .delete(controller.deleteSV);
 router.route("/QLLH")
     .get(controller.findAllClass)
     .put(controller.updateClass)
@@ -28,7 +31,7 @@ router.route("/courses/:id")
     .get(controller.findOneClass);
 router.route("/register")
     .post(controller.registerClass);
-router.route("/register/:id")
+router.route("/register/:MaLopTT/:MSSV")
     .get(controller.isRegistered);
 router.route("/allStudent")
     .get(controller.getAllStudent);

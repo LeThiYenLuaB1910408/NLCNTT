@@ -13,8 +13,8 @@ class LopHoc{
     async RegisterClass(data){
         return (await this.api.post("/register", data)).data;
     }
-    async isRegistered(id){
-        return (await this.api.get(`/register/${id}`)).data;
+    async isRegistered(MaLopTT,MSSV){
+        return (await this.api.get(`/register/${MaLopTT}/${MSSV}`)).data;
     }
     async create(data) {
         return (await this.api.post('/QLLH', data)).data;

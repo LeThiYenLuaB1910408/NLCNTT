@@ -75,7 +75,7 @@ export default {
                                 <a>{{ this.accStore.user.ChuyenNganh }}</a>
                             </li>
                             <li class="breadcrumb-item active" aria-current="page">
-                                <router-link to="'/courses/' + this.accStore.user.MaLopTT"
+                                <router-link :to="'/courses/' + this.$route.params.MaLopTT"
                                     class="text-decoration-none text-black">Các khóa thực tập</router-link>
                             </li>
                             <li class="breadcrumb-item active" aria-current="page">
