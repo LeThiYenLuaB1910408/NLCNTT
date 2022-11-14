@@ -65,7 +65,7 @@ export default {
       this.retrieveClasses();
     },
 
-   
+
   },
   created() {
     this.retrieveClasses();
@@ -105,9 +105,9 @@ export default {
               <p class="col-md-6"><span><strong>Học Kì - Niên Khóa:</strong></span>{{ this.data.classCurrent.HocKi }}
                 {{ this.data.classCurrent.NienKhoa }}</p>
             </div>
-            <div v-if="this.data.classCurrent.GiangVien!=null" class="row">
+            <div v-if="this.data.classCurrent.GiangVien != null" class="row">
               <p class="col-md-4"><span><strong>Giảng Viên Hướng
-                    Dẫn:</strong></span>{{ this.data.classCurrent.GiangVien.length> 0 ?
+                    Dẫn:</strong></span>{{ this.data.classCurrent.GiangVien.length > 0 ?
                         this.data.classCurrent.GiangVien[0].HoTen : null
                     }}</p>
               <p class="col-md-4"><span><strong><i class="fa-solid fa-phone me-2"></i></strong></span>{{
@@ -138,112 +138,126 @@ export default {
                 <i class="fa-solid fa-file-import me-2"></i>Vui lòng nhập form
                 đăng ký:
               </p>
-
-              <a v-if="!this.registered" class="btn border rounded-0 col-md-2 mb-2" data-bs-toggle="collapse"
-                href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
+              <!-- v-if="!this.registered" -->
+              <a class="btn border rounded-0 col-md-2 mb-2" data-bs-toggle="modal" data-bs-target="#exampleModal">
                 ĐĂNG KÝ
               </a>
-              <h6 class="text-danger col-md-2 mt-1" v-else>Đã đăng ký</h6>
+              <!-- <h6 class="text-danger col-md-2 mt-1" v-else>Đã đăng ký</h6> -->
+            </div>
+            <div class="modal fade hide" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+              aria-hidden="true">
+              <div class="modal-dialog modal-dialog-scrollable modal-xs">
+                <div class="modal-content" >
+                  <div class="modal-header">
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                    <form @submit.prevent="onSubmit" class="container ">
+                      <div class="header text-center">
+                        <h5>ĐĂNG KÝ THÔNG TIN THỰC TẬP</h5>
+                      </div>
+                      <div class="mb-3 mt-3">
+                        <label for="cty" class="form-label">Tên công ty (Ghi chính xác)*:</label>
+                        <input type="text" class="form-control border rounded-0" id="cty"
+                          v-model="this.data.CongTy.TenCongTy" />
+                      </div>
+                      <div class="mb-3 mt-3">
+                        <label for="address" class="form-label">Địa chỉ công ty (Ghi chính xác)*:</label>
+                        <input type="text" class="form-control border rounded-0" id="address"
+                          v-model="this.data.CongTy.DiaDiem" />
+                      </div>
+                      <div class="mb-3 mt-3">
+                        <label for="sdt-cty" class="form-label">Điện thoại của công ty*:</label>
+                        <input type="text" class="form-control border rounded-0" id="sdt-cty"
+                          v-model="this.data.CongTy.Sdt" />
+                      </div>
+                      <div class="mb-3 mt-3">
+                        <label for="email-cty" class="form-label">Email của công ty*:</label>
+                        <input type="text" class="form-control border rounded-0" id="email-cty"
+                          v-model="this.data.CongTy.Email" />
+                      </div>
+                      <div class="mb-3 mt-3">
+                        <label for="cbhd" class="form-label">Họ tên cán bộ hướng dẫn tại công ty*:</label>
+                        <input type="text" class="form-control border rounded-0" id="cbhd"
+                          v-model="this.data.CanBo.HoTen" />
+                      </div>
+                      <div class="mb-3 mt-3">
+                        <label for="sdt-cbhd" class="form-label">Số điện thoại cán bộ hướng dẫn tại công ty*:</label>
+                        <input type="text" class="form-control border rounded-0" id="sdt-cbhd"
+                          v-model="this.data.CanBo.Sdt" />
+                      </div>
+                      <div class="mb-3 mt-3">
+                        <label for="email" class="form-label">Email cán bộ hướng dẫn tại công ty*:</label>
+                        <input type="email" class="form-control border rounded-0" id="email"
+                          v-model="this.data.CanBo.Email" />
+                      </div>
+                      <div class="mb-3 mt-3">
+                        <label for="ndcv" class="form-label">Nội dung công việc sẽ làm(bao gồm số buổi làm việc trên
+                          tuần, ghi ngắn gọn, nội dung chính)*:</label>
+                        <input type="text" class="form-control border rounded-0" id="ndcv"
+                          v-model="this.data.ThongTin.NoiDung.NoiDungCV" />
+                      </div>
+                      <fieldset class="row mb-3">
+                        <div>
+                          <legend class="col-form-label pt-0">
+                            Công ty có máy tính cho SV thực tập không?*
+                          </legend>
+                        </div>
+
+                        <div class="row m-2">
+                          <div class="form-check col-md-6">
+                            <input class="form-check-input" type="radio" name="Laptop" id="yes" value=true
+                              v-model="this.data.ThongTin.NoiDung.MayTinh" />
+                            <label class="form-check-label" for="yes"> Có </label>
+                          </div>
+                          <div class="form-check col-md-6">
+                            <input class="form-check-input" type="radio" name="Laptop" id="no" value=false
+                              v-model="this.data.ThongTin.NoiDung.MayTinh" />
+                            <label class="form-check-label" for="no"> Không </label>
+                          </div>
+                        </div>
+                      </fieldset>
+                      <fieldset class="row mb-3">
+                        <div>
+                          <legend class="col-form-label pt-0">
+                            Công ty có phòng làm việc cho SV thực tập không?*
+                          </legend>
+                        </div>
+
+                        <div class="row m-2">
+                          <div class="form-check col-md-6">
+                            <input class="form-check-input" type="radio" name="Room" id="yes" value=true
+                              v-model="this.data.ThongTin.NoiDung.PhongLamViec" />
+                            <label class="form-check-label" for="yes"> Có </label>
+                          </div>
+                          <div class="form-check col-md-6">
+                            <input class="form-check-input" type="radio" name="Room" id="no" value=false
+                              v-model="this.data.ThongTin.NoiDung.PhongLamViec" />
+                            <label class="form-check-label" for="no"> Không </label>
+                          </div>
+                        </div>
+                      </fieldset>
+
+                      <div class="mb-3 mt-3">
+                        <label for="ho-tro" class="form-label">Hỗ trợ khác của công ty(nếu có, ví dụ: hỗ trợ tiền đi
+                          lại,
+                          chỗ ở, lương,...):</label>
+                        <input type="text" class="form-control border rounded-0" id="ho-tro"
+                          v-model="this.data.ThongTin.NoiDung.HoTro" />
+                      </div>
+
+                      
+                    </form>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="submit" class="btn btn-success border rounded-0" data-bs-dismiss="modal">
+                        Gửi
+                      </button>
+                  </div>
+                </div>
+              </div>
             </div>
 
-            <div v-if="!this.registered" class="collapse" id="collapseExample">
-              <form @submit.prevent="onSubmit" class="container w-50 border border-dark py-4">
-                <div class="header text-center">
-                  <h5>ĐĂNG KÝ THÔNG TIN THỰC TẬP</h5>
-                </div>
-                <div class="mb-3 mt-3">
-                  <label for="cty" class="form-label">Tên công ty (Ghi chính xác)*:</label>
-                  <input type="text" class="form-control border rounded-0" id="cty"
-                    v-model="this.data.CongTy.TenCongTy" />
-                </div>
-                <div class="mb-3 mt-3">
-                  <label for="address" class="form-label">Địa chỉ công ty (Ghi chính xác)*:</label>
-                  <input type="text" class="form-control border rounded-0" id="address"
-                    v-model="this.data.CongTy.DiaDiem" />
-                </div>
-                <div class="mb-3 mt-3">
-                  <label for="sdt-cty" class="form-label">Điện thoại của công ty*:</label>
-                  <input type="text" class="form-control border rounded-0" id="sdt-cty"
-                    v-model="this.data.CongTy.Sdt" />
-                </div>
-                <div class="mb-3 mt-3">
-                  <label for="email-cty" class="form-label">Email của công ty*:</label>
-                  <input type="text" class="form-control border rounded-0" id="email-cty"
-                    v-model="this.data.CongTy.Email" />
-                </div>
-                <div class="mb-3 mt-3">
-                  <label for="cbhd" class="form-label">Họ tên cán bộ hướng dẫn tại công ty*:</label>
-                  <input type="text" class="form-control border rounded-0" id="cbhd" v-model="this.data.CanBo.HoTen" />
-                </div>
-                <div class="mb-3 mt-3">
-                  <label for="sdt-cbhd" class="form-label">Số điện thoại cán bộ hướng dẫn tại công ty*:</label>
-                  <input type="text" class="form-control border rounded-0" id="sdt-cbhd"
-                    v-model="this.data.CanBo.Sdt" />
-                </div>
-                <div class="mb-3 mt-3">
-                  <label for="email" class="form-label">Email cán bộ hướng dẫn tại công ty*:</label>
-                  <input type="email" class="form-control border rounded-0" id="email"
-                    v-model="this.data.CanBo.Email" />
-                </div>
-                <div class="mb-3 mt-3">
-                  <label for="ndcv" class="form-label">Nội dung công việc sẽ làm(bao gồm số buổi làm việc trên
-                    tuần, ghi ngắn gọn, nội dung chính)*:</label>
-                  <input type="text" class="form-control border rounded-0" id="ndcv"
-                    v-model="this.data.ThongTin.NoiDung.NoiDungCV" />
-                </div>
-                <fieldset class="row mb-3">
-                  <div>
-                    <legend class="col-form-label pt-0">
-                      Công ty có máy tính cho SV thực tập không?*
-                    </legend>
-                  </div>
-
-                  <div class="row m-2">
-                    <div class="form-check col-md-6">
-                      <input class="form-check-input" type="radio" name="Laptop" id="yes" value=true
-                        v-model="this.data.ThongTin.NoiDung.MayTinh" />
-                      <label class="form-check-label" for="yes"> Có </label>
-                    </div>
-                    <div class="form-check col-md-6">
-                      <input class="form-check-input" type="radio" name="Laptop" id="no" value=false
-                        v-model="this.data.ThongTin.NoiDung.MayTinh" />
-                      <label class="form-check-label" for="no"> Không </label>
-                    </div>
-                  </div>
-                </fieldset>
-                <fieldset class="row mb-3">
-                  <div>
-                    <legend class="col-form-label pt-0">
-                      Công ty có phòng làm việc cho SV thực tập không?*
-                    </legend>
-                  </div>
-
-                  <div class="row m-2">
-                    <div class="form-check col-md-6">
-                      <input class="form-check-input" type="radio" name="Room" id="yes" value=true
-                        v-model="this.data.ThongTin.NoiDung.PhongLamViec" />
-                      <label class="form-check-label" for="yes"> Có </label>
-                    </div>
-                    <div class="form-check col-md-6">
-                      <input class="form-check-input" type="radio" name="Room" id="no" value=false
-                        v-model="this.data.ThongTin.NoiDung.PhongLamViec" />
-                      <label class="form-check-label" for="no"> Không </label>
-                    </div>
-                  </div>
-                </fieldset>
-
-                <div class="mb-3 mt-3">
-                  <label for="ho-tro" class="form-label">Hỗ trợ khác của công ty(nếu có, ví dụ: hỗ trợ tiền đi lại,
-                    chỗ ở, lương,...):</label>
-                  <input type="text" class="form-control border rounded-0" id="ho-tro"
-                    v-model="this.data.ThongTin.NoiDung.HoTro" />
-                </div>
-
-                <button type="submit" class="btn btn-success border rounded-0">
-                  Gửi
-                </button>
-              </form>
-            </div>
           </div>
         </div>
         <div class="container past">
@@ -253,10 +267,12 @@ export default {
           <div v-for="(e, i) in this.reportSinhVien" class="row">
             <div v-if="e.TrangThai == 'true'" class="nop-bao-cao col-md-9 mb-5">
               <i class="fa-solid fa-file me-2"></i>
-              <router-link :to='"/courses/"+this.$route.params.id+"/"+e.TenBaoCao' class="text-decoration-none">{{ e.TenBaoCao }}</router-link>
-              
+              <router-link :to='"/courses/" + this.$route.params.id + "/" + e.TenBaoCao' class="text-decoration-none">{{
+                  e.TenBaoCao
+              }}</router-link>
+
               <p>{{ e.MoTa }}</p>
-              
+
             </div>
           </div>
 
