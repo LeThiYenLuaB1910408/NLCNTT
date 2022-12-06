@@ -1,23 +1,21 @@
-const { ObjectId } = require("mongodb");
-const { Blob } = require('buffer') ;
 
 class Report {
     constructor(client) {
         this.Report = client.db().collection("baocao");
+        this.SinhVien = client.db().collection("sinhvien");
     }
     // Dinh nghia cac phuong thuc truy xuat CSDL su dung mongodb API
     extractData(payload) {
         const rp = {
-            MaLopTT: ObjectId(payload.MaLopTT),
+            MSGV: (payload.MSGV),
             BaoCao: [
                 {
                     TenBaoCao: payload.BaoCao.TenBaoCao,
                     MoTa: payload.BaoCao.MoTa,
                     TrangThai: payload.BaoCao.TrangThai,
+                    HanNop: payload.BaoCao.HanNop,
                     QuyenHienThi: payload.BaoCao.QuyenHienThi,
-                    BaiNop: [
-
-                    ]
+                    BaiNop: []
                 }
             ]
         };
@@ -29,10 +27,10 @@ class Report {
         return rp;
     }
 
-    async createReport(id, payload) {
+    async createReport(MSGV, payload) {
         const rp = this.extractData(payload);
         const cursor = await this.Report.findOne({
-            "MaLopTT": ObjectId(id)
+            "MSGV": (MSGV)
         });
         if (cursor == null) {
             const result = await this.Report.insertOne(
@@ -41,9 +39,10 @@ class Report {
             return result.value;
         } else {
             const result = await this.Report.updateOne(
-                { "MaLopTT": ObjectId(id) },
+                { "MSGV": (MSGV) },
                 { $push: { BaoCao: rp.BaoCao[0] } }
             )
+            return result.value;
         }
 
     }
@@ -51,7 +50,7 @@ class Report {
         let result;
         if (payload.DiemSo != null) {
             result = await this.Report.findOneAndUpdate(
-                { "MaLopTT": ObjectId(id) },
+                { "MSGV": (id) },
                 {
                     $set: {
                         'BaoCao.$[element].BaiNop.$[elem].DiemSo': payload.DiemSo
@@ -65,10 +64,34 @@ class Report {
                     returnDocument: "after"
                 }
             )
+            const sv = await this.SinhVien.findOne({
+                MSSV: payload.MSSV
+            })
+            const nodemailer = require("nodemailer");
+
+            var transporter = nodemailer.createTransport({
+                service: "Gmail",
+                auth: {
+                    user: process.env.EMAIL,
+                    pass: process.env.PASS,
+                },
+            });
+
+            await transporter.sendMail({
+                from: '"Cuc Lua"',
+                to: sv.Email,
+                subject: "THÔNG BÁO ĐIỂM BÁO CÁO THỰC TẬP",
+                text: "",
+                html: "<div style='border: 1px solid black;border-top: 5px solid black;width: fit-content; padding: 10px;' >" +
+                    "<p style='font-size: 12px'>ĐÃ CHẤM ĐIỂM</p>" +
+                    "<p>BÀI BÁO CÁO THỰC TẬP HÈ <br/><span style='color: red'>Điểm: <span>"+payload.DiemSo+"</span></span></p>" +
+                    "</div><p><b>Mọi thắc mắc vui lòng phản hồi về Email này!</b></p>",
+            });
+
         }
         else {
             result = await this.Report.findOneAndUpdate(
-                { "MaLopTT": ObjectId(id) },
+                { "MSGV": (id) },
                 {
                     $set: {
                         'BaoCao.$[element]': payload
@@ -87,34 +110,36 @@ class Report {
     }
 
     async findOne(id) {
-        const cursor = await this.Report.findOne({ "MaLopTT": ObjectId(id) });
+        const cursor = await this.Report.findOne({ "MSGV": (id) });
         return cursor;
     }
-    async getReport(MaLopTT, TenBaoCao) {
+    async getReport(MSGV, TenBaoCao) {
         let cursor = await this.Report.aggregate([
             {
                 $unwind: "$BaoCao"
             }
-            ,{   
+            , {
                 $match: {
-                    "MaLopTT": ObjectId(MaLopTT),
-                    "BaoCao.TenBaoCao": TenBaoCao 
+                    "MSGV": (MSGV),
+                    "BaoCao.TenBaoCao": TenBaoCao
                 }
-                
+
             }
         ]
-            
+
         );
         cursor = (await cursor.toArray())[0]
         return cursor;
     }
-    async updateFile(MaLop, file, data) {
+    async uploadFile(MSGV, file, data) {
         const fs = require('fs');
-        let folderPath = "./fileUpload/" + MaLop;
+        let folderPath = "../thuc-tap-thuc-te - frontend/public/fileUpload/";
         try {
-            if (!fs.existsSync("./fileUpload")) {
-                fs.mkdirSync("./fileUpload");
+            
+            if (!fs.existsSync(folderPath)) {
+                fs.mkdirSync(folderPath);
             }
+            folderPath = folderPath + "/" + MSGV
             if (!fs.existsSync(folderPath)) {
                 fs.mkdirSync(folderPath);
             }
@@ -129,7 +154,6 @@ class Report {
         } catch (err) {
             console.error(err);
         }
-        console.log(file.name);
         file.mv(`${folderPath}/${file.name}`, function (err) {
             if (err) {
                 console.log(err)
@@ -139,19 +163,15 @@ class Report {
         try {
             const result = await this.Report.updateOne(
                 {
-                    "MaLopTT": ObjectId(MaLop),
+                    "MSGV": (MSGV),
                 },
                 {
                     $push: {
                         'BaoCao.$[element].BaiNop': {
                             MSSV: data.MSSV,
-                            File: `${folderPath}/${file.name}`
+                            File: `/fileUpload/${MSGV}/${data.TenBaoCao}/${data.MSSV}/${file.name}`
                         }
                     }
-                    // $set: {
-                    //     "BaoCao.BaiNop.$[element].MSSV": data.MSSV,
-                    //     "BaoCao.BaiNop.$[element].File": file.name,
-                    // }
                 },
                 {
                     arrayFilters: [{ "element.TenBaoCao": data.TenBaoCao }],
@@ -164,13 +184,13 @@ class Report {
         }
 
     }
-    async deleteFile(MaLop, data) {
+    async deleteFile(MSGV, data) {
         const fs = require('fs');
-        fs.unlinkSync(data.File);
+        fs.unlinkSync('../thuc-tap-thuc-te - frontend/public'+data.File);
         try {
             const result = await this.Report.updateOne(
                 {
-                    "MaLopTT": ObjectId(MaLop),
+                    "MSGV": (MSGV),
                 },
                 {
                     $pull: {

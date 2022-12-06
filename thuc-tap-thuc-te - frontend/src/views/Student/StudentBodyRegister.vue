@@ -1,8 +1,8 @@
 <script>
 import LopHoc from "@/services/class";
 import Report from '@/services/report';
-import FileBaoCao from '../Home/FileBaoCao.vue';
-import Calendar from '../Home/Calendar.vue';
+import FileBaoCao from '@/components/components/FileBaoCao.vue';
+import Calendar from '@/components/components/Calendar.vue';
 
 import { useAccountStore } from "@/stores/AccountStore";
 export default {
@@ -13,7 +13,6 @@ export default {
   data() {
     const accStore = useAccountStore();
     return {
-      date: new Date(),
       studentClass: [],
       data: {
         classCurrent: {},
@@ -21,7 +20,6 @@ export default {
         CongTy: {},
         ThongTin: {
           MSSV: accStore.user._id,
-          MaLopTT: this.$route.params.id,
           NoiDung: {
             MayTinh: true,
             PhongLamViec: true,
@@ -30,45 +28,42 @@ export default {
       },
       registered: null,
       accStore,
-      classCurrent: null,
+      classCurrent: {},
       reportSinhVien: null,
       reports: null,
     };
   },
   methods: {
-    async retrieveClasses() {
+    async getData() {
       try {
         this.classCurrent = (await LopHoc.getAll()).filter(e => e._id == this.$route.params.id)[0]
+        console.log(this.classCurrent);
         this.studentClass = await LopHoc.getStudentClass(this.$route.params.id);
-
         if (this.studentClass.length != 0) {
           this.data.classCurrent = this.studentClass.filter(e => e.SinhVien.MSSV == this.accStore.user._id)[0];
+          if (this.data.classCurrent == undefined) {
+            this.data.classCurrent = {}
+          }
         }
         console.log(this.data.classCurrent);
         this.registered = await LopHoc.isRegistered(this.$route.params.id, this.accStore.user._id)
-        this.reports = await Report.getAll(this.$route.params.id)
-        this.reportSinhVien = this.reports.BaoCao.filter((e) => e.QuyenHienThi.includes(this.accStore.user.CapQuyen))
+        if (this.data.classCurrent.SinhVien != null && this.data.classCurrent.SinhVien.MSGV != '') {
+          this.reports = await Report.getAll(this.data.classCurrent.SinhVien.MSGV)
+          this.reportSinhVien = this.reports.BaoCao.filter((e) => e.QuyenHienThi.includes(this.accStore.user.CapQuyen))
+        }
       } catch (error) {
+        console.log(error);
       }
     },
     async onSubmit() {
       this.data.classCurrent._id = this.$route.params.id;
       await LopHoc.RegisterClass(this.data);
-      this.retrieveClasses();
+      this.getData();
     },
-    async submitFile(file, TenBaoCao) {
-      const formData = new FormData();
-      formData.append("file", file);
-      formData.append("TenBaoCao", TenBaoCao);
-      formData.append("MSSV", this.accStore.user._id);
-      await Report.submitFile(this.$route.params.id, formData)
-      this.retrieveClasses();
-    },
-
 
   },
   created() {
-    this.retrieveClasses();
+    this.getData();
   },
 };
 </script>
@@ -96,7 +91,7 @@ export default {
           </nav>
         </div>
 
-        <div class="container lop-hoc-phan">
+        <div v-if="this.registered" class="container lop-hoc-phan">
           <div class="row mb-3" v-if="this.data.classCurrent._id != null">
             <h5 class="my-4 form text-secondary">THÔNG TIN LỚP HỌC PHẦN</h5>
             <div class="row">
@@ -110,21 +105,25 @@ export default {
                     Dẫn:</strong></span>{{ this.data.classCurrent.GiangVien.length > 0 ?
                         this.data.classCurrent.GiangVien[0].HoTen : null
                     }}</p>
-              <p class="col-md-4"><span><strong><i class="fa-solid fa-phone me-2"></i></strong></span>{{
+              <p class="col-md-3"><span><strong><i class="fa-solid fa-phone me-2"></i></strong></span>{{
                   this.data.classCurrent.GiangVien.length != 0 ? this.data.classCurrent.GiangVien[0].Sdt : null
               }}
               </p>
+              <p class="col-md-4"><span><strong><i class="fa-regular fa-envelope"></i></strong></span>{{
+                  this.data.classCurrent.GiangVien.length != 0 ? this.data.classCurrent.GiangVien[0].Email : null
+              }}
+              </p>
             </div>
-            <div class="row">
+            <div v-if="this.data.classCurrent.CanBo != null " class="row">
               <p class="col-md-4"><span><strong>Cán Bộ Hướng
-                    Dẫn:</strong></span>{{ this.data.classCurrent != {} ? this.data.classCurrent.CanBo.HoTen : null }}
+                    Dẫn:</strong></span>{{this.data.classCurrent.CanBo.HoTen }}
               </p>
               <p class="col-md-3"><span><strong><i class="fa-solid fa-phone me-2"></i></strong></span>{{
-                  this.data.classCurrent != {} ? this.data.classCurrent.CanBo.Sdt : null
+                   this.data.classCurrent.CanBo.Sdt
               }}
               </p>
               <p class="col-md-4"><span><strong><i class="fa-regular fa-envelope"></i></strong></span>{{
-                  this.data.classCurrent != {} ? this.data.classCurrent.CanBo.Email : null
+                  this.data.classCurrent.CanBo.Email
               }}
               </p>
             </div>
@@ -138,16 +137,17 @@ export default {
                 <i class="fa-solid fa-file-import me-2"></i>Vui lòng nhập form
                 đăng ký:
               </p>
-              <!-- v-if="!this.registered" -->
-              <a class="btn border rounded-0 col-md-2 mb-2" data-bs-toggle="modal" data-bs-target="#exampleModal">
+
+              <a v-if="!this.registered" class="btn border rounded-0 col-md-2 mb-2" data-bs-toggle="modal"
+                data-bs-target="#exampleModal">
                 ĐĂNG KÝ
               </a>
-              <!-- <h6 class="text-danger col-md-2 mt-1" v-else>Đã đăng ký</h6> -->
+              <h6 class="text-danger col-md-2 mt-1" v-else>Đã đăng ký</h6>
             </div>
             <div class="modal fade hide" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
               aria-hidden="true">
               <div class="modal-dialog modal-dialog-scrollable modal-xs">
-                <div class="modal-content" >
+                <div class="modal-content">
                   <div class="modal-header">
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                   </div>
@@ -245,31 +245,32 @@ export default {
                         <input type="text" class="form-control border rounded-0" id="ho-tro"
                           v-model="this.data.ThongTin.NoiDung.HoTro" />
                       </div>
-
-                      
-                    </form>
-                  </div>
-                  <div class="modal-footer">
-                    <button type="submit" class="btn btn-success border rounded-0" data-bs-dismiss="modal">
+                      <button type="submit" class="btn btn-success border rounded-0" data-bs-dismiss="modal">
                         Gửi
                       </button>
+
+                    </form>
                   </div>
+                  <!-- <div class="modal-footer">
+                    
+                  </div> -->
                 </div>
               </div>
             </div>
 
           </div>
         </div>
-        <div class="container past">
+        <div class="container past" v-if="this.registered">
           <div class="row mb-2">
             <h5 class="my-4 bao-cao text-secondary">BÁO CÁO</h5>
           </div>
           <div v-for="(e, i) in this.reportSinhVien" class="row">
             <div v-if="e.TrangThai == 'true'" class="nop-bao-cao col-md-9 mb-5">
               <i class="fa-solid fa-file me-2"></i>
-              <router-link :to='"/courses/" + this.$route.params.id + "/" + e.TenBaoCao' class="text-decoration-none">{{
-                  e.TenBaoCao
-              }}</router-link>
+              <router-link :to='"/courses/" +this.data.classCurrent._id + "/" + this.data.classCurrent.SinhVien.MSGV + "/" + e.TenBaoCao'
+                class="text-decoration-none">{{
+                    e.TenBaoCao
+                }}</router-link>
 
               <p>{{ e.MoTa }}</p>
 

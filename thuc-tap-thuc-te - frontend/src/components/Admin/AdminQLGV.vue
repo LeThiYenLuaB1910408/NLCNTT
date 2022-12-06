@@ -28,6 +28,7 @@ export default {
       this.data.HoTen = data.HoTen;
       this.data.Sdt = data.Sdt;
       this.data.MaLop = data.MaLop;
+      this.data.Email = data.Email;
       this.data.BoMon = data.BoMon;
       this.data._id = data._id;
       this.idEdit =  data._id;
@@ -53,6 +54,7 @@ export default {
           <th scope="col">STT</th>
           <th scope="col">MSGV</th>
           <th scope="col">Họ và tên</th>
+          <th scope="col">Email</th>
           <th scope="col">Số điện thoại</th>
           <th scope="col">Mã lớp cố vấn</th>
           <th scope="col">Bộ môn</th>
@@ -64,6 +66,7 @@ export default {
           <td>{{ index + 1 }}</td>
           <td>{{ teacher._id }}</td>
           <td>{{ teacher.HoTen }}</td>
+          <td>{{ teacher.Email }}</td>
           <td>{{ teacher.Sdt }}</td>
           <td>{{ teacher.MaLop }}</td>
           <td>{{ teacher.BoMon }}</td>
@@ -105,12 +108,17 @@ export default {
             </div>
 
             <div class="row">
-              <div class="col-md-6 mb-3 mt-3">
+              <div class="col-md-3 mb-3 mt-3">
                 <label for="ml" class="form-label">Mã Lớp Cố Vấn:</label>
                 <input type="text" class="form-control border rounded-0" id="ml" name="ml"
                   v-model="this.data.MaLop" />
               </div>
-              <div class="col-md-6 mb-3 mt-3">
+              <div class="col-md-5 mb-3 mt-3">
+                <label for="mail" class="form-label">Email:</label>
+                <input type="email" class="form-control border rounded-0" id="mail" name="mail"
+                  v-model="this.data.Email" />
+              </div>
+              <div class="col-md-4 mb-3 mt-3">
                 <label for="cn" class="form-label">Bộ Môn:</label>
                 <select id="inputState" class="form-select" v-model="this.data.BoMon">
                   <option selected>Choose...</option>

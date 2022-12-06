@@ -1,8 +1,8 @@
 <script>
 import Report from '@/services/report';
 import { useAccountStore } from "@/stores/AccountStore";
-import Calendar from '../Home/Calendar.vue';
-import FileBaoCao from '../Home/FileBaoCao.vue';
+import Calendar from '@/components/components/Calendar.vue';
+import FileBaoCao from '@/components/components/FileBaoCao.vue';
 export default {
     components: {
         Calendar,
@@ -15,20 +15,20 @@ export default {
             report: null,
             BaiNop: {},
             selectedFile: ""
-
         };
     },
     methods: {
         async getData() {
             try {
-                this.report = await Report.getReport(this.$route.params.MaLopTT, this.$route.params.TenBaoCao)
-                console.log(this.report);
+                this.report = await Report.getReport(this.$route.params.MSGV, this.$route.params.TenBaoCao)
                 if (this.report.BaoCao.BaiNop.length > 0) {
                     this.BaiNop = this.report.BaoCao.BaiNop.filter(e => e.MSSV == this.accStore.user._id)[0]
-                }else{
-                    this.BaiNop={}
+                    if (this.BaiNop == undefined) {
+                        this.BaiNop = {}
+                    }
+                } else {
+                    this.BaiNop = {}
                 }
-                console.log(this.BaiNop);
             } catch (error) {
                 console.log(error);
             }
@@ -42,7 +42,7 @@ export default {
             formData.append("file", this.selectedFile);
             formData.append("TenBaoCao", this.$route.params.TenBaoCao);
             formData.append("MSSV", this.accStore.user._id);
-            await Report.submitFile(this.$route.params.MaLopTT, formData)
+            await Report.submitFile(this.$route.params.MSGV, formData)
             this.getData();
         },
         async deleteFile() {
@@ -51,8 +51,19 @@ export default {
                 MSSV: this.accStore.user._id,
                 File: this.BaiNop.File
             }
-            await Report.deleteFile(this.$route.params.MaLopTT, data)
+            await Report.deleteFile(this.$route.params.MSGV, data)
             this.getData();
+        },
+        secondToTime(duration) {
+            var minutes = Math.floor((duration / (1000 * 60)) % 60),
+                hours = Math.floor((duration / (1000 * 60 * 60)) % 24),
+                days = Math.floor((duration / (1000 * 60 * 60 * 24))),
+                
+                hours = (hours < 10) ? "0" + hours : hours;
+                minutes = (minutes < 10) ? "0" + minutes : minutes;
+               return (duration < 0)?  "Hết hạn nộp": days + " ngày, " + hours + " giờ, " + minutes + " phút";
+            
+
         }
     },
     created() {
@@ -75,7 +86,7 @@ export default {
                                 <a>{{ this.accStore.user.ChuyenNganh }}</a>
                             </li>
                             <li class="breadcrumb-item active" aria-current="page">
-                                <router-link :to="'/courses/' + this.$route.params.MaLopTT"
+                                <router-link :to="'/courses/' + this.$route.params.MaLop"
                                     class="text-decoration-none text-black">Các khóa thực tập</router-link>
                             </li>
                             <li class="breadcrumb-item active" aria-current="page">
@@ -87,8 +98,8 @@ export default {
                 <div class="row">
                     <h5 class="my-3 khoa-hoc text-secondary">Nộp {{ this.$route.params.TenBaoCao }}
                     </h5>
-                    <p  class="ms-3">
-                        {{this.report.BaoCao.MoTa}}
+                    <p class="ms-3">
+                        {{ this.report.BaoCao.MoTa }}
                     </p>
                     <div class="ms-3 mb-3"> Hướng dẫn:
                         <ol class="mt-2">
@@ -113,11 +124,18 @@ export default {
                             </tr>
                             <tr>
                                 <td class="col-2 border">Hết hạn</td>
-                                <td style="background: rgb(230, 230, 230);">Monday, 14 November 2022, 12:00 AM</td>
+                                <td style="background: rgb(230, 230, 230);">{{ new
+                                        Date(this.report.BaoCao.HanNop).toLocaleString("vi-VN", {
+                                            timeZone: "Asia/Ho_Chi_Minh",
+                                        })
+                                }}</td>
                             </tr>
                             <tr>
                                 <td class="col-2 border">Thời gian còn lại</td>
-                                <td style="background: rgb(230, 230, 230);">3 giờ 57 phút</td>
+                                <td style="background: rgb(230, 230, 230);">{{ this.secondToTime(new
+                                        Date(this.report.BaoCao.HanNop) - new
+                                            Date())
+                                }}</td>
                             </tr>
                             <tr>
                                 <td class="col-2 border">Sửa đổi lần cuối</td>

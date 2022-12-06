@@ -1,20 +1,15 @@
 <script>
-import AdminQLSV from "../components/Admin/AdminQLSV.vue";
-import SinhVien from "../services/student";
-import AdminSiderBar from "../components/Admin/AdminSiderBar.vue";
-import AdminHeader from "../components/Admin/AdminHeader.vue";
+import AdminQLSV from "@/components/Admin/AdminQLSV.vue";
+import SinhVien from "@/services/student";
 export default {
   components: {
     AdminQLSV,
-    AdminSiderBar,
-    AdminHeader,
   },
   data() {
     return {
       students: [],
-      student: {},
     };
-  },
+  }, 
   methods: {
     async deleteStudent(id) {
       if (confirm("Bạn muốn xóa Sinh Viên này?")) {
@@ -40,7 +35,6 @@ export default {
       try {
         await SinhVien.create(data);
         this.refreshList();
-        this.student = {};
       } catch (error) {
         console.log(error);
       }
@@ -64,20 +58,14 @@ export default {
 </script>
 
 <template>
-  <AdminHeader />
-  <div class="container-fluid">
-    <div class="row">
-      <AdminSiderBar />
-      <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-        <div class="d-flex justify-content-between align-items-center">
-          <h2 class="my-3">Quản Lý Sinh Viên</h2>
-        </div>
-        <hr />
-        <AdminQLSV :students="students" @delete:students="deleteStudent" @add:students="addStudent"
-                    @update:students="updateStudent"/>
-      </main>
+  <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+    <div class="d-flex justify-content-between align-items-center">
+      <h2 class="my-3">Quản Lý Sinh Viên</h2>
     </div>
-  </div>
+    <hr />
+    <AdminQLSV :students="students" @delete:students="deleteStudent" @add:students="addStudent"
+      @update:students="updateStudent" />
+  </main>
 </template>
 <style>
 

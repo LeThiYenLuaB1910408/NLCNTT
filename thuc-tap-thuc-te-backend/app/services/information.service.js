@@ -30,7 +30,6 @@ class Information {
     extractThongTinData(payload) {
         const thongtin = {
             MSSV: payload.MSSV,
-            MaLopTT: ObjectId(payload.MaLopTT),
             NoiDung: {
                 NoiDungCV: payload.NoiDung.NoiDungCV,
                 MayTinh: payload.NoiDung.MayTinh,
@@ -71,14 +70,19 @@ class Information {
                 { $push: { SinhVien: { MSSV: thongTin.MSSV, MSGV: '', MSCB: resultCanBo.insertedId ?? resultCanBo._id, DiemSo: '' } } }
             )
     
-            return result ;
+            return {message: "Đăng ký thành công"};
         } catch (error) {
             console.log(error);
         }
        
     }
+    async getInfor(MSSV) {
+        return await this.ThongTin.findOne({
+            'MSSV': MSSV
 
+        })
 
+    }
 }
 
 module.exports = Information;

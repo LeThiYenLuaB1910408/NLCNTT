@@ -1,7 +1,7 @@
 import createApiClient from "./api.service";
 
 class TaiKhoan{
-    constructor(baseUrl = "/api"){
+    constructor(baseUrl = "/api/account"){
         this.api = createApiClient(baseUrl);
     }
     async getAll(){

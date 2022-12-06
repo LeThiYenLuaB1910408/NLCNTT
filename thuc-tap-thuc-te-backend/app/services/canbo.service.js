@@ -3,6 +3,7 @@ const { ObjectId } = require("mongodb");
 class CanBo {
     constructor(client) {
         this.CanBo = client.db().collection("canbocongty");
+        this.TaiKhoan = client.db().collection("taikhoan");
     }
     // Dinh nghia cac phuong thuc truy xuat CSDL su dung mongodb API
     extractCBData(payload) {
@@ -36,7 +37,10 @@ class CanBo {
         const result = await this.CanBo.findOneAndDelete({
             _id: ObjectId.isValid(id) ? new ObjectId(id) : null,
         });
-
+        await this.TaiKhoan.findOneAndDelete({
+            TenDangNhap: result.value.TenDangNhap,
+        });
+console.log(result.value);
         return result.value;
     }
 

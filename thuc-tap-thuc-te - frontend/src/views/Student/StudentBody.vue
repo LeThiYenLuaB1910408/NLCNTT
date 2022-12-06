@@ -1,7 +1,7 @@
 <script>
 import LopHoc from "@/services/class";
 import { useAccountStore } from "@/stores/AccountStore";
-import Calendar from '../Home/Calendar.vue';
+import Calendar from '@/components/components/Calendar.vue';
 export default {
   components: {
     Calendar
@@ -18,7 +18,7 @@ export default {
     };
   },
   methods: {
-    async retrieveClasses() {
+    async getData() {
       try {
         this.classes = await LopHoc.getAll();
         this.classes = this.classes.filter(
@@ -41,7 +41,7 @@ export default {
     },
 
     refreshList() {
-      this.retrieveClasses();
+      this.getData();
     },
   },
   mounted() {

@@ -12,14 +12,15 @@ class Lecturer {
             MSGV: payload._id,
             HoTen: payload.HoTen,
             Sdt: payload.Sdt,
+            Email: payload.Email,
             MaLop: MaLop,
             BoMon: payload.BoMon,
             TenDangNhap: payload._id
         };
-// remove undefined fields
-Object.keys(gv).forEach(
-    (key) => gv[key] === undefined && delete gv[key]
-    );
+        // remove undefined fields
+        Object.keys(gv).forEach(
+            (key) => gv[key] === undefined && delete gv[key]
+        );
         return gv;
     }
 

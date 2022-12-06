@@ -14,7 +14,6 @@ class QuanLyLopHoc {
             SinhVien: [],
         };
 
-        // remove undefined fields
         Object.keys(lh).forEach(
             (key) => lh[key] === undefined && delete lh[key]
         );
@@ -35,14 +34,8 @@ class QuanLyLopHoc {
         return await cursor.toArray();
     }
 
-    // async findByName(name) {
-    //     return await this.find({
-    //         name: { $regex: new RegExp(name), $options: "i" },
-    //     });
-    // }
-
     async findById(id) {
-        const result = await this.LopHoc.aggregate([
+        let result = await this.LopHoc.aggregate([
             { '$unwind': '$SinhVien' },
             {
                 $lookup: {
@@ -73,8 +66,8 @@ class QuanLyLopHoc {
             },
         ]
         );
-        let results = await result.toArray();
-        return results.filter(e => e._id == id);
+        result = await result.toArray();
+        return result.filter(e => e._id == id);
     }
     async isRegistered(MaLopTT, MSSV) {
         return await this.LopHoc.findOne({
@@ -82,8 +75,6 @@ class QuanLyLopHoc {
             "SinhVien.MSSV": MSSV,
         });
     }
-
-
     async getAllStudent() {
         const result = await this.LopHoc.aggregate([
             { '$unwind': '$SinhVien' },
@@ -147,25 +138,8 @@ class QuanLyLopHoc {
             );
             return result.value;
         }
-
-
-
     }
 
-    // async delete(id) {
-    //     const result = await this.Contact.findOneAndDelete({
-    //         _id: ObjectId.isValid(id) ? new ObjectId(id) : null,
-    //     });
-
-    //     return result.value;
-    // }
-    // async findFavorite() {
-    //     return await this.find({ favorite: true });
-    // }
-    // async deleteAll() {
-    //     const result = await this.Contact.deleteMany();
-    //     return result.deletedCount;
-    // }
 }
 
 module.exports = QuanLyLopHoc;

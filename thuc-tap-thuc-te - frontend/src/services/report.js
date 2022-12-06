@@ -1,7 +1,7 @@
 import createApiClient from "./api.service";
 
 class Report {
-    constructor(baseUrl = "/api") {
+    constructor(baseUrl = "/api/report") {
         this.api = createApiClient(baseUrl);
     }
     async getAll(id) {
@@ -11,13 +11,9 @@ class Report {
         return (await this.api.get(`/report/${MaLop}/${TenBaoCao}`)).data;
     }
 
-    async getFile(linkUrl) {
-        return (await this.api.post(`/getfile/`, linkUrl,
-            {
-                responseType: 'blob'
-            })).data;
-    }
-    // },{responseType:'blob'}/
+    // async getFile(linkUrl) {
+    //     return (await this.api.get(`/getfile/`, linkUrl)).data;
+    // }
 
     async create(id, data) {
         return (await this.api.post(`/report/${id}`, data)).data;

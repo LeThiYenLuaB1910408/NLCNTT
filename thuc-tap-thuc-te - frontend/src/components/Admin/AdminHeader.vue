@@ -69,7 +69,7 @@ export default {
             >
           </li>
         </ul> </i
-      ><a class="text-light text-decoration-none">{{ acc.user.tenDangNhap }}</a>
+      ><a class="text-light text-decoration-none">{{ acc.user.TenDangNhap }}</a>
       <button type="button" class="btn border rounded-circle ms-3 me-0">
         <i class="fa-regular fa-user text-light"></i>
       </button>

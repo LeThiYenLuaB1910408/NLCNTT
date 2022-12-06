@@ -8,16 +8,11 @@ export default {
   },
   data() {
     return {
+      year: new Date().getFullYear(),
       activeIndex: null,
       allStudent: [],
       studentInClass: [],
-      class: {
-        _id: "",
-        MaLopTT: "",
-        NienKhoa: "",
-        ChuyenNganh: "",
-        HocKi: "",
-      },
+      class: {},
       data: {
         CT471: "CNTT",
         CT472: "CNPM",
@@ -39,13 +34,7 @@ export default {
     async addClass() {
       try {
         await LopHoc.create(this.class);
-        this.class = {
-          _id: "",
-          MaLopTT: "",
-          NienKhoa: "",
-          ChuyenNganh: "",
-          HocKi: "",
-        };
+        this.class = {};
         this.refreshList();
       } catch (error) {
         console.log(error);
@@ -170,10 +159,9 @@ export default {
                   <label for="nk" class="form-label">Niên Khóa:</label>
                   <select id="inputState" class="form-select" v-model="this.class.NienKhoa">
                     <option selected>Choose...</option>
-                    <option>2019-2020</option>
-                    <option>2020-2021</option>
-                    <option>2021-2022</option>
-                    <option>2022-2023</option>
+                    <option>{{this.year-1}} - {{this.year}}</option>
+                    <option>{{this.year}} - {{this.year+1}}</option>
+                    <option>{{this.year+1}} - {{this.year+2}}</option>
                   </select>
                 </div>
               </div>

@@ -1,24 +1,13 @@
 <script>
-import AdminQLGV from "../components/Admin/AdminQLGV.vue";
-import GiangVien from "../services/lecturer";
-import AdminSiderBar from "../components/Admin/AdminSiderBar.vue";
-import AdminHeader from "../components/Admin/AdminHeader.vue";
+import AdminQLGV from "@/components/Admin/AdminQLGV.vue";
+import GiangVien from "@/services/lecturer";
 export default {
     components: {
         AdminQLGV,
-        AdminSiderBar,
-        AdminHeader,
     },
     data() {
         return {
             teachers: [],
-            teacher: {
-                _id: "",
-                HoTen: "",
-                Sdt: "",
-                BoMon: "",
-                MaLop: [],
-            },
         };
     },
     methods: {
@@ -70,20 +59,14 @@ export default {
 </script>
 
 <template>
-    <AdminHeader />
-    <div class="container-fluid">
-        <div class="row">
-            <AdminSiderBar />
-            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-                <div class="d-flex justify-content-between align-items-center">
-                    <h2 class="my-3">Quản Lý Giảng Viên</h2>
-                </div>
-                <hr />
-                <AdminQLGV :teachers="teachers" @delete:teachers="deleteTeacher" @add:teachers="addTeacher"
-                    @update:teachers="updateTeacher" />
-            </main>
+    <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+        <div class="d-flex justify-content-between align-items-center">
+            <h2 class="my-3">Quản Lý Giảng Viên</h2>
         </div>
-    </div>
+        <hr />
+        <AdminQLGV :teachers="teachers" @delete:teachers="deleteTeacher" @add:teachers="addTeacher"
+            @update:teachers="updateTeacher" />
+    </main>
 </template>
 <style>
 

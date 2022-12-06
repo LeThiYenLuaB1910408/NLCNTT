@@ -1,7 +1,7 @@
 <script>
 import * as yup from "yup";
 import { Form, Field, ErrorMessage } from "vee-validate";
-import TaiKhoan from "../services/account";
+import TaiKhoan from "@/services/account";
 import { useAccountStore } from "@/stores/AccountStore";
 
 export default {
@@ -27,7 +27,7 @@ export default {
         MatKhau: "",
       },
       user: {},
-      accStore
+      accStore,
     };
   },
 
@@ -45,7 +45,7 @@ export default {
               this.$router.push({ name: "leader" });
               break;
             case "2":
-              this.$router.push('/lecturer');
+              this.$router.push({ name: "lecturer" });
               break;
             case "3":
               this.$router.push({ name: "canbo" });
@@ -106,13 +106,6 @@ export default {
               class="btn btn-secondary col-12 btn_submit py-2 border border-secondary rounded-0">
               Trang Chủ
             </button></router-link>
-          <!-- <router-link to="/lecturer"
-            ><button
-              class="btn btn-secondary col-12 btn_submit py-2 border border-secondary rounded-0"
-            >
-              Trang Chủ
-            </button></router-link
-          > -->
         </Form>
       </div>
     </div>

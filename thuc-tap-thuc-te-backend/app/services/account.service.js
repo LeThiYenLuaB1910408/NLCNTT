@@ -9,14 +9,13 @@ class QuanLyTaiKhoan {
 
     }
     // Dinh nghia cac phuong thuc truy xuat CSDL su dung mongodb API
-    extractAccountData(payload) {
+    extractAccountData(payload) { 
         const tk = {
             _id: payload.TenDangNhap??payload._id,
             TenDangNhap: payload.TenDangNhap??payload._id,
             MatKhau: payload.TenDangNhap??payload._id,
             CapQuyen: payload.CapQuyen??"0"
         };
-
         // remove undefined fields
         Object.keys(tk).forEach(
             (key) => tk[key] === undefined && delete tk[key]
@@ -37,9 +36,9 @@ class QuanLyTaiKhoan {
         return await cursor.toArray();
     }
 
-    async findByName(data) {
+    async findByAccount(data) {
         const acc = await this.TaiKhoan.findOne({
-            TenDangNhap: { $regex: new RegExp(data.TenDangNhap), $options: "i" },
+            TenDangNhap: data.TenDangNhap,
             MatKhau: data.MatKhau
         })
         var user={};
@@ -61,29 +60,10 @@ class QuanLyTaiKhoan {
                 default:
                     break;
             }
-            return {...user,CapQuyen: acc.CapQuyen, tenDangNhap: acc.TenDangNhap};
+            return {...user,CapQuyen: acc.CapQuyen, TenDangNhap: acc.TenDangNhap};
         }
         return null;
     }
-
-    // async findById(id) {
-    //     return await this.Contact.findOne({
-    //         _id: ObjectId.isValid(id) ? new ObjectId(id) : null,
-    //     });
-    // }
-
-    // async update(id, payload) {
-    //     const filter = {
-    //         _id: ObjectId.isValid(id) ? new ObjectId(id) : null,
-    //     };
-    //     const update = this.extractContactData(payload);
-    //     const result = await this.Contact.findOneAndUpdate(
-    //         filter,
-    //         { $set: update },
-    //         { returnDocument: "after" }
-    //     );
-    //     return result.value;
-    // }
 
     async delete(id) {
         const result = await this.TaiKhoan.findOneAndDelete({
@@ -92,13 +72,6 @@ class QuanLyTaiKhoan {
 
         return result.value;
     }
-    // async findFavorite() {
-    //     return await this.find({ favorite: true });
-    // }
-    // async deleteAll() {
-    //     const result = await this.Contact.deleteMany();
-    //     return result.deletedCount;
-    // }
 }
 
 module.exports = QuanLyTaiKhoan;

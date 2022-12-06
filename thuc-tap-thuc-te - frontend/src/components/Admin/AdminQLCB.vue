@@ -9,20 +9,20 @@ export default {
     }
   },
   props: {
-    teachers: { type: Array, default: [] },
+    CanBo: { type: Array, default: [] },
   },
-  emits: ["delete:teachers", "update:teachers", "add:teachers"],
+  emits: ["delete:CanBo", "update:CanBo", "add:CanBo"],
   methods: {
     deleteTeacher(id) {
-      this.$emit("delete:teachers", id);
+      this.$emit("delete:CanBo", id);
     },
     update() {
-      this.$emit("update:teachers", this.idEdit, this.data);
+      this.$emit("update:CanBo", this.idEdit, this.data);
       this.idEdit = null
       this.data = { CapQuyen: "3" }
     },
     add() {
-      this.$emit("add:teachers", this.data);
+      this.$emit("add:CanBo", this.data);
     },
     setEdit(data) {
       this.data.HoTen = data.HoTen;
@@ -61,7 +61,7 @@ export default {
         </tr>
       </thead>
       <tbody align="center">
-        <tr v-for="(teacher, index) in teachers" :key="teacher._id">
+        <tr v-for="(teacher, index) in CanBo" :key="teacher._id">
           <td>{{ index + 1 }}</td>
           <td>{{ teacher.HoTen }}</td>
           <td>{{ teacher.Sdt }}</td>

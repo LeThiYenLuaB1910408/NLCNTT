@@ -1,141 +1,121 @@
 import { createWebHistory, createRouter } from "vue-router";
-import HomeBody from "../components/Home/HomeBody.vue"
-import LogIn from "../components/LogIn.vue"
-import HomeHeaderStudent from "../components/Home/HomeHeaderStudent.vue"
-import HomeHeaderLecturer from "../components/Home/HomeHeaderLecturer.vue"
-import StudentBody from "../components/Student/StudentBody.vue"
-import StudentBodyRegister from "../components/Student/StudentBodyRegister.vue";
-import LecturerBody from "../components/Lecturer/LecturerBody.vue";
-import LeaderBody from "../components/Lecturer/LeaderBody.vue";
-import CanBoBody from "../components/Lecturer/CanBoBody.vue";
-import InfoStudentBody from "../components/Lecturer/InfoStudentBody.vue";
-import SubmitFile from "../components/Student/SubmitFile.vue";
+import LecturerBody from "@/views/Lecturer/LecturerBody.vue";
+import LeaderBody from "@/views/Lecturer/LeaderBody.vue";
+import CanBoBody from "@/views/Lecturer/CanBoBody.vue";
+import InfoStudentBody from "@/views/Lecturer/InfoStudentBody.vue";
 
 import { useAccountStore } from "@/stores/AccountStore";
 
 const routes = [
-    {
-        path: "/",
+  {
+    path: "/login",
+    name: "login",
+    component: () => import("@/views/Auth/LogIn.vue"),
+  },
+  {
+    path: "/",
+    component: () => import("@/views/Layouts/DefaultLayout.vue"),
+    children: [
+      {
+        path: "",
         name: "home",
-        components:{
-            default: HomeBody,
-            header: HomeHeaderStudent
-        } 
-    },
-    {
-        path: "/login",
-        name: "login",
-        component: LogIn
-    
-    },
-    {
+        component: () => import("@/views/Home/HomeBody.vue"),
+      },
+      {
         path: "/ChuyenNganh/:id",
         name: "ChuyenNganh",
-        components:{
-            default: StudentBody,
-            header: HomeHeaderStudent
-        } 
-    
-    },
-    {
+        component: () => import("@/views/Student/StudentBody.vue"),
+      },
+      {
         path: "/courses/:id",
         name: "courses",
-        components:{
-            default: StudentBodyRegister,
-            header: HomeHeaderStudent
-        } 
-    
-    },
-    {
-        path: "/courses/:MaLopTT/:TenBaoCao",
+        component: () => import("@/views/Student/StudentBodyRegister.vue"),
+      },
+      {
+        path: "/courses/:MaLop/:MSGV/:TenBaoCao",
         name: "submit",
-        components:{
-            default: SubmitFile,
-            header: HomeHeaderStudent
-        } 
-    
-    },
-    {
+        component: () => import("@/views/Student/SubmitFile.vue"),
+      },
+    ],
+  },
+  {
+    path: "/manager",
+    component: () => import("@/views/Layouts/ManagerLayout.vue"),
+    children: [
+      {
         path: "/leader",
         name: "leader",
-        components:{
-            default: LeaderBody,
-            header: HomeHeaderLecturer
-        } 
-    
-    },
-    {
+        component: LeaderBody,
+      },
+      {
         path: "/lecturer",
         name: "lecturer",
-        components:{
-            default: LecturerBody,
-            header: HomeHeaderLecturer
-        } 
-    
-    },
-    {
+        component: LecturerBody,
+      },
+      {
         path: "/canbo",
         name: "canbo",
-        components:{
-            default: CanBoBody,
-            header: HomeHeaderLecturer
-        } 
-    
-    },
-    {
-        path: "/canbo/:MaLopTT/:MSSV",
+        component: CanBoBody,
+      },
+      {
+        path: "/canbo/:MSGV/:MSSV",
         name: "detail",
-        components:{
-            default: InfoStudentBody,
-            header: HomeHeaderLecturer
-        } 
-    
-    },
-    {
+        component: InfoStudentBody,
+      },
+    ],
+  },
+
+  {
+    path: "/admin",
+    component: () => import("@/views/Layouts/AdminLayout.vue"),
+    children: [
+      {
+        path: "",
+        name: "QLTK",
+        component: () => import("@/views/Admin/QLTK.vue"),
+      },
+      {
         path: "/QLLH",
         name: "QLLH",
-        component: () => import('@/views/QLLH.vue'),
-    },
-    {
-        path: "/QLTK",
-        name: "QLTK",
-        component: () => import('@/views/QLTK.vue'),
-    },
-    {
+        component: () => import("@/views/Admin/QLLH.vue"),
+      },
+      {
         path: "/QLSV",
         name: "QLSV",
-        component: () => import('@/views/QLSV.vue'),
-    },
-    {
+        component: () => import("@/views/Admin/QLSV.vue"),
+      },
+      {
         path: "/QLCB",
         name: "QLCB",
-        component: () => import('@/views/QLCB.vue'),
-    },
-    {
+        component: () => import("@/views/Admin/QLCB.vue"),
+      },
+      {
         path: "/QLGV",
         name: "QLGV",
-        component: () => import('@/views/QLGV.vue'),
-    },
-    {
-        path: "/:pathMatch(.*)*",
-        name: "notfound",
-        component: () => import('@/views/NotFound.vue'),
-    }
+        component: () => import("@/views/Admin/QLGV.vue"),
+      },
+    ],
+  },
+  {
+    path: "/:pathMatch(.*)*",
+    name: "notfound",
+    component: () => import("@/views/NotFound.vue"),
+  },
 ];
 
 const router = createRouter({
-    history: createWebHistory(import.meta.env.BASE_URL),
-    routes,
+  history: createWebHistory(import.meta.env.BASE_URL),
+  routes,
 });
 
-router.beforeEach((to, from, next)=> {
-    const AccountStore = useAccountStore();
-    if(!AccountStore.user.CapQuyen && to.name != 'login'){
-        next({
-            path: '/login',
-            replace: true,
-        })
-    }
-   next();
+router.beforeEach((to, from, next) => {
+  const AccountStore = useAccountStore();
+  if (!AccountStore.user.CapQuyen && to.name != "login") {
+    next({
+      path: "/login",
+      replace: true,
+    });
+  }
+  next();
 });
 export default router;

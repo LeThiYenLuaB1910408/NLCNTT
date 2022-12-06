@@ -2,19 +2,13 @@
 import { useAccountStore } from "@/stores/AccountStore";
 
 export default {
-  setup() {
+  data() {
     const acc = useAccountStore();
     return {
       acc,
     };
   },
   methods: {
-    khoahocscroll() {
-      document.documentElement.scrollTop = 840;
-    },
-    bomonscroll() {
-      document.documentElement.scrollTop = 20;
-    },
     logout() {
       this.acc.user = {};
       this.$router.push({ name: "login" });
@@ -24,77 +18,43 @@ export default {
 </script>
 
 <template>
-  <nav
-    class="navbar navbar-expand-lg navbar-dark"
-    style="background-color: rgba(51, 73, 183, 0.814)"
-  >
+  <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: rgba(51, 73, 183, 0.814)">
     <div class="container-fluid">
-      <button
-        class="navbar-toggler"
-        type="button"
-        data-bs-toggle="collapse"
-        data-bs-target="#navbarSupportedContent"
-        aria-controls="navbarSupportedContent"
-        aria-expanded="false"
-        aria-label="Toggle navigation"
-      >
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse d-block w-100" id="navbarSupportedContent">
-        <ul
-          class="navbar-nav d-flex justify-content-between"
-          style="word-spacing: 4px; font-weight: 700"
-        >
+        <ul class="navbar-nav d-flex justify-content-between" style="word-spacing: 4px; font-weight: 700">
           <li class="nav-item me-4">
-            <a class="nav-link text-light"
-              >TRANG CHỦ</a
-            >
+            <a class="nav-link text-light">TRANG CHỦ</a>
           </li>
 
           <li class="nav-item me-4" v-if="acc.user.HoTen == null">
-            <router-link to="/login" class="nav-link text-light"
-              >ĐĂNG NHẬP</router-link
-            >
+            <router-link to="/login" class="nav-link text-light">ĐĂNG NHẬP</router-link>
           </li>
           <li class="nav-item me-4" v-else>
             <i class="dropdown me-2">
-              <button
-                class="btn dropdown-toggle text-light p-0"
-                id="dropdownMenuButton1"
-                data-bs-toggle="dropdown"
-                aria-expanded="false"
-              ></button>
-              <ul
-                class="dropdown-menu border rounded-0 shadow"
-                aria-labelledby="dropdownMenuButton1"
-              >
+              <button class="btn dropdown-toggle text-light p-0" id="dropdownMenuButton1" data-bs-toggle="dropdown"
+                aria-expanded="false"></button>
+              <ul class="dropdown-menu border rounded-0 shadow" aria-labelledby="dropdownMenuButton1">
                 <li>
-                  <a class="dropdown-item" href="#"
-                    ><i class="fa-solid fa-user me-2 text-secondary"></i
-                    ><i class="fw-normal">Trang cá nhân</i></a
-                  >
+                  <a class="dropdown-item" href="#"><i class="fa-solid fa-user me-2 text-secondary"></i><i
+                      class="fw-normal">Trang cá nhân</i></a>
                 </li>
                 <hr class="m-0" />
                 <li>
-                  <a class="dropdown-item" href="#"
-                    ><i class="fa-solid fa-message me-2 text-secondary"></i>Tin
-                    nhắn</a
-                  >
+                  <a class="dropdown-item" href="#"><i class="fa-solid fa-message me-2 text-secondary"></i>Tin
+                    nhắn</a>
                 </li>
                 <li>
-                  <a class="dropdown-item" href="#"
-                    ><i class="fa-solid fa-gear me-2 text-secondary"></i>Cài
-                    đặt</a
-                  >
+                  <a class="dropdown-item" href="#"><i class="fa-solid fa-gear me-2 text-secondary"></i>Cài
+                    đặt</a>
                 </li>
                 <hr class="m-0" />
                 <li>
-                  <a class="dropdown-item" @click="logout()"
-                    ><i
-                      class="fa-solid fa-right-from-bracket me-2 text-secondary"
-                    ></i
-                    >Đăng xuất</a
-                  >
+                  <a class="dropdown-item" @click="logout()"><i
+                      class="fa-solid fa-right-from-bracket me-2 text-secondary"></i>Đăng xuất</a>
                 </li>
               </ul>
             </i>
@@ -114,9 +74,11 @@ export default {
 nav {
   background-color: rgba(51, 73, 183, 0.814);
 }
+
 nav li {
   cursor: pointer;
 }
+
 .container-fluid {
   display: flex;
   justify-content: center;
@@ -125,5 +87,4 @@ nav li {
 a:hover {
   color: black !important;
 }
-
 </style>

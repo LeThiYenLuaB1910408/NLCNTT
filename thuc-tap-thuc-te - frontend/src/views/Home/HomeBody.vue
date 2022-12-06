@@ -30,7 +30,7 @@
         <div class="col-md-6 ps-0">
           <img src="../../assets/it4.jpg" />
           <div class="title">
-            <router-link to="/ChuyenNganh/MTT&TT" class="p1">MẠNG MÁY TÍNH & TRUYỀN THÔNG</router-link>
+            <router-link to="/ChuyenNganh/MMT&TT" class="p1">MẠNG MÁY TÍNH & TRUYỀN THÔNG</router-link>
           </div>
         </div>
       </div>

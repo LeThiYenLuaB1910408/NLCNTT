@@ -15,7 +15,6 @@ export default {
           <th scope="col">Tên Đăng Nhập</th>
           <th scope="col">Mật Khẩu</th>
           <th scope="col">Cấp quyền</th>
-          <th scope="col">Thao tác</th>
         </tr>
       </thead>
       <tbody align="center">
@@ -28,8 +27,6 @@ export default {
           <td v-else-if="account.CapQuyen == 2">Giảng viên hướng dẫn</td>
           <td v-else-if="account.CapQuyen == 3">Cán bộ hướng dẫn</td>
           <td v-else-if="account.CapQuyen == -1">Quản trị viên</td>
-          <td><i class="fa-solid fa-pen-to-square" style="cursor: pointer"></i> <i class="fa-regular fa-trash-can"
-              style="cursor: pointer"></i></td>
         </tr>
       </tbody>
     </table>
